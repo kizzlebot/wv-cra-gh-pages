@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "node_modules": true,
+    ".git": true,
+    ".gitignore": true,
+    "yarn.lock": true,
+    "README.md": true,
+    "public/index.html": true,
+    "public/robots.txt": true,
+    "public/manifest.json": true
+  }
+}
