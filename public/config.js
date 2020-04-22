@@ -9,9 +9,48 @@
     const { PDFNet, docViewer, Annotations, Tools } = instance;
     const annotManager = docViewer.getAnnotationManager();
     const { createSignHereElement, draw } = Annotations.SignatureWidgetAnnotation.prototype;
-  
+
     const { deserialize, serialize } = Annotations.Annotation.prototype;
-  
+    const rubberStampTool = instance.docViewer.getTool('AnnotationCreateRubberStamp');
+    docViewer
+      .getTool('AnnotationCreateFreeText')
+      .setStyles({
+        Font: 'Times New Roman',
+        StrokeThickness: 0,
+        StrokeColor: new Annotations.Color(0, 0, 0),
+        TextColor: new Annotations.Color(0, 0, 0),
+        FontSize: '20pt'
+      });
+
+    rubberStampTool.__proto__.getDefaultStampAnnotations = function () {
+      const imgs = [
+        '/imgs/date.png',
+        '/imgs/signature.png',
+        '/imgs/initials.png',
+      ];
+
+      let sigFhs = []
+
+      for (let img of imgs) {
+
+        const sigFh = new instance.Annotations.StampAnnotation();
+        sigFh.ImageData = img;
+        sigFh.Subject = 'Signature';
+        sigFh.Width = 200;
+        sigFh.Height = 79.18999999999994;
+        sigFh.MaintainAspectRatio = true;
+        sigFh.setCustomData('type', 'signature');
+
+        sigFhs = [...sigFhs, sigFh];
+
+      }
+
+
+      return sigFhs;
+    }
+
+
+
     Annotations.WidgetAnnotation.prototype.getMetadata = function getMetadata() {
       if (!this.getField) {
         return;
@@ -26,12 +65,12 @@
         name
       };
     };
-  
+
     Annotations.WidgetAnnotation.prototype.updateCustomData = async function (currentUser) {
       if (!this.getField) {
         return;
       }
-  
+
       const [type, timestamp, id, author, signerId, name] = this.getField().name.split('.');
       this.CustomData = this.getMetadata();
       await Promise.all([
@@ -42,26 +81,26 @@
         this.setCustomData('signerId', signerId),
         this.setCustomData('name', name)
       ]);
-  
+
       this.Author = signerId;
-  
+
       return this.CustomData;
     };
-  
+
     Annotations.WidgetAnnotation.prototype.updateReadOnly = function (userType, currentUser, locked) {
       if (!this.getField) {
         return;
       }
-  
+
       const { type, timestamp, signerId, author, name, id } = this.getMetadata();
-  
-  
+
+
       // update readOnly flag based for this widget annotation on the currentUser
-      console.debug('updateReadOnly', currentUser, this.fieldFlags.get('ReadOnly'));
+      // console.debug('updateReadOnly', currentUser, this.fieldFlags.get('ReadOnly'));
       if (userType === 'consumer' && locked) {
         return this.fieldFlags.set('ReadOnly', true);
       }
-  
+
       if (userType === 'notary') {
         this.fieldFlags.set('ReadOnly', false);
       } else if (signerId === currentUser) {
@@ -69,7 +108,7 @@
       } else {
         this.fieldFlags.set('ReadOnly', true);
       }
-  
+
       return {
         id,
         type,
@@ -79,19 +118,13 @@
         name
       };
     };
-  
-    Tools.Tool.prototype.contextMenu = function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.console.debug('context menu', e);
-    };
-  
-  
+
+
     const { addSignature, saveSignatures, importSignatures, exportSignatures } = Tools.SignatureCreateTool.prototype;
     Tools.SignatureCreateTool.prototype.importSignatures = function (args) {
       return importSignatures.apply(this, arguments);
     };
-  
+
     Tools.SignatureCreateTool.prototype.addSignature = function (args) {
       return addSignature.apply(this, arguments);
     };
@@ -101,32 +134,32 @@
     Tools.SignatureCreateTool.prototype.exportSignatures = function (args) {
       return exportSignatures.apply(this, arguments);
     };
-  
-  
+
+
     Annotations.Annotation.prototype.serialize = function () {
       const el = serialize.apply(this, arguments);
-      console.debug('serializing annotation', this, el);
+      // console.debug('serializing annotation', this, el);
       if (this.myCustomAttribute) {
         el.setAttribute('attribute-name', this.myCustomAttribute);
       }
       return el;
     };
-  
+
     Annotations.Annotation.prototype.deserialize = function (el) {
-      console.debug('deserializing annotation', this, el);
+      // console.debug('deserializing annotation', this, el);
       deserialize.apply(this, arguments);
       this.myCustomAttribute = el.getAttribute('attribute-name');
       return el;
     };
-  
-  
+
+
     Annotations.SignatureWidgetAnnotation.prototype.createSignHereElement = function () {
       // signHereElement is the default one with dark blue background
       const signHereElement = createSignHereElement.apply(this, arguments);
-  
+
       const { type, timestamp, id, author, signerId, name } = this.getMetadata();
       this.Author = signerId;
-  
+
       // console.console.debug('this', { signerId, custom: this.custom, customdata: this.CustomData });
       this.setCustomData('id', id);
       this.setCustomData('type', type);
@@ -134,8 +167,8 @@
       this.setCustomData('name', name);
       this.setCustomData('author', annotManager.getCurrentUser());
       this.setCustomData('signerId', signerId);
-  
-  
+
+
       // dont show sign here dupes
       const signatures = _.filter(instance.annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.FreeHandAnnotation && annot.Subject === 'Signature');
       if (_.findIndex(signatures, (sig) => sig.CustomData.id === id) > -1) {
@@ -144,58 +177,58 @@
         signHereElement.innerText = '';
         return signHereElement;
       }
-  
+
       signHereElement.style.backgroundColor = 'red';
       signHereElement.innerText = `${_.capitalize(type)}: ${name}`;
       signHereElement.style.fontSize = '12px';
       return signHereElement;
     };
-  
+
     const { createInnerElement } = Annotations.SignatureWidgetAnnotation.prototype;
     Annotations.SignatureWidgetAnnotation.prototype.createInnerElement = function () {
       const el = createInnerElement.apply(this, arguments);
       console.debug('create inner element', el);
-  
+
       const signatureWidget = this;
-  
+
       el.addEventListener('click', (e) => {
         console.debug('create inner element clicked', { signatureWidget, target: e.target });
         e.preventDefault();
         e.stopPropagation();
-  
-  
+
+
         const isReadOnly = signatureWidget.fieldFlags.get('ReadOnly');
         if (isReadOnly) {
           return;
         }
-  
-  
+
+
         instance.setToolMode('AnnotationCreateSignature');
         const signatureTool = docViewer.getTool('AnnotationCreateSignature');
-  
+
         // trigger a click from the signature tool
         signatureTool.mouseLeftDown(e);
         signatureTool.mouseLeftUp(e);
-  
+
         signatureTool.one('annotationAdded', async (signatureAnnot) => {
           signatureWidget.Custom = 'filled';
           // $(el).off('click');
-  
+
           // positioning and scaling signature annotation to go inside widget
           const height = signatureWidget.Height;
           const width = signatureWidget.Width;
           const x = signatureWidget.getRect().x1;
           const y = signatureWidget.getRect().y1;
-  
+
           let hScale = 1;
           let wScale = 1;
           hScale = height / signatureAnnot.Height;
           wScale = width / signatureAnnot.Width;
           const scale = Math.min(hScale, wScale);
-  
+
           signatureAnnot.Width = width;
           signatureAnnot.Height = height;
-  
+
           let h;
           let i;
           if (signatureAnnot.getPaths) {
@@ -206,21 +239,21 @@
               }
             }
           }
-  
+
           signatureAnnot.X = x;
           signatureAnnot.Y = y;
-  
+
           const annotManager = docViewer.getAnnotationManager();
-  
+
           // delete any signatures that were added previously
           annotManager.getAnnotationsList().forEach((annot) => {
             if (annot !== signatureAnnot && annot instanceof Annotations.FreeHandAnnotation && annot.X === signatureAnnot.X && annot.Y === signatureAnnot.Y) {
               annotManager.deleteAnnotation(annot);
             }
           });
-  
+
           annotManager.drawAnnotations(signatureAnnot.PageNumber);
-  
+
           const [type, timestamp, id, author, signerId, name] = signatureWidget.getField().name.split('.');
           signatureAnnot.CustomData = signatureWidget.getMetadata();
           await Promise.all([
@@ -231,12 +264,12 @@
             signatureAnnot.setCustomData('signerId', signerId),
             signatureAnnot.setCustomData('name', name)
           ]);
-  
-  
+
+
           instance.setToolMode('AnnotationEdit');
         });
       });
-  
+
       return el;
     };
 
@@ -248,7 +281,7 @@
   * Creates tool for creating temporary boxes for widget annotations
   * for form fields, signature fields, and checkbox fields
   */
-  const initCreator = (name, instance, getSigner = () => {}) => {
+  const initCreator = (name, instance, getSigner = () => { }) => {
     const { Annotations, Tools, docViewer } = instance;
     const annotManager = instance.docViewer.getAnnotationManager();
 
@@ -314,7 +347,7 @@
       // get currently selected signer.
       const signer = getSigner();
 
-      
+
       textAnnot.custom = {
         type,
         value,
@@ -423,14 +456,14 @@
         div.appendChild(label);
         return div;
       }
-    }, 
-    // {
-    //     type: 'customElement',
-    //     render: () => opts.getSelSignerHeader(),
-    //     dataElement: 'selectSigner',
-    //     element: 'selectSigner'
-    // }
-  ];
+    },
+      // {
+      //     type: 'customElement',
+      //     render: () => opts.getSelSignerHeader(),
+      //     dataElement: 'selectSigner',
+      //     element: 'selectSigner'
+      // }
+    ];
 
     const certButton = {
       type: 'statefulButton',
@@ -695,7 +728,7 @@
     const { docViewer } = readerControl;
     const { Annotations, Tools, PDFNet } = exports;
     const annotManager = docViewer.getAnnotationManager();
-    
+
     console.log('custom file loaded', { PDFNet, Tools, annotManager, readerControl, Annotations, version: exports })
 
 
