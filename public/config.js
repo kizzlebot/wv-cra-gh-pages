@@ -22,34 +22,54 @@
         FontSize: '20pt'
       });
 
-    rubberStampTool.__proto__.getDefaultStampAnnotations = function () {
-      const imgs = [
-        '/imgs/date.png',
-        '/imgs/signature.png',
-        '/imgs/initials.png',
-      ];
+    // rubberStampTool.__proto__.getDefaultStampAnnotations = async function () {
+    //   const imgs = [
+    //     '/imgs/signature.png',
+    //     '/imgs/initials.png',
+    //   ];
 
-      let sigFhs = []
-
-      for (let img of imgs) {
-
-        const sigFh = new instance.Annotations.StampAnnotation();
-        sigFh.ImageData = img;
-        sigFh.Subject = 'Signature';
-        sigFh.Width = 200;
-        sigFh.Height = 79.18999999999994;
-        sigFh.MaintainAspectRatio = true;
-        sigFh.setCustomData('type', 'signature');
-
-        sigFhs = [...sigFhs, sigFh];
-
-      }
+    //   let sigFhs = []
 
 
-      return sigFhs;
-    }
+    //   for (let img of imgs) {
+
+    //     const sigFh = new instance.Annotations.StampAnnotation();
+
+    //     // const iimg = await new Promise((res) => {
+    //     //   const iimg = new Image();
+    //     //   iimg.src = img;
+    //     //   iimg.onload = () => res(iimg);
+    //     // })
+    //     sigFh.ImageData = img;
+    //     sigFh.Subject = 'Signature';
+    //     sigFh.MaintainAspectRatio = true;
+    //     sigFh.Width = 200;
+    //     sigFh.Height = 79.18999999999994;
+    //     sigFh.setCustomData('type', 'signature');
+    //     sigFhs = [...sigFhs, sigFh];
+    //   }
 
 
+    //   return [];
+    // }
+
+    const sigTool = docViewer.getTool('AnnotationCreateSignature');
+
+    // const getPreview = rubberStampTool.__proto__.getPreview
+    // rubberStampTool.__proto__.getPreview = async function (annot, options) {
+    //   console.log('sigTool.getPreview(annot)');
+    //   console.log('sigTool.getPreview(annot)', await sigTool.getPreview(annot))
+    //   return getPreview(annot, options)
+    // }
+
+
+
+
+
+
+
+
+    //#region - from enl-fe, ignore
 
     Annotations.WidgetAnnotation.prototype.getMetadata = function getMetadata() {
       if (!this.getField) {
@@ -714,6 +734,8 @@
 
       header.get('selectToolButton').insertAfter(deleteBtn);
     });
+    //#endregion
+
     return instance;
   };
 
