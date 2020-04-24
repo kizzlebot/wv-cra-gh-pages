@@ -22,36 +22,36 @@
         FontSize: '20pt'
       });
 
-    rubberStampTool.__proto__.getDefaultStampAnnotations = async function () {
-      const imgs = [
-        '/imgs/signature.png',
-        '/imgs/initials.png',
-      ];
+    // rubberStampTool.__proto__.getDefaultStampAnnotations = async function () {
+    //   const imgs = [
+    //     '/imgs/signature.png',
+    //     '/imgs/initials.png',
+    //   ];
 
-      let sigFhs = []
-
-
-      for (let img of imgs) {
-
-        const sigFh = new instance.Annotations.StampAnnotation();
-
-        // const iimg = await new Promise((res) => {
-        //   const iimg = new Image();
-        //   iimg.src = img;
-        //   iimg.onload = () => res(iimg);
-        // })
-        sigFh.ImageData = img;
-        sigFh.Subject = 'Signature';
-        sigFh.MaintainAspectRatio = true;
-        sigFh.Width = 200;
-        sigFh.Height = 79.18999999999994;
-        sigFh.setCustomData('type', 'signature');
-        sigFhs = [...sigFhs, sigFh];
-      }
+    //   let sigFhs = []
 
 
-      return [];
-    }
+    //   for (let img of imgs) {
+
+    //     const sigFh = new instance.Annotations.StampAnnotation();
+
+    //     // const iimg = await new Promise((res) => {
+    //     //   const iimg = new Image();
+    //     //   iimg.src = img;
+    //     //   iimg.onload = () => res(iimg);
+    //     // })
+    //     sigFh.ImageData = img;
+    //     sigFh.Subject = 'Signature';
+    //     sigFh.MaintainAspectRatio = true;
+    //     sigFh.Width = 200;
+    //     sigFh.Height = 79.18999999999994;
+    //     sigFh.setCustomData('type', 'signature');
+    //     sigFhs = [...sigFhs, sigFh];
+    //   }
+
+
+    //   return [];
+    // }
 
     const sigTool = docViewer.getTool('AnnotationCreateSignature');
 
