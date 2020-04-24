@@ -3,7 +3,6 @@ import _ from 'lodash';
 import Popover from 'react-bootstrap/Popover';
 import Overlay from 'react-bootstrap/Overlay';
 import Button from 'react-bootstrap/Button';
-import PlaceholderStampOverlay from './placeholderStampOverlay';
 
 const initialState = {
   instance: null,
