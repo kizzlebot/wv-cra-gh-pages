@@ -31,7 +31,7 @@
     "showMoreResults": "Mehr Ergebnisse anzeigen",
     "sign": "Unterschrift",
     "style": "Stil",
-    "submit": "Abgeben",
+    "submit": "OK",
     "zoom": "Zoom",
     "zoomIn": "Heranzoomen",
     "zoomOut": "Rauszoomen",
@@ -80,7 +80,7 @@
     "Confidential": "Geheim",
     "Departmental": "Abteilung",
     "Draft": "Entwurf",
-    "Experimental": "Experimental",
+    "Experimental": "Experimentell",
     "Expired": "Abgelaufen",
     "Final": "Finale",
     "ForComment": "Für Kommentar",
@@ -125,14 +125,14 @@
     "encryptedAttemptsExceeded": "Fehler beim Laden des verschlüsselten Dokuments. Zu viele Versuche.",
     "encryptedUserCancelled": "Fehler beim Laden des verschlüsselten Dokuments. Passworteingabe wurde abgebrochen.",
     "enterPassword": "Dieses Dokument ist durch ein Passwort geschützt. Bitte geben Sie ein Passwort ein",
-    "incorrectPassword": "Falsches Passwort, Verbleibende Versuche: {{ remainingAttempts }}",
+    "incorrectPassword": "Falsches Passwort, verbleibende Versuche: {{ remainingAttempts }}",
     "noAnnotations": "Dieses Dokument hat keine Annotationen.",
     "noOutlines": "Dieses Dokument enthält keine Gliederung.",
     "noResults": "Keine Ergebnisse gefunden.",
     "notSupported": "Dieser Dateityp ist nicht unterstützt.",
     "passwordRequired": "Passwort erforderlich",
     "preparingToPrint": "Druckvorbereitung...",
-    "annotationReplyCount": "{{count}} Antworten",
+    "annotationReplyCount": "{{count}} Antwort",
     "annotationReplyCount_plural": "{{count}} Antworten",
     "printTotalPageCount": "{{count}} Seite",
     "printTotalPageCount_plural": "{{count}} Seiten",
@@ -186,7 +186,7 @@
       "markForRedaction": "Zum Schwärzen markieren"
     },
     "searchPanel": {
-      "caseSensitive": "Groß-/Klein- schreibung beachten",
+      "caseSensitive": "Groß-/Kleinschreibung beachten",
       "wholeWordOnly": "Ganzes Wort",
       "wildcard": "Platzhalter"
     },
@@ -251,6 +251,12 @@
       "delete": "Löschen",
       "rotateClockwise": "Im Uhrzeigersinn",
       "rotateCounterClockwise": "Gegen den Uhrzeigersinn"
+    },
+    "richText": {
+      "bold": "Mutig",
+      "italic": "Kursiv",
+      "underline": "Unterstreichen",
+      "strikeout": "Durchgestrichen"
     }
   },
   "warning": {
@@ -261,7 +267,7 @@
     },
     "redaction": {
       "applyTile": "Schwärzung anwenden",
-      "applyMessage": "Durch diese Aktion werden alle zur Bearbeitung ausgewählten Elemente dauerhaft entfernt. Es kann nicht ungeschehen gemacht werden."
+      "applyMessage": "Durch diese Aktion werden alle zur Bearbeitung ausgewählten Elemente dauerhaft entfernt. Es kann nicht rückgängig gemacht werden."
     }
   },
   "shortcut": {
@@ -287,7 +293,13 @@
     "strikeout": "(K)",
     "underline": "(U)",
     "zoomIn": "(Ctrl +)",
-    "zoomOut": "(Ctrl -)"
+    "zoomOut": "(Ctrl -)",
+    "richText": {
+      "bold": "(Strg B)",
+      "italic": "(Strg I)",
+      "underline": "(Strg L)",
+      "strikeout": "(Strg K)"
+    }
   },
   "tool": {
     "pan": "Hand",
@@ -300,5 +312,41 @@
     "page": "Seite",
     "enterurl": "Geben Sie die URL ein, zu der Sie einen Link erstellen möchten",
     "enterpage": "Wählen Sie die Seitennummer aus, zu der Sie einen Link erstellen möchten"
+  },
+  "datePicker": {
+    "previousMonth": "Vorheriger Monat",
+    "nextMonth": "Nächsten Monat",
+    "months": {
+      "0": "Januar",
+      "1": "Februar",
+      "2": "März",
+      "3": "April",
+      "4": "Mai",
+      "5": "Juni",
+      "6": "Juli",
+      "7": "August",
+      "8": "September",
+      "9": "Oktober",
+      "10": "November",
+      "11": "Dezember"
+    },
+    "weekdays": {
+      "0": "Sonntag",
+      "1": "Montag",
+      "2": "Dienstag",
+      "3": "Mittwoch",
+      "4": "Donnerstag",
+      "5": "Freitag",
+      "6": "Samstag"
+    },
+    "weekdaysShort": {
+      "0": "So.",
+      "1": "Mo.",
+      "2": "Di.",
+      "3": "Mi.",
+      "4": "Do.",
+      "5": "Fr.",
+      "6": "Sa."
+    }
   }
 }

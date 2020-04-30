@@ -34,45 +34,17 @@ class Webviewer extends Component {
 
     this.instance = instance;
     const { docViewer, } = instance;
-    window.instance = instance;
+    window.instance = this.instance = instance;
+
+
 
     console.log('finished init')
+    instance.docViewer.one('ready', async () => {
 
-    // ref: https://www.pdftron.com/documentation/web/guides/customizing-popup/
-    // instance.annotationPopup.add({
-    //   type: 'customElement',
-    //   title: 'Select Signer',
-    //   render: (...args) => {
-    //     const annot = _.head(instance.annotManager.getSelectedAnnotations());
-
-    //     // TODO: set annot.Author and annot.CustomData.type
-
-    //     if (annot instanceof instance.Annotations.StampAnnotation) {
-    //       return (
-    //         <div>
-    //           <label htmlFor="signer">Signer: </label>
-    //           <select
-    //             onChange={() => {
-    //               console.log('annot', annot);
-    //             }}
-    //           >
-    //             <option value="1">1</option>
-    //             <option value="1">2</option>
-    //           </select>
-    //         </div>
-    //       )
-    //     }
-    //     return null;
-
-    //   }
-    // });
-
-    await this.setState(({ instance }) => {
-      if (this.props.onReady) {
-        return this.props.onReady(instance);
-      }
+      console.log('is ready')
+      this.setState(({ instance }));
+      this.props.onReady(instance);
     });
-
   }
 
   componentDidUpdate = async (prevProps, prevState) => {
