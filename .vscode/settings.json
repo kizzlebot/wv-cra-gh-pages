@@ -4,9 +4,8 @@
     ".git": true,
     ".gitignore": true,
     "yarn.lock": true,
-    "README.md": true,
-    "public/index.html": true,
-    "public/robots.txt": true,
-    "public/manifest.json": true
+    "src/setupTests.js": true,
+    "src/style.css": true,
+    "src/App.test.js": true
   }
 }

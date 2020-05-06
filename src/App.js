@@ -10,13 +10,23 @@ function App() {
 
 
   return (
-    <div className="App h-100" style={{ height: '100% !important' }}>
+    <div className="App h-101" style={{ height: '100% !important' }}>
 
       <Webviewer
         // selectedDoc={`https://storage.googleapis.com/enl-static-files/local/linearized.pdf`}
         onReady={(viewer) => {
           console.log('viewer', viewer);
         }}
+        selectedSigner={'1'}
+        selectedDoc={'linearized.pdf'}
+        docs={{
+          'linearized.pdf': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
+          'ack.pdf': 'https://storage.googleapis.com/enl-static-files/local/ack.pdf',
+        }}
+        signers={[
+          { firstName: "james", lastName: "Choi", id: '1' },
+          { firstName: "joe", lastName: "done", id: '2' }
+        ]}
       />
 
     </div>
