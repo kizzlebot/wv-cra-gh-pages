@@ -28,7 +28,6 @@ function App() {
           { firstName: "joe", lastName: "done", id: '2' }
         ]}
       />
-
     </div>
   );
 }

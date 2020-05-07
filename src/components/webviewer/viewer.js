@@ -24,7 +24,7 @@ class Webviewer extends Component {
     const instance = await initWv({
       ...this.props.config,
       path: '/lib',
-      pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
+      // pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
 
@@ -32,6 +32,39 @@ class Webviewer extends Component {
     this.instance = instance;
     window.instance = instance;
 
+
+    instance.annotationPopup.add({
+      type: 'customElement',
+      title: 'Select Signer',
+      render: (...args) => {
+        const annot = _.head(instance.annotManager.getSelectedAnnotations());
+
+        // TODO: set annot.Author and annot.CustomData.type
+        if (annot instanceof instance.iframeWindow.SigTemplateAnnot) {
+          return (
+            <div>
+              <label htmlFor="signer">Signer: </label>
+              <select
+                onChange={(ev) => {
+                  console.log('annot', annot);
+                  // annot.setContents()
+                }}
+              >
+                {
+                  _.map(this.props.signers, (signer) => {
+                    return (
+                      <option key={signer.id} value={signer.id}>{signer.firstName}</option>
+                    )
+                  })
+                }
+              </select>
+            </div>
+          )
+        }
+        return null;
+
+      }
+    })
 
 
     instance.docViewer.one('ready', async () => {
@@ -67,7 +100,10 @@ class Webviewer extends Component {
       instance.annotManager.trigger('setSigners', this.props.signers)
       instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
 
-      instance.docViewer.on('documentLoaded', async () => this.loadAnnotations());
+      instance.docViewer.on('annotationsLoaded', async () => {
+        console.log('%cannotationsLoaded', 'font-size:20px; color:ref;')
+        return this.loadAnnotations()
+      });
 
 
       if (_.isFunction(this.props.onReady)) {
@@ -83,7 +119,7 @@ class Webviewer extends Component {
   componentDidUpdate = async (prevProps, prevState) => {
 
     if (prevProps.selectedSigner !== this.props.selectedSigner) {
-      this.instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
+      await this.instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
     }
 
     if (prevProps.selectedDoc !== this.props.selectedDoc) {
@@ -102,22 +138,17 @@ class Webviewer extends Component {
   loadAnnotations = async () => {
     const annotations = _.chain(this.props.annotations)
       .toPairs()
-      .filter(([key, val]) => val.type === 'annotation')
       .filter(([key, val]) => val.docId === this.props.selectedDoc)
       .value();
 
-    const widgets = _.chain(this.props.annotations)
-      .toPairs()
-      .filter(([key, val]) => val.type === 'widget')
-      .filter(([key, val]) => val.docId === this.props.selectedDoc)
-      .value();
 
     await Promise.map(annotations, ([key, value]) => {
-      return this.instance.annotManager.importAnnotations(unescape(value.xfdf))
-    })
-    await Promise.map(widgets, ([key, value]) => {
-      return this.instance.annotManager.importAnnotations(unescape(value.xfdf))
+      return this.instance.annotManager.trigger('addAnnotation', {
+        ...value,
+        xfdf: unescape(value.xfdf)
+      })
     });
+
   }
 
   render() {

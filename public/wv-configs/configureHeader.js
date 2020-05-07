@@ -16,9 +16,9 @@ module.exports = async (instance, opts) => {
             super(...args);
 
             this.Subject = className;
-            if (this.setCustomData) {
-              this.setCustomData('type', className);
-            }
+            this.setCustomData('type', className);
+            this.CustomData = this.CustomData || {};
+            this.CustomData.type = className;
           }
         }
       })[className];
