@@ -7,6 +7,92 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
 
   const { Promise, R, _ } = exports.getExternalLibs()
 
+  // #region get/set signers
+  let signer = null;
+  let signers = [];
+  const signerSigInits = {};
+  let locked = false;
+  const { Annotations, Tools, PDFNet } = exports;
+
+  const colors = [
+    new Annotations.Color(153, 215, 114, 0.5),
+    new Annotations.Color(255, 10, 102, 0.5),
+    new Annotations.Color(38, 79, 120, 0.5),
+    new Annotations.Color(239, 106, 70, 0.5),
+    new Annotations.Color(227, 73, 67, 0.5),
+    new Annotations.Color(255, 87, 126, 0.5),
+    new Annotations.Color(91, 215, 227, 0.5),
+    new Annotations.Color(91, 215, 227, 0.5),
+    new Annotations.Color(160, 146, 236, 0.5),
+  ];
+
+
+  exports.setSigners = (s) => {
+    // console.log('setSigners called', s);
+    signers = _.map(s, (signer, i) => {
+      return {
+        ...signer,
+        color: colors[i % colors.length],
+      };
+    });
+
+    return signers;
+  };
+
+  exports.setSigner = (s) => {
+    signer = s;
+
+    return signer;
+  };
+
+  exports.getSigner = (s) => signer;
+
+  exports.addSigner = (s) => {
+    signers = _.uniqBy([...signers, s], 'id');
+
+    return signers;
+  };
+
+
+  exports.getSigInits = () => signerSigInits;
+
+  exports.updateSignerSigInits = (id, val) => {
+    signerSigInits[id] = val;
+
+    return signerSigInits;
+  };
+
+  exports.saveSignature = ({ id, type, raw }) => {
+    signerSigInits[id] = signerSigInits[id] || {};
+    signerSigInits[id][type] = { id, type, raw };
+
+    return signerSigInits;
+  };
+
+
+  exports.getSigners = () => signers;
+  exports.setLock = (s) => locked = s;
+  exports.getLock = (s) => locked;
+  exports.setSignerSigInits = (id, type, raw) => ({
+    ...signerSigInits,
+    [id]: {
+      ...signerSigInits[id],
+      [type]: raw || signerSigInits[id]?.[type],
+    },
+  });
+  exports.getSigInits = () => signerSigInits;
+  exports.delSignerSigInits = (id, sigType) => ({
+    ...signerSigInits,
+    [id]: {
+      ...(signerSigInits[id] || {}),
+      [sigType]: null,
+    },
+  });
+  //#endregion
+
+
+
+
 
   const parseName = (user) => {
     const fName = _.get(user, 'firstName', _.get(user, 'user.firstName'));
@@ -260,6 +346,107 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
 
 
 
+  async function createStampTool(instance, options) {
+    const { Annotations, Tools, docViewer } = instance;
+
+    class NotaryCertAnnotation extends Annotations.StampAnnotation {
+      constructor(...args) {
+        super(...args);
+        console.debug('args', args);
+      }
+
+      draw(ctx, pageMatrix) {
+        super.draw(ctx, pageMatrix);
+      }
+    }
+
+    class StampCreateTool extends Tools.GenericAnnotationCreateTool {
+      constructor(docViewer) {
+        super(docViewer, NotaryCertAnnotation);
+        delete this.defaults.StrokeColor;
+        delete this.defaults.FillColor;
+        delete this.defaults.StrokeThickness;
+      }
+
+      mouseLeftDown(e) {
+        const am = instance.docViewer.getAnnotationManager();
+        const annot = am.getAnnotationByMouseEvent(e);
+        if (annot) {
+          return;
+        }
+        Tools.AnnotationSelectTool.prototype.mouseLeftDown.apply(this, [e]);
+      }
+
+      mouseMove(...args) {
+        Tools.AnnotationSelectTool.prototype.mouseMove.apply(this, args);
+      }
+
+      mouseLeftUp(e) {
+        let annotation;
+
+        Tools.GenericAnnotationCreateTool.prototype.mouseLeftDown.call(this, e);
+
+        if (this.annotation) {
+          const { img, dataUrl } = options.getImage();
+          if (!img) {
+            return;
+          }
+          this.aspectRatio = img.width / img.height;
+          let width = 300;
+
+          let height = width / this.aspectRatio;
+
+          const rotation = this.docViewer.getCompleteRotation(this.annotation.PageNumber) * 90;
+          this.annotation.Rotation = rotation;
+
+          if (rotation === 270 || rotation === 90) {
+            const t = height;
+            height = width;
+            width = t;
+          }
+
+          this.annotation.ImageData = dataUrl;
+          this.annotation.Width = width;
+          this.annotation.Height = height;
+          this.annotation.X -= width / 2;
+          this.annotation.Y -= height / 2;
+
+          annotation = this.annotation;
+        }
+
+        Tools.GenericAnnotationCreateTool.prototype.mouseLeftUp.call(this, e);
+
+        if (annotation) {
+          const annotManager = instance.docViewer.getAnnotationManager();
+          annotManager.deselectAllAnnotations();
+          annotManager.redrawAnnotation(annotation);
+          annotManager.selectAnnotation(annotation);
+          instance.setToolMode('AnnotationEdit');
+        }
+      }
+    }
+
+
+    const customStampTool = new StampCreateTool(docViewer);
+
+
+    // register the tool
+    await instance.registerTool({
+      toolName: options.toolName || 'NotaryCertTool',
+      image: options.image || '/static/img/notary_seal.png',
+      buttonImage: options.buttonImage || '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="stamp" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-stamp fa-w-16 fa-5x"><path fill="currentColor" d="M32 512h448v-64H32v64zm384-256h-66.56c-16.26 0-29.44-13.18-29.44-29.44v-9.46c0-27.37 8.88-53.41 21.46-77.72 9.11-17.61 12.9-38.39 9.05-60.42-6.77-38.78-38.47-70.7-77.26-77.45C212.62-9.04 160 37.33 160 96c0 14.16 3.12 27.54 8.69 39.58C182.02 164.43 192 194.7 192 226.49v.07c0 16.26-13.18 29.44-29.44 29.44H96c-53.02 0-96 42.98-96 96v32c0 17.67 14.33 32 32 32h448c17.67 0 32-14.33 32-32v-32c0-53.02-42.98-96-96-96z" class=""></path></svg>',
+      tooltip: options.tooltip || 'Notary Cert',
+      toolObject: customStampTool,
+      group: 'notaryCerts',
+    }, NotaryCertAnnotation);
+
+
+    return customStampTool;
+  }
+
+
+
+
 
 
 
@@ -267,50 +454,25 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
 
 
   const configureCustomTool = (instance, {
-    type, 
+    type,
     name,
     label,
-    icon
+    icon,
+    register = true
   }) => {
     const { Annotations, Tools, docViewer } = instance;
 
-    // create a placeholder which will then be converted to template field 
+    // create a placeholder which will then be converted to template field
     const initCreator = () => {
       const annotManager = instance.docViewer.getAnnotationManager();
 
-      const createAnnotClass = (className, ClassDef) => {
-        const C = ({
-          [className]: class extends ClassDef {
-            constructor(...args) {
-              super(...args);
-
-              this.Subject = className;
-              this.MaintainAspectRatio = true;
-              const currSigner = exports.getSigner();
-              const signers = exports.getSigners();
-
-              console.log('signers', signers);
-              const signer = _.find(signers, { id: currSigner });
-
-              this.FillColor = signer.color;
-
-              if (this.setCustomData) {
-                this.setCustomData('type', className);
-              }
-            }
-          }
-        })[className];
-
-        Object.defineProperty(C, 'name', { value: className });
-        return C;
-      };
 
       // convert rectangle into free text annotation
       const createFreeText = async (rectAnnot, custom) => {
         const {
           type = _.toUpper(name),
           value = '',
-          flag = false
+          flag = false,
         } = (custom || {});
 
         console.debug('this type type', type);
@@ -321,6 +483,7 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
         const textAnnot = new TemplateFreeText();
 
         const rotation = docViewer.getCompleteRotation(pageIndex + 1) * 90;
+
         textAnnot.Rotation = rotation;
         textAnnot.X = rectAnnot.X;
         textAnnot.Y = rectAnnot.Y;
@@ -331,6 +494,7 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
         // get currently selected signer.
         const signers = exports.getSigners();
         const signer = _.find(signers, { id: exports.getSigner() });
+
         if (!signer) {
           return;
         }
@@ -343,6 +507,7 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
           fieldType: type,
           signerId: signer.id,
           id: rectAnnot.Id,
+          color: [signer.color.R, signer.color.G, signer.color.B, signer.color.A],
           author: annotManager.getCurrentUser(),
           name: parseName(signer),
         };
@@ -361,8 +526,9 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
 
         // TODO: Set the author here
         // textAnnot.Author = annotManager.getCurrentUser();
-        await annotManager.deleteAnnotation(rectAnnot, true);
-        await annotManager.addAnnotation(textAnnot, true);
+        console.log('rectAnnot', rectAnnot)
+        await annotManager.deleteAnnotation(rectAnnot, false, true);
+        await annotManager.addAnnotation(textAnnot, false, true);
         await annotManager.deselectAllAnnotations();
         await annotManager.redrawAnnotation(textAnnot);
         await annotManager.selectAnnotation(textAnnot);
@@ -371,17 +537,18 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
 
 
       const createToolClass = (className) => {
-
         class TemplateRectangle extends Annotations.RectangleAnnotation {
           constructor(...args) {
             super(...args);
 
-            this.Subject = className;
+            this.Subject = `${className}Rectangle`;
             this.MaintainAspectRatio = true;
 
 
             if (this.setCustomData) {
               this.setCustomData('type', className);
+              this.setCustomData('label', label);
+              this.setCustomData('color', [this.FillColor.R, this.FillColor.G, this.FillColor.B, this.FillColor.A]);
             }
           }
         }
@@ -393,24 +560,27 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
             super(docViewer, TemplateRectangle);
             this.on('annotationAdded', async (annot) => {
               await createFreeText(annot);
+
               return instance.setActiveHeaderGroup('default');
             });
           }
 
-          switchIn(...args){
+          switchIn(...args) {
             super.switchIn(...args);
 
             const currSigner = exports.getSigner();
             const signers = exports.getSigners();
             const signer = _.find(signers, { id: currSigner });
+
             this.defaults.FillColor = signer.color;
           }
-        };
+        }
 
         Object.defineProperty(TemplateAnnotationTool, 'name', { value: className });
 
         // TemplateAnnotationTool.prototype.mouseLeftDown = Tools.RectangleCreateTool.prototype.mouseLeftDown;
         TemplateAnnotationTool.prototype.mouseLeftUp = Tools.RectangleCreateTool.prototype.mouseLeftUp;
+
         return TemplateAnnotationTool;
       };
 
@@ -423,29 +593,97 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
 
           this.Subject = 'Template';
           this.MaintainAspectRatio = true;
-          
+          this.LockedContents = true;
+
           const currSigner = exports.getSigner();
           const signers = exports.getSigners();
           const signer = _.find(signers, { id: currSigner });
 
-          this.FillColor = signer.color;
+          this.FillColor = signer?.color;
+          this.Author = signer?.id;
 
           if (this.setCustomData) {
             this.setCustomData('type', 'Template');
+            label && this.setCustomData('label', label);
+            if (signer){
+              this.setCustomData('color', [signer.color.R, signer.color.G, signer.color.B, signer.color.A]);
+            }
           }
 
 
-          this.on('setSigner', (id) => this.setSigner(id))
+          this.on('setSigner', (id) => this.setSigner(id));
         }
 
-        setSigner(id){
+        setSigner(id) {
           const signers = exports.getSigners();
-          const signer = _.find(signers, { id: id });
+          const signer = _.find(signers, { id: id.toString() });
+
+          const fullName = parseName(signer);
 
           this.FillColor = signer.color;
-          annotManager.redrawAnnotation(annotation);
+          this.setContents(`${label}: ${fullName}`);
+          this.Author = signer.id;
+          const customdata = {
+            ...this.CustomData,
+            label,
+            signerId: id,
+            color: [signer.color.R, signer.color.G, signer.color.B, signer.color.A],
+            name: fullName,
+          };
+
+          this.setCustomData(customdata);
+          this.CustomData = customdata;
+
+          annotManager.redrawAnnotation(this);
         }
       }
+
+      TemplateFreeText.convert = (rectAnnots) => {
+        return _.reduce(rectAnnots, (acc, rectAnnot) => {
+          if (!_.get(rectAnnot, 'CustomData.type', '').includes('TEMPLATE') || rectAnnot instanceof TemplateFreeText || rectAnnot.constructor.name === 'TemplateFreeText') {
+            return acc;
+          }
+
+
+          console.log('rectAnnot.Author', rectAnnot.Author);
+          const tAnnot = new TemplateFreeText();
+
+          tAnnot.Id = rectAnnot.Id;
+          const zoom = docViewer.getZoom();
+
+          tAnnot.Rotation = rectAnnot.Rotation;
+          const pageIndex = (rectAnnot.PageNumber) ? rectAnnot.PageNumber - 1 : docViewer.getCurrentPage() - 1;
+
+          tAnnot.Author = rectAnnot.CustomData.signerId;
+          tAnnot.X = rectAnnot.X;
+          tAnnot.Y = rectAnnot.Y;
+          tAnnot.Width = rectAnnot.Width;
+          tAnnot.Height = rectAnnot.Height;
+          tAnnot.setPadding(new Annotations.Rect(0, 0, 0, 0));
+          tAnnot.CustomData = { ...rectAnnot.CustomData };
+          tAnnot.custom = { ...rectAnnot.CustomData };
+
+          const lbl = rectAnnot.CustomData.type === 'SIGNATURETEMPLATE' ? 'Signature' : (rectAnnot.CustomData.type === 'INITIALSTEMPLATE' ? 'Initials' : 'Address');
+
+          tAnnot.setContents(`${lbl}: ${tAnnot.custom.name}`);
+          // tAnnot.FontSize = `${15.0 / zoom}px`;
+          tAnnot.FillColor = new Annotations.Color(...rectAnnot.CustomData.color);
+          tAnnot.TextColor = new Annotations.Color(0, 0, 0);
+          tAnnot.StrokeThickness = 1;
+          tAnnot.StrokeColor = new Annotations.Color(0, 165, 228);
+          tAnnot.TextAlign = 'center';
+          tAnnot.PageNumber = rectAnnot.PageNumber || (pageIndex + 1);
+
+          return {
+            ...acc,
+            toAdd: [...acc.toAdd, tAnnot],
+            toDelete: [...acc.toDelete, rectAnnot],
+          };
+        }, {
+          toAdd: [],
+          toDelete: [],
+        });
+      };
 
 
       // const CustomFreeTextAnnot = createAnnotClass(`${name}FreeTextAnnot`, Annotations.FreeTextAnnotation);
@@ -456,19 +694,19 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
 
 
       const customSignatureTool = new CreateTool(docViewer);
-      // customSignatureTool.on('annotationAdded', (annot) => createFreeText(annot));
 
       return {
         tool: customSignatureTool,
-        textAnnot: TemplateFreeText
+        annot: TemplateFreeText,
+        textAnnot: TemplateFreeText,
       };
-    }
+    };
 
     const createSignatureTool = async () => {
       const {
         tool,
         annot,
-        textAnnot
+        textAnnot,
       } = initCreator();
 
       const dataElement = `${_.lowerFirst(type)}FieldTool`;
@@ -491,17 +729,32 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
           toolName,
           dataElement,
           hidden: ['tablet', 'mobile'],
-        }
-      }
-    }
+        },
+      };
+    };
 
 
     return createSignatureTool();
+  };
+
+
+
+
+  const betterStampTool = (instance) => {
+    const mouseLeftDown = instance.Tools.StampCreateTool.prototype.mouseLeftDown;
+
+    instance.Tools.StampCreateTool.prototype.mouseLeftDown = function (evt) {
+      console.log('target', evt.target, evt);
+      const rtn = mouseLeftDown.apply(this, arguments);
+
+      console.log('rtn', rtn);
+    }
+
+    // class BetterStampTool extends instance.Tools.StampCreateTool {
+
+    // }
+
   }
-
-
-
-
 
 
 
@@ -540,7 +793,17 @@ const addressTemplateIcon = `<svg aria-hidden="true" focusable="false" data-pref
 
 
     // const selectedSignerTextEl = opts.getSelectedSignerHeader();
+    await createStampTool(instance, {
+      customType: 'NotaryStamp',
+      toolName: 'NotaryStampTool',
+      image: '/static/img/notary_stamp.png',
+      buttonImage: '/static/img/notary_stamp.png',
+      tooltip: 'Notary Stamp',
+    })
 
+
+
+    await betterStampTool(instance);
 
 
     const notaryBtns = [

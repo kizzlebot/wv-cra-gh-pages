@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>icon/small/mainCustomer</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/small/mainCustomer" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_star">
+            <polygon id="Bounds" points="0 0 24 0 24 24 0 24"></polygon>
+            <path d="M12,17.27 L17.3206975,20.4813595 C17.7952772,20.7677967 18.0774107,20.560242 17.951965,20.0225086 L16.54,13.97 L21.2408104,9.89768623 C21.6600992,9.53445616 21.5502333,9.20184177 21.0002613,9.15518211 L14.81,8.63 L12.3907185,2.92187309 C12.1749306,2.41273664 11.8242219,2.41473619 11.6092815,2.92187309 L9.19,8.63 L2.99973869,9.15518211 C2.44759826,9.20202574 2.34154745,9.53588268 2.75918961,9.89768623 L7.46,13.97 L6.04803497,20.0225086 C5.92209474,20.5623622 6.20658668,20.7666718 6.67930252,20.4813595 L12,17.27 Z" id="Icon" fill="#FFBE3D"></path>
+        </g>
+    </g>
+</svg>

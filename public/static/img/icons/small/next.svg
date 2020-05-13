@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>icon/small/next</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0 20 0 20 14 0 14"></polygon>
+    </defs>
+    <g id="icon/small/next" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-3" transform="translate(2.000000, 5.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="Clip-2"></g>
+            <path d="M13.4677675,0.210547709 C13.1953001,-0.0701825695 12.7411877,-0.0701825695 12.4598285,0.210547709 C12.1873611,0.481793856 12.1873611,0.933238492 12.4598285,1.20385236 L17.5706574,6.29177252 L0.705620832,6.29177252 C0.312480152,6.29240479 0,6.60348429 0,6.99486276 C0,7.38624124 0.312480152,7.70743714 0.705620832,7.70743714 L17.5706574,7.70743714 L12.4598285,12.7865054 C12.1873611,13.0666034 12.1873611,13.5186804 12.4598285,13.7899265 C12.7411877,14.0700245 13.1959352,14.0700245 13.4677675,13.7899265 L19.7885043,7.49688943 C20.0704986,7.22564328 20.0704986,6.77419865 19.7885043,6.50358478 L13.4677675,0.210547709 Z" id="Fill-1" fill="#FFFFFF" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>

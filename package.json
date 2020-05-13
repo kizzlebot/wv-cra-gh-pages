@@ -9,14 +9,17 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "bluebird": "^3.7.2",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^4.5.0",
+    "node-sass": "^4.14.1",
     "polished": "^3.5.1",
     "prop-types": "^15.7.2",
     "ramda": "^0.27.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
+    "react-dropzone": "^11.0.1",
     "react-scripts": "3.4.1",
+    "react-use": "^14.2.0",
     "styled-components": "^5.1.0",
     "twilio-video": "^2.3.0"
   },
@@ -61,8 +64,6 @@
     "babelify": "^10.0.0",
     "browserify": "^16.5.1",
     "prettier": "^2.0.4",
-    "storybook-dark-mode": "^0.4.1",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "storybook-dark-mode": "^0.4.1"
   }
 }

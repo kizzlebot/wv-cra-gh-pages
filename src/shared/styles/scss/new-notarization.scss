@@ -1,0 +1,169 @@
+.page-dashboard.new-notarization{padding:20px 0 0 0;}
+.dashboard-container{padding-bottom:100px;margin-bottom:0;}
+#dashboard .dashboard-container{padding-left:80px}
+.new-notarization .custom-select{margin-bottom:15px;}
+.new-notarization #notarization-type, .new-notarization #inputGroupSelect01 {margin:10px 0 0 0;}
+.new-notarization .document-preparation{min-height:160px;height:160px;max-height:160px;padding:20px;}
+.new-notarization .document-preparation .box{max-height:160px;height:100px;min-height:120px;}
+.new-notarization .ul-doc-list{margin:15px 0 0 0;background:#fff;box-shadow: 0 0 0 rgba(0,0,0,0)}
+.new-notarization .ul-doc-list a{color:#C93}
+.new-notarization .step:not(.disabled) .ul-doc-list .li-remove:hover{cursor:pointer;background: url(/static/img/icons/small/delete-red.svg) no-repeat center center;}
+.new-notarization h3{font-size:18px;margin-bottom: 5px;color:#444;white-space:nowrap;}
+.new-notarization .section{padding:0;}
+.new-notarization *, .new-notarization *:before, .new-notarization *:after { box-sizing: border-box; }
+.new-notarization .card-doc div div:last-of-type{margin-top:0 !important;}
+.new-notarization .row-doc{padding-bottom:0;}
+.new-notarization .card{width:150px;min-height:120px;height:auto;}
+.new-notarization .card-title{font-size:14px;margin-bottom:5px;}
+.new-notarization .card-text{font-size:12px;margin-bottom:5px;}
+.new-notarization .row-doc button{height:30px;width:30px;overflow:hidden;padding:0;margin:0;background:#fff;font-size:1px;border:0;position:absolute;bottom:15px;right:10px;}
+.new-notarization .row-doc button:active{background:#fff;}
+.new-notarization .row-doc button:nth-of-type(2){left:10px;right:auto;}
+.new-notarization .badge-primary{position:absolute;top:-10px;left:0;background:#C93;border:0;}
+.new-notarization .signers h3:first-of-type{padding-left:5px;}
+.new-notarization .signers .container-fluid{padding-left:0;}
+.new-notarization .row-doc button:nth-of-type(1){background: url(/static/img/icons/small/edit-grey.svg) no-repeat center center;background-size: auto;}
+.new-notarization .row-doc button:nth-of-type(1):hover{background: url(/static/img/icons/small/edit-green.svg) no-repeat center center;background-size: auto;}
+.new-notarization .row-doc button:nth-of-type(2){background: url(/static/img/icons/small/delete-grey.svg) no-repeat center center;background-size: auto;}
+.new-notarization .row-doc button:nth-of-type(2):hover{background: url(/static/img/icons/small/delete-red.svg) no-repeat center center;background-size: auto;}
+
+
+/* -------------------------------------------------------------------------
+  VERTICAL STEPPERS
+-------------------------------------------------------------------------- */
+
+/* Steps */
+.new-notarization .step {
+  position: relative;
+  color: gray;
+  margin: 30px auto 0 auto;
+  max-width:800px;
+}
+.new-notarization .step:first-of-type{margin-top: 10px;}
+
+.new-notarization .step:nth-child(2)::after,
+.new-notarization .step:nth-child(3)::after,
+.new-notarization .step:nth-child(4)::after, 
+.new-notarization .step:nth-child(5)::after, 
+.new-notarization .step:nth-child(6)::after {
+	position:absolute;
+	left:15px;
+	top:45px;
+	bottom:-15px;
+	content:"";
+	height:auto;
+	border-left:1px solid #DDD;
+}
+
+
+.new-notarization .step > div:first-child {
+  position: static;
+  height: 0;
+}
+.new-notarization .step > div:not(:first-child) {
+  margin-left: 1.5em;
+  padding-left: 1em;
+}
+.new-notarization .step.step-active {
+  color: #C93
+}
+.step.step-active .circle {
+  background-color: #C93;
+}
+
+/* Circle */
+.new-notarization .circle {
+  background: #C93;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  font-size:14px;
+  font-weight:600;
+  line-height: 30px;
+  border-radius: 100%;
+  color: #fff;
+  text-align: center;
+  font-family: Roboto;
+}
+
+/* Vertical Line */
+.new-notarization .circle:after {
+  content: ' ';
+  position: absolute;
+  display: block;
+  top: 1px;
+  right: 50%;
+  bottom: 1px;
+  left: 50%;
+  height: 100%;
+  width: 1px;
+  transform: scale(1, 2);
+  transform-origin: 50% -100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: -1;
+}
+.new-notarization .step:last-child .circle:after {
+  display: none
+}
+
+.new-notarization .card-doc {
+  cursor: pointer;
+}
+
+.new-notarization .step.disabled {
+  .circle {
+    background: #aeaeae;
+  }
+  .card-doc,
+  .document-preparation,
+  .ul-doc-list,
+  .btn {
+    cursor: not-allowed;
+    background: #e9ecef;
+  }
+  
+  .card-doc .badge-primary {
+    background: #aeaeae;
+  }
+
+  .document-preparation label,
+  select  {
+    cursor: not-allowed;
+  }
+
+  h3 {
+    color: #797979;
+  }
+}
+
+/* -------------------------------------------------------------------------
+  Placeholder Beahaviour
+-------------------------------------------------------------------------- */
+
+input:hover:placeholder-shown:not(:focus),textarea:hover:placeholder-shown:not(:focus){cursor:pointer;}
+input:focus,textarea:focus{cursor:text;}
+select:hover{cursor:pointer;}
+
+.webviewer{height:52vh !important;border:1px solid #000;}
+.webviewer iframe{border:0;margin-bottom:10px;}
+.modal-body .form-group{margin-bottom:0;}
+.modal-body .form-label{font-weight:600;padding-left:4px;margin:0;}
+.modal-footer button:disabled{background:#999;border-color:#777;color:#FFF;}
+
+::-webkit-input-placeholder{color:rgba(0,0,0,.8) !important;opacity:1;-webkit-transition:opacity 300ms ease-in-out;transition:opacity 300ms ease-in-out;} 
+:-moz-placeholder{color:rgba(0,0,0,.8) !important;opacity:1;-moz-transition:opacity 300ms ease-in-out;transition:opacity 300ms ease-in-out;}
+::-moz-placeholder{color:rgba(0,0,0,.8) !important;opacity:1;-moz-transition:opacity 300ms ease-in-out;transition:opacity 300ms ease-in-out;}
+:-ms-input-placeholder{color:rgba(0,0,0,.8) !important;opacity:1;-ms-transition:opacity 300ms ease-in-out;transition:opacity 300ms ease-in-out;}
+::placeholder{color:rgba(0,0,0,.8) !important;opacity:1;transition:opacity 300ms ease-in-out;}
+
+*:focus::-webkit-input-placeholder{opacity:0;}
+*:focus:-moz-placeholder{opacity:0;}
+*:focus::-moz-placeholder{opacity:0;}
+*:focus:-ms-input-placeholder{opacity:0;}
+*:focus::placeholder{opacity:0;}
+
+#add-new-signer-modal :-webkit-input-placeholder{opacity:0;}
+#add-new-signer-modal :-moz-placeholder{opacity:0;}
+#add-new-signer-modal :-moz-placeholder{opacity:0;}
+#add-new-signer-modal :-ms-input-placeholder{opacity:0;}
+#add-new-signer-modal ::placeholder{opacity:0;}

@@ -1,0 +1,47 @@
+.here {
+  border: 1px solid red;
+}
+
+.column-doc {
+  float: left;
+  width: 25%;
+  padding: 0 10px;
+  height: 150px;
+  
+  background-color: #F7F8F8;
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
+}
+
+.row-doc {margin: 0 -5px;}
+
+.row-doc:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media screen and (max-width: 600px) {
+  .column-doc {
+    width: 100%;
+    display: block;
+    margin-bottom: 40px;
+    border: none !important;
+    height: 125px;
+  }
+}
+
+.card-doc {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: white;
+  min-height: none !important;
+  /* border: black solid 1px; */
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  .card-doc{
+    height: 150px;
+  }
+}

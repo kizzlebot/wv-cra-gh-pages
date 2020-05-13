@@ -1,0 +1,164 @@
+$grid-breakpoints: (
+        xs: 0,
+        sm: 576px,
+        md: 768px,
+        lg: 1024px,
+        xl: 1400px
+);
+
+:root {
+  --blue: #007bff;
+  --indigo: #6610f2;
+  --purple: #6f42c1;
+  --pink: #e83e8c;
+  --red: #dc3545;
+  --orange: #fd7e14;
+  --yellow: #ffc107;
+  --green: #28a745;
+  --teal: #20c997;
+  --cyan: #17a2b8;
+  --white: #fff;
+  --gray: #6c757d;
+  --gray-dark: #343a40;
+  --primary: #007bff;
+  --secondary: #6c757d;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --breakpoint-xs: $grid-breakpoints(xs);
+  --breakpoint-sm: $grid-breakpoints(sm);
+  --breakpoint-md: $grid-breakpoints(md);
+  --breakpoint-lg: $grid-breakpoints(lg);
+  --breakpoint-xl: $grid-breakpoints(xl);
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@font-face {
+  font-family: 'Cera';
+  src: url('/static/fonts/Cera-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cera';
+  src: url('/static/fonts/Cera-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cera';
+  src: url('/static/fonts/Cera-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cera';
+  src: url('/static/fonts/Cera-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cera';
+  src: url('/static/fonts/Cera-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+}
+
+//GENERAL//
+$header-padding: 56px;
+
+//FONTS//
+
+$font-stack-primary: "Cera", sans-serif;
+$font-size: 16px;
+$p-line-height: 1.525;
+
+//FONTS//
+
+$bg-body: #ffffff;
+$color-primary: #CC9933;
+$color-secondary: #006F83;
+$color-gray: #000000;
+$color-dark: rgba(#333333, 0.8);
+
+//DASHBOARD//
+$dash-bg-body: #F7F8F8;
+//DASHBOARD//
+
+//HEADING SIZING
+$h1-font-size: 2.625em;
+$h2-font-size: 1.75em;
+$h3-font-size: 1.5em;
+$h4-font-size: 1.25em;
+$h5-font-size: 1.125em;
+$h6-font-size: 1em;
+
+@for $i from 1 through 10 {
+  .mt-#{$i} {
+    margin-top: $i + rem !important;
+  }
+  .mb-#{$i} {
+    margin-bottom: $i + rem !important;
+  }
+}
+
+//MIXINS//
+
+@mixin overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin flex-grid($col) {
+  flex: 0 0 calc(100% / #{$col});
+  max-width: calc(100% / #{$col});
+}
+
+@mixin grid($percentage) {
+  flex: 0 0 $percentage;
+  max-width: $percentage;
+}
+
+@mixin flex($col) {
+  flex: 0 0 calc(100% / #{$col});
+}
+
+@mixin svg($desiredWidth, $originalWidth, $originalHeight) {
+  width: $desiredWidth;
+  height: calc(#{$desiredWidth} * #{$originalHeight} / #{$originalWidth});
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: $desiredWidth calc(#{$desiredWidth} * #{$originalHeight} / #{$originalWidth});
+}
+
+@mixin height($desiredWidth, $originalWidth, $originalHeight) {
+  height: calc(#{$desiredWidth} * #{$originalHeight} / #{$originalWidth});
+}
+
+@mixin thumb {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@mixin boxed($width) {
+  max-width: $width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin centered {
+  margin-left: auto;
+  margin-right: auto;
+}

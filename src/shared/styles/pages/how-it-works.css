@@ -1,0 +1,3993 @@
+
+/*@font-face {*/
+    /*font-family: "CeraGR-Bold";*/
+    /*src: url('../fonts/Cera GR Bold.ttf') format("truetype");*/
+/*}*/
+/*@font-face {*/
+    /*font-family: "CeraGR-Regular";*/
+    /*src: url('../fonts/Cera GR.ttf') format("truetype");*/
+/*}*/
+/*@font-face {*/
+    /*font-family: "CeraGR-Medium";*/
+    /*src: url('../fonts/Cera GR Medium.ttf') format("truetype");*/
+/*}*/
+/*@font-face {*/
+    /*font-family: "CeraGR-Black";*/
+    /*src: url('../fonts/Cera GR Black.ttf') format("truetype");*/
+/*}*/
+
+.bp2-a20registernotarymobile {
+    width               : 100%;
+    min-width           : 320px;
+    height              : 100vh;
+    min-height          : 1509px;
+    position            : relative;
+    overflow            : hidden;
+    margin              : 0px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color    : rgba(255, 255, 255, 1.0);
+}
+div {
+    -webkit-text-size-adjust: none;
+}
+.bp2-a20registernotarymobile .bp2-bitmaprectanglemask {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 53px;
+    height              : 1241px;
+    width               : 321px;
+    position            : fixed;
+    margin              : 0;
+    left                : -1px;
+    overflow            : hidden;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-bitmaprectanglemask .bp2-mask {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 1241px;
+    width               : 321px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-bitmaprectanglemask .bp2-depositphotos102195198xl2015 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : -5px;
+    height              : 1086px;
+    width               : 1626px;
+    position            : absolute;
+    margin              : 0;
+    left                : -672px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-bitmaprectanglemask .bp2-rectangle1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 922px;
+    width               : 321px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : -22px;
+    height              : 101px;
+    width               : 368px;
+    position            : absolute;
+    margin              : 0;
+    left                : -24px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-rectangle1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 101px;
+    width               : 368px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 37px;
+    height              : 23px;
+    width               : 120px;
+    position            : absolute;
+    margin              : 0;
+    left                : 39px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group31 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 21px;
+    width               : 20px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group31 .bp2-fill1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 21px;
+    width               : 17px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group31 .bp2-fill2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 11px;
+    width               : 17px;
+    position            : absolute;
+    margin              : 0;
+    left                : 2px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 3px;
+    height              : 16px;
+    width               : 98px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 3px;
+    height              : 10px;
+    width               : 9px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill6 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 13px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 11px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill8 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 3px;
+    height              : 10px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 23px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill10 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 1px;
+    height              : 12px;
+    width               : 7px;
+    position            : absolute;
+    margin              : 0;
+    left                : 33px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill12 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 3px;
+    height              : 10px;
+    width               : 8px;
+    position            : absolute;
+    margin              : 0;
+    left                : 41px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill14 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 3px;
+    height              : 9px;
+    width               : 5px;
+    position            : absolute;
+    margin              : 0;
+    left                : 52px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill16 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 3px;
+    height              : 13px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 58px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill18 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 12px;
+    width               : 8px;
+    position            : absolute;
+    margin              : 0;
+    left                : 69px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill20 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 3px;
+    height              : 10px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 78px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group1 .bp2-fill22 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 3px;
+    height              : 13px;
+    width               : 9px;
+    position            : absolute;
+    margin              : 0;
+    left                : 89px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group21 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 18px;
+    height              : 5px;
+    width               : 20px;
+    position            : absolute;
+    margin              : 0;
+    left                : 88px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group21 .bp2-group26 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 3px;
+    height              : 2px;
+    width               : 2px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group21 .bp2-group26 .bp2-group261 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 2px;
+    width               : 2px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group21 .bp2-fill27 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 5px;
+    width               : 4px;
+    position            : absolute;
+    margin              : 0;
+    left                : 2px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group21 .bp2-fill29 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 4px;
+    width               : 5px;
+    position            : absolute;
+    margin              : 0;
+    left                : 7px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-logo .bp2-group21 .bp2-fill31 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 4px;
+    width               : 7px;
+    position            : absolute;
+    margin              : 0;
+    left                : 13px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-icmenu {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 36px;
+    height              : 24px;
+    width               : 24px;
+    position            : absolute;
+    margin              : 0;
+    left                : 307px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-icmenu .bp2-bounds {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 24px;
+    width               : 24px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-headermobile .bp2-icmenu .bp2-icon {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 6px;
+    height              : 12px;
+    width               : 18px;
+    position            : absolute;
+    margin              : 0;
+    left                : 3px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-electronicnotaryrecopy {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 79px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 34px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Bold", Helvetica, Arial, serif;
+    font-size           : 24.0px;
+    color               : rgba(0, 110, 131, 1.0);
+    text-align          : center;
+    line-height         : 24.0px;
+}
+.bp2-a20registernotarymobile .bp2-rectangle {
+    background-color    : rgba(255, 255, 255, 1.0);
+    top                 : 157px;
+    height              : 941px;
+    width               : 296px;
+    position            : absolute;
+    margin              : 0;
+    left                : 12px;
+    border-radius       : 4px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    opacity             : 0.9;
+}
+.bp2-a20registernotarymobile .bp2-group {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 177px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group .bp2-rectangle1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group .bp2-textfirstname {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 258px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group .bp2-textfirstname::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 226px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group2 .bp2-rectanglecopy {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group2 .bp2-textlastname {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 259px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group2 .bp2-textlastname::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 275px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group3 .bp2-rectanglecopy2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group3 .bp2-textcommissionnumber {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 258px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group3 .bp2-textcommissionnumber::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 324px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4 .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4 .bp2-textcommissionstartdate {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 259px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4 .bp2-textcommissionstartdate::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4copy {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 373px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy .bp2-textcommissionenddate {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 259px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4copy .bp2-textcommissionenddate::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4copy2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 422px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy2 .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy2 .bp2-textstateofnotarycommission {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 258px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4copy2 .bp2-textstateofnotarycommission::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4copy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 491px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy3 .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy3 .bp2-textemail {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 258px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4copy3 .bp2-textemail::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4copy4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 540px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy4 .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy4 .bp2-textpassword {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 259px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4copy4 .bp2-textpassword::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4copy5 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 589px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy5 .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy5 .bp2-textverifypassword {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 259px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4copy5 .bp2-textverifypassword::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4copy6 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 658px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy6 .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy6 .bp2-textpaymentmethod {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 258px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4copy6 .bp2-textpaymentmethod::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4copy7 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 707px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy7 .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy7 .bp2-textcreditcardnumber {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 258px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4copy7 .bp2-textcreditcardnumber::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4copy10 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 756px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy10 .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy10 .bp2-textsecuritycode {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 258px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4copy10 .bp2-textsecuritycode::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-group4copy8 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 805px;
+    height              : 39px;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy8 .bp2-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 276px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-group4copy8 .bp2-textbillingaddress {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 258px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp2-a20registernotarymobile .bp2-group4copy8 .bp2-textbillingaddress::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp2-a20registernotarymobile .bp2-buttonyellowcopy2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 996px;
+    height              : 58px;
+    width               : 158px;
+    position            : absolute;
+    margin              : 0;
+    left                : 81px;
+    overflow            : hidden;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    transition          : all 0.2s ease-in-out;
+}
+.bp2-a20registernotarymobile .bp2-buttonyellowcopy2:hover {
+    transform           : scale(1.05);
+}
+.bp2-a20registernotarymobile .bp2-buttonyellowcopy2 .bp2-background {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 58px;
+    width               : 158px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-buttonyellowcopy2 .bp2-rectangle1 {
+    background-color    : rgba(0, 110, 131, 1.0);
+    top                 : 0px;
+    height              : 58px;
+    width               : 158px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 3px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-buttonyellowcopy2 .bp2-subscribe {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 22px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 40px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Medium", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+.bp2-a20registernotarymobile .bp2-byselectingpayno {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 861px;
+    height              : auto;
+    width               : 278px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.8);
+    text-align          : left;
+    line-height         : 21.0px;
+}
+.bp2-a20registernotarymobile .bp2-footermobile {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 1128px;
+    height              : 381px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-rectanglecopy4 {
+    background-color    : rgba(0, 110, 131, 1.0);
+    top                 : 0px;
+    height              : 381px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-rectangle1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 343px;
+    height              : 38px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 281px;
+    height              : 35px;
+    width               : 180px;
+    position            : absolute;
+    margin              : 0;
+    left                : 66px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group31 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 32px;
+    width               : 29px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group31 .bp2-fill1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 32px;
+    width               : 25px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group31 .bp2-fill2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 8px;
+    height              : 17px;
+    width               : 26px;
+    position            : absolute;
+    margin              : 0;
+    left                : 4px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 24px;
+    width               : 147px;
+    position            : absolute;
+    margin              : 0;
+    left                : 33px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 15px;
+    width               : 13px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill6 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 19px;
+    width               : 15px;
+    position            : absolute;
+    margin              : 0;
+    left                : 16px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill8 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 15px;
+    width               : 14px;
+    position            : absolute;
+    margin              : 0;
+    left                : 34px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill10 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 1px;
+    height              : 18px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 50px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill12 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 15px;
+    width               : 12px;
+    position            : absolute;
+    margin              : 0;
+    left                : 62px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill14 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 14px;
+    width               : 8px;
+    position            : absolute;
+    margin              : 0;
+    left                : 77px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill16 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 19px;
+    width               : 14px;
+    position            : absolute;
+    margin              : 0;
+    left                : 86px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill18 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 19px;
+    width               : 11px;
+    position            : absolute;
+    margin              : 0;
+    left                : 103px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill20 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 15px;
+    width               : 14px;
+    position            : absolute;
+    margin              : 0;
+    left                : 116px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group1 .bp2-fill22 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 20px;
+    width               : 14px;
+    position            : absolute;
+    margin              : 0;
+    left                : 133px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group21 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 28px;
+    height              : 7px;
+    width               : 29px;
+    position            : absolute;
+    margin              : 0;
+    left                : 132px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group21 .bp2-group26 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 3px;
+    width               : 3px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group21 .bp2-group26 .bp2-group261 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 3px;
+    width               : 3px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group21 .bp2-fill27 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 7px;
+    width               : 6px;
+    position            : absolute;
+    margin              : 0;
+    left                : 4px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group21 .bp2-fill29 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 7px;
+    width               : 7px;
+    position            : absolute;
+    margin              : 0;
+    left                : 11px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-logo .bp2-group21 .bp2-fill31 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 7px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 19px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-copyright2512019 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 355px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 102px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 14.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 18.0px;
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-a438753645 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 188px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 121px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 0.8);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-mailmailcom {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 214px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 103px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 0.8);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-address {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 162px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 129px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 0.8);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-path3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 250px;
+    height              : 1px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group11 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 31px;
+    height              : 31px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group11 .bp2-path3copy2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 30px;
+    height              : 1px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group11 .bp2-aboutcopy {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 2px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 134px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Bold", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 190, 61, 1.0);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group11 .bp2-icexpandmore {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 20px;
+    width               : 20px;
+    position            : absolute;
+    margin              : 0;
+    left                : 181px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group11 .bp2-icexpandmore .bp2-bounds {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 20px;
+    width               : 20px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group11 .bp2-icexpandmore .bp2-icon {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 7px;
+    height              : 6px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 5px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group10 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 71px;
+    height              : 31px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group10 .bp2-path3copy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 30px;
+    height              : 1px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group10 .bp2-productcopy {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 2px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 127px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Bold", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 190, 61, 1.0);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group10 .bp2-icexpandmore {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 20px;
+    width               : 20px;
+    position            : absolute;
+    margin              : 0;
+    left                : 188px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group10 .bp2-icexpandmore .bp2-bounds {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 20px;
+    width               : 20px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group10 .bp2-icexpandmore .bp2-icon {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 7px;
+    height              : 6px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 5px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group9 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 110px;
+    height              : 32px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group9 .bp2-path3copy4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 31px;
+    height              : 1px;
+    width               : 320px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group9 .bp2-supportcopy {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 2px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 127px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Bold", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 190, 61, 1.0);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group9 .bp2-icexpandmore {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 20px;
+    width               : 20px;
+    position            : absolute;
+    margin              : 0;
+    left                : 188px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group9 .bp2-icexpandmore .bp2-bounds {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 20px;
+    width               : 20px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp2-a20registernotarymobile .bp2-footermobile .bp2-group9 .bp2-icexpandmore .bp2-icon {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 7px;
+    height              : 6px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 5px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+/* .anima-animate-appear prefix for appear animations */
+.anima-animate-appear {
+    opacity             : 0;
+    display             : block;
+    -webkit-animation   : anima-reveal 0.3s ease-in-out 1 normal forwards;
+    -moz-animation      : anima-reveal 0.3s ease-in 1 normal forwards;
+    -o-animation        : anima-reveal 0.3s ease-in-out 1 normal forwards;
+    animation           : anima-reveal 0.3s ease-in-out 1 normal forwards;
+}
+.anima-animate-disappear {
+    opacity             : 1;
+    display             : block;
+    -webkit-animation   : anima-reveal 0.3s ease-in-out 1 reverse forwards;
+    -moz-animation      : anima-reveal 0.3s ease-in 1 normal forwards;
+    -o-animation        : anima-reveal 0.3s ease-in-out 1 reverse forwards;
+    animation           : anima-reveal 0.3s ease-in-out 1 reverse forwards;
+}
+.anima-animate-nodelay {
+    -webkit-animation-delay: 0;
+    -moz-animation-delay: 0;
+    -o-animation-delay  : 0;
+    animation-delay     : 0;
+}
+@-webkit-keyframes anima-reveal {
+    0%
+
+    {
+        opacity: 0;
+    }
+
+
+    100%
+
+    {
+        opacity: 1;
+    }
+}
+@-moz-keyframes anima-reveal {
+    0%
+
+    {
+        opacity: 0;
+    }
+
+
+    100%
+
+    {
+        opacity: 1;
+    }
+}
+@-o-keyframes anima-reveal {
+    0%
+
+    {
+        opacity: 0;
+    }
+
+
+    100%
+
+    {
+        opacity: 1;
+    }
+}
+@keyframes anima-reveal {
+    0%
+
+    {
+        opacity: 0;
+    }
+
+
+    100%
+
+    {
+        opacity: 1;
+    }
+}
+.bp1-a20registernotary {
+    width               : 100%;
+    min-width           : 1440px;
+    height              : 100vh;
+    min-height          : 1228px;
+    position            : relative;
+    overflow            : hidden;
+    margin              : 0px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color    : rgba(255, 255, 255, 1.0);
+}
+a {
+    text-decoration     : none;
+}
+div {
+    -webkit-text-size-adjust: none;
+}
+.anima-full-width-a {
+    width               : 100%;
+}
+.anima-full-height-a {
+    height              : 100%;
+}
+textarea:focus, input:focus {
+    outline             : none;
+}
+div {
+    -webkit-text-size-adjust: none;
+}
+.bp1-a20registernotary .bp1-bitmaprectanglemask {
+    background-color    : rgba(215, 215, 215, 1.0);
+    top                 : 0px;
+    height              : 962px;
+    width               : 1440px;
+    position            : fixed;
+    margin              : 0;
+    left                : 0px;
+    overflow            : hidden;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-bitmaprectanglemask .bp1-mask {
+    background-color    : rgba(215, 215, 215, 1.0);
+    top                 : 0px;
+    height              : 962px;
+    width               : 1440px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-bitmaprectanglemask .bp1-depositphotos102195198xl2015 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 91px;
+    height              : 1221px;
+    width               : 1829px;
+    position            : absolute;
+    margin              : 0;
+    left                : -349px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-bitmaprectanglemask .bp1-rectangle1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 962px;
+    width               : 1440px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 870px;
+    height              : 358px;
+    width               : 1440px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    overflow            : hidden;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-background {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 358px;
+    width               : 1440px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-rectangle2 {
+    background-color    : rgba(0, 110, 131, 1.0);
+    top                 : 0px;
+    height              : 321px;
+    width               : 1440px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-product {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 68px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 926px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Black", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 190, 61, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-features {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 104px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 926px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-pricing {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 140px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 926px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-demos {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 176px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 926px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-rectangle1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 320px;
+    height              : 38px;
+    width               : 1440px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-copyright2512019 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 332px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 662px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 14.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 18.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-about {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 68px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 734px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Black", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 190, 61, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-support {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 68px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 1115px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Black", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 190, 61, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-blogs {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 104px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 734px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-a438753645 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 176px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 191px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-mailmailcom {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 212px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 191px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-privacypolicy {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 104px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 1115px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-careers {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 140px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 734px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-termsconditions {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 140px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 1115px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-company {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 176px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 734px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-technicalsupport {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 176px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 1115px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-contactus {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 212px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 734px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-faq {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 212px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 1115px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-events {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 248px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 734px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 56px;
+    height              : 51px;
+    width               : 262px;
+    position            : absolute;
+    margin              : 0;
+    left                : 165px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group32 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 47px;
+    width               : 43px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group32 .bp1-fill11 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 47px;
+    width               : 37px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group32 .bp1-fill2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 11px;
+    height              : 25px;
+    width               : 37px;
+    position            : absolute;
+    margin              : 0;
+    left                : 5px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 7px;
+    height              : 35px;
+    width               : 214px;
+    position            : absolute;
+    margin              : 0;
+    left                : 48px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 6px;
+    height              : 21px;
+    width               : 19px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill6 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 28px;
+    width               : 22px;
+    position            : absolute;
+    margin              : 0;
+    left                : 23px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill8 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 6px;
+    height              : 21px;
+    width               : 21px;
+    position            : absolute;
+    margin              : 0;
+    left                : 50px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill10 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 2px;
+    height              : 26px;
+    width               : 15px;
+    position            : absolute;
+    margin              : 0;
+    left                : 73px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill12 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 6px;
+    height              : 21px;
+    width               : 18px;
+    position            : absolute;
+    margin              : 0;
+    left                : 90px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill14 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 7px;
+    height              : 20px;
+    width               : 12px;
+    position            : absolute;
+    margin              : 0;
+    left                : 113px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill16 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 7px;
+    height              : 28px;
+    width               : 21px;
+    position            : absolute;
+    margin              : 0;
+    left                : 126px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill18 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 27px;
+    width               : 17px;
+    position            : absolute;
+    margin              : 0;
+    left                : 150px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill20 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 6px;
+    height              : 21px;
+    width               : 21px;
+    position            : absolute;
+    margin              : 0;
+    left                : 169px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group1 .bp1-fill22 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 6px;
+    height              : 29px;
+    width               : 21px;
+    position            : absolute;
+    margin              : 0;
+    left                : 193px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group21 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 40px;
+    height              : 11px;
+    width               : 43px;
+    position            : absolute;
+    margin              : 0;
+    left                : 192px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group21 .bp1-group26 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 7px;
+    height              : 4px;
+    width               : 4px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group21 .bp1-group26 .bp1-group261 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 4px;
+    width               : 4px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group21 .bp1-fill27 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 10px;
+    width               : 9px;
+    position            : absolute;
+    margin              : 0;
+    left                : 5px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group21 .bp1-fill29 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 10px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 16px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-logo .bp1-group21 .bp1-fill31 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 10px;
+    width               : 15px;
+    position            : absolute;
+    margin              : 0;
+    left                : 28px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-group31 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 215px;
+    height              : 11px;
+    width               : 15px;
+    position            : absolute;
+    margin              : 0;
+    left                : 165px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-group31 .bp1-fill11 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 6px;
+    height              : 5px;
+    width               : 15px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-group31 .bp1-fill2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 7px;
+    width               : 15px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-group31 .bp1-fill3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 1px;
+    height              : 9px;
+    width               : 5px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-group31 .bp1-fill4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 1px;
+    height              : 9px;
+    width               : 5px;
+    position            : absolute;
+    margin              : 0;
+    left                : 10px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-call {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 177px;
+    height              : 15px;
+    width               : 15px;
+    position            : absolute;
+    margin              : 0;
+    left                : 166px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-call .bp1-path {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 15px;
+    width               : 15px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-footer .bp1-address {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 140px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 191px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-footer .bp1-fill1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 138px;
+    height              : 16px;
+    width               : 11px;
+    position            : absolute;
+    margin              : 0;
+    left                : 168px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-electronicnotaryre {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 141px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 214px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Bold", Helvetica, Arial, serif;
+    font-size           : 42.0px;
+    color               : rgba(0, 110, 131, 1.0);
+    text-align          : right;
+    line-height         : 40.0px;
+}
+.bp1-a20registernotary .bp1-rectangle {
+    background-color    : rgba(255, 255, 255, 1.0);
+    top                 : 142px;
+    height              : 658px;
+    width               : 539px;
+    position            : absolute;
+    margin              : 0;
+    left                : 735px;
+    border-radius       : 4px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    opacity             : 0.9;
+}
+.bp1-a20registernotary .bp1-group {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 162px;
+    height              : 39px;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group .bp1-rectangle1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group .bp1-textfirstname {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 229px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group .bp1-textfirstname::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 162px;
+    height              : 39px;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 1007px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group2 .bp1-rectanglecopy {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group2 .bp1-textlastname {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 230px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group2 .bp1-textlastname::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 211px;
+    height              : 39px;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group3 .bp1-rectanglecopy2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group3 .bp1-textcommissionnumber {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 478px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group3 .bp1-textcommissionnumber::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 260px;
+    height              : 39px;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4 .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4 .bp1-textcommissionstartdate {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 230px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4 .bp1-textcommissionstartdate::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4copy {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 260px;
+    height              : 39px;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 1007px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy .bp1-textcommissionenddate {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 230px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4copy .bp1-textcommissionenddate::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4copy2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 309px;
+    height              : 39px;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy2 .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy2 .bp1-textstateofnotarycommission {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 478px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4copy2 .bp1-textstateofnotarycommission::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4copy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 358px;
+    height              : 39px;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy3 .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy3 .bp1-textemail {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 478px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4copy3 .bp1-textemail::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4copy4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 407px;
+    height              : 39px;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy4 .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy4 .bp1-textpassword {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 230px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4copy4 .bp1-textpassword::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4copy5 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 407px;
+    height              : 39px;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 1007px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy5 .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy5 .bp1-textverifypassword {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 230px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4copy5 .bp1-textverifypassword::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4copy6 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 456px;
+    height              : 39px;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy6 .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy6 .bp1-textpaymentmethod {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 478px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4copy6 .bp1-textpaymentmethod::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4copy7 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 505px;
+    height              : 39px;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy7 .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy7 .bp1-textcreditcardnumber {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 229px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4copy7 .bp1-textcreditcardnumber::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4copy10 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 505px;
+    height              : 39px;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 1007px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy10 .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 247px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy10 .bp1-textsecuritycode {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 229px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4copy10 .bp1-textsecuritycode::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-group4copy8 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 554px;
+    height              : 39px;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy8 .bp1-rectanglecopy3 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 39px;
+    box-sizing          : border-box;
+    width               : 499px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 4px;
+    border-style        : solid;
+    border-width        : 1px;
+    border-color        : rgba(225, 225, 225, 1.0);
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-group4copy8 .bp1-textbillingaddress {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 4px;
+    height              : 30px;
+    width               : 478px;
+    position            : absolute;
+    margin              : 0;
+    left                : 15px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.64);
+    text-align          : left;
+    line-height         : 20.0px;
+    border              : 0;
+    resize              : none;
+    padding             : 0;
+}
+.bp1-a20registernotary .bp1-group4copy8 .bp1-textbillingaddress::placeholder {
+    color               : rgba(51, 51, 51, 0.38);
+}
+.bp1-a20registernotary .bp1-buttonyellowcopy2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 713px;
+    height              : 58px;
+    width               : 158px;
+    position            : absolute;
+    margin              : 0;
+    left                : 926px;
+    overflow            : hidden;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    transition          : all 0.2s ease-in-out;
+}
+.bp1-a20registernotary .bp1-buttonyellowcopy2:hover {
+    transform           : scale(1.05);
+}
+.bp1-a20registernotary .bp1-buttonyellowcopy2 .bp1-background {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 58px;
+    width               : 158px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-buttonyellowcopy2 .bp1-rectangle1 {
+    background-color    : rgba(0, 110, 131, 1.0);
+    top                 : 0px;
+    height              : 58px;
+    width               : 158px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 3px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-buttonyellowcopy2 .bp1-subscribe {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 22px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 40px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Medium", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-byselectingpayno {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 614px;
+    height              : auto;
+    width               : 501px;
+    position            : absolute;
+    margin              : 0;
+    left                : 755px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Regular", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.8);
+    text-align          : left;
+    line-height         : 21.0px;
+}
+.bp1-a20registernotary .bp1-header {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : -22px;
+    height              : 138px;
+    width               : 1488px;
+    position            : fixed;
+    margin              : 0;
+    left                : -24px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-rectangle1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 138px;
+    width               : 1488px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 49px;
+    height              : 39px;
+    width               : 201px;
+    position            : absolute;
+    margin              : 0;
+    left                : 85px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group31 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 36px;
+    width               : 33px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group31 .bp1-fill1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 36px;
+    width               : 28px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group31 .bp1-fill2 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 8px;
+    height              : 19px;
+    width               : 29px;
+    position            : absolute;
+    margin              : 0;
+    left                : 4px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 27px;
+    width               : 164px;
+    position            : absolute;
+    margin              : 0;
+    left                : 37px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill4 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 16px;
+    width               : 15px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill6 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 21px;
+    width               : 17px;
+    position            : absolute;
+    margin              : 0;
+    left                : 18px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill8 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 16px;
+    width               : 16px;
+    position            : absolute;
+    margin              : 0;
+    left                : 38px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill10 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 2px;
+    height              : 20px;
+    width               : 11px;
+    position            : absolute;
+    margin              : 0;
+    left                : 56px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill12 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 16px;
+    width               : 13px;
+    position            : absolute;
+    margin              : 0;
+    left                : 69px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill14 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 16px;
+    width               : 9px;
+    position            : absolute;
+    margin              : 0;
+    left                : 86px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill16 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 6px;
+    height              : 21px;
+    width               : 16px;
+    position            : absolute;
+    margin              : 0;
+    left                : 96px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill18 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 21px;
+    width               : 13px;
+    position            : absolute;
+    margin              : 0;
+    left                : 115px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill20 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 16px;
+    width               : 16px;
+    position            : absolute;
+    margin              : 0;
+    left                : 130px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group1 .bp1-fill22 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 22px;
+    width               : 16px;
+    position            : absolute;
+    margin              : 0;
+    left                : 148px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group21 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 31px;
+    height              : 8px;
+    width               : 33px;
+    position            : absolute;
+    margin              : 0;
+    left                : 147px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group21 .bp1-group26 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 3px;
+    width               : 3px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group21 .bp1-group26 .bp1-group261 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 3px;
+    width               : 3px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group21 .bp1-fill27 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 8px;
+    width               : 7px;
+    position            : absolute;
+    margin              : 0;
+    left                : 4px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group21 .bp1-fill29 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 8px;
+    width               : 8px;
+    position            : absolute;
+    margin              : 0;
+    left                : 12px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-logo .bp1-group21 .bp1-fill31 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 7px;
+    width               : 11px;
+    position            : absolute;
+    margin              : 0;
+    left                : 22px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-howitworks {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 61px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 769px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Medium", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.8);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-header .bp1-pricing {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 61px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 1038px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Medium", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.8);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-header .bp1-dropdown-view {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 61px;
+    height              : 16px;
+    width               : 87px;
+    position            : absolute;
+    margin              : 0;
+    left                : 922px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-dropdown-view .bp1-register {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Medium", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(51, 51, 51, 0.8);
+    text-align          : left;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-header .bp1-dropdown-view .bp1-path5 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 5px;
+    height              : 6px;
+    width               : 10px;
+    position            : absolute;
+    margin              : 0;
+    left                : 77px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-buttonyellow {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 51px;
+    height              : 35px;
+    width               : 169px;
+    position            : absolute;
+    margin              : 0;
+    left                : 1131px;
+    overflow            : hidden;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-buttonyellow .bp1-background {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 35px;
+    width               : 169px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-buttonyellow .bp1-rectangle2 {
+    background-color    : rgba(204, 153, 51, 1.0);
+    top                 : 0px;
+    height              : 35px;
+    width               : 169px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 3px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-buttonyellow .bp1-subscribe {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 9px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 23px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Medium", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+.bp1-a20registernotary .bp1-header .bp1-buttonyellow1 {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 51px;
+    height              : 35px;
+    width               : 104px;
+    position            : absolute;
+    margin              : 0;
+    left                : 1310px;
+    overflow            : hidden;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-buttonyellow1 .bp1-background {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 0px;
+    height              : 35px;
+    width               : 104px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-buttonyellow1 .bp1-rectangle2 {
+    background-color    : rgba(204, 153, 51, 1.0);
+    top                 : 0px;
+    height              : 35px;
+    width               : 104px;
+    position            : absolute;
+    margin              : 0;
+    left                : 0px;
+    border-radius       : 3px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+}
+.bp1-a20registernotary .bp1-header .bp1-buttonyellow1 .bp1-subscribe {
+    background-color    : rgba(255,255,255,0.0);
+    top                 : 9px;
+    height              : auto;
+    width               : auto;
+    position            : absolute;
+    margin              : 0;
+    left                : 23px;
+    -ms-transform       : rotate(0deg); /* IE 9 */
+    -webkit-transform   : rotate(0deg); /* Chrome, Safari, Opera */
+    transform           : rotate(0deg);
+    font-family         : "CeraGR-Medium", Helvetica, Arial, serif;
+    font-size           : 16.0px;
+    color               : rgba(255, 255, 255, 1.0);
+    text-align          : center;
+    line-height         : 20.0px;
+}
+/* .anima-animate-appear prefix for appear animations */
+.anima-animate-appear {
+    opacity             : 0;
+    display             : block;
+    -webkit-animation   : anima-reveal 0.3s ease-in-out 1 normal forwards;
+    -moz-animation      : anima-reveal 0.3s ease-in 1 normal forwards;
+    -o-animation        : anima-reveal 0.3s ease-in-out 1 normal forwards;
+    animation           : anima-reveal 0.3s ease-in-out 1 normal forwards;
+}
+.anima-animate-disappear {
+    opacity             : 1;
+    display             : block;
+    -webkit-animation   : anima-reveal 0.3s ease-in-out 1 reverse forwards;
+    -moz-animation      : anima-reveal 0.3s ease-in 1 normal forwards;
+    -o-animation        : anima-reveal 0.3s ease-in-out 1 reverse forwards;
+    animation           : anima-reveal 0.3s ease-in-out 1 reverse forwards;
+}
+.anima-animate-nodelay {
+    -webkit-animation-delay: 0;
+    -moz-animation-delay: 0;
+    -o-animation-delay  : 0;
+    animation-delay     : 0;
+}
+@-webkit-keyframes anima-reveal {
+    0%
+
+    {
+        opacity: 0;
+    }
+
+
+    100%
+
+    {
+        opacity: 1;
+    }
+}
+@-moz-keyframes anima-reveal {
+    0%
+
+    {
+        opacity: 0;
+    }
+
+
+    100%
+
+    {
+        opacity: 1;
+    }
+}
+@-o-keyframes anima-reveal {
+    0%
+
+    {
+        opacity: 0;
+    }
+
+
+    100%
+
+    {
+        opacity: 1;
+    }
+}
+@keyframes anima-reveal {
+    0%
+
+    {
+        opacity: 0;
+    }
+
+
+    100%
+
+    {
+        opacity: 1;
+    }
+}
+@media screen and (max-width: 1439px) {
+    .bp2-a20registernotarymobile {
+        display             : block;
+    }
+    .bp1-a20registernotary {
+        display             : none;
+    }
+}
+@media screen and (min-width: 1440px) {
+    .bp2-a20registernotarymobile {
+        display             : none;
+    }
+    .bp1-a20registernotary {
+        display             : block;
+    }
+}

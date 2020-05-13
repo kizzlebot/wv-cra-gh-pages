@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="132px" height="132px" viewBox="0 0 132 132" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Group 5</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-107.9%" y="-107.9%" width="315.9%" height="315.9%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="17" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.971536276 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Website" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1.0-Home" transform="translate(-895.000000, -844.000000)">
+            <g id="Group-7" transform="translate(641.000000, 734.000000)">
+                <g id="Group-5" filter="url(#filter-1)" transform="translate(288.544882, 144.771654)">
+                    <circle id="Oval" stroke="#FFFFFF" stroke-width="4" cx="31.4503937" cy="31.4503937" r="31.4503937"></circle>
+                    <polygon id="Path-2" fill="#FFFFFF" points="23.9622047 14.976378 46.9259843 31.4503937 23.9622047 47.9244094"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>icon/small/notificationOn</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/small/notificationOn" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="notifications-bell-button" transform="translate(2.000000, 0.000000)" fill="#333333" fill-opacity="0.8" fill-rule="nonzero">
+            <path d="M10,23.5294118 C11.2941176,23.5294118 12.3529412,22.4705882 12.3529412,21.1764706 L7.64705882,21.1764706 C7.64705882,22.4705882 8.70588235,23.5294118 10,23.5294118 Z M17.6470588,16.4705882 L17.6470588,10 C17.6470588,6.35294118 15.1764706,3.41176471 11.7647059,2.58823529 L11.7647059,1.76470588 C11.7647059,0.823529412 10.9411765,0 10,0 C9.05882353,0 8.23529412,0.823529412 8.23529412,1.76470588 L8.23529412,2.58823529 C4.82352941,3.41176471 2.35294118,6.35294118 2.35294118,10 L2.35294118,16.4705882 L0,18.8235294 L0,20 L20,20 L20,18.8235294 L17.6470588,16.4705882 Z M15.2941176,17.6470588 L4.70588235,17.6470588 L4.70588235,10 C4.70588235,7.05882353 7.05882353,4.70588235 10,4.70588235 C12.9411765,4.70588235 15.2941176,7.05882353 15.2941176,10 L15.2941176,17.6470588 Z" id="Shape"></path>
+        </g>
+        <circle id="Oval-Copy" stroke="#FFFFFF" fill="#FFBE3D" cx="20" cy="19" r="4.5"></circle>
+    </g>
+</svg>

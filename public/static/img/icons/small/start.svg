@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>icon/small/start</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/small/start" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_play_arrow" transform="translate(2.000000, 2.000000)">
+            <polygon id="Bounds" points="0 0 20 0 20 20 0 20"></polygon>
+            <path d="M7.51261393,4.70499674 C7.04541016,4.40768525 6.66666667,4.6097676 6.66666667,5.1613601 L6.66666667,14.8386399 C6.66666667,15.3879939 7.03736415,15.5974349 7.51261393,15.2950033 L14.9873861,10.5383301 C15.4545898,10.2410186 15.4626359,9.7641016 14.9873861,9.46166992 L7.51261393,4.70499674 Z" id="Icon" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

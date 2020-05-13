@@ -1,0 +1,51 @@
+.enbtn {
+  font-family: "CeraGR-Medium", Helvetica, Arial, serif;
+  font-size: 16.0px;
+  line-height: 20.0px;
+}
+
+.lh {
+  font-family: "CeraGR-Bold", Helvetica, Arial, serif;
+  font-size: 42.0px;
+  line-height: 53.0px;
+  font-weight: bold;
+}
+
+.mh {
+  font-family: "CeraGR-Black", Helvetica, Arial, serif;
+  font-size: 28.0px;
+  line-height: 35.0px;
+}
+
+.sh {
+  font-family: "CeraGR-Black", Helvetica, Arial, serif;
+  font-size: 16.0px;
+  line-height: 20.0px;
+}
+
+.spm {
+  font-family: "CeraGR-Regular", Helvetica, Arial, serif;
+  font-size: 16.0px;
+  line-height: 21.0px;
+}
+
+.mp {
+  font-family: "CeraGR-Medium", Helvetica, Arial, serif;
+  font-size: 18.0px;
+  line-height: 21.0px;
+  font-weight: 500;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+/* color classes */
+
+.white {
+  color: white;
+}
+
+.zephyr-bg {
+  background-color: #006D84;
+}

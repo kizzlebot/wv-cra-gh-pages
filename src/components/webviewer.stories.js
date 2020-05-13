@@ -42,7 +42,6 @@ export const beta = () => {
       config={{
         l,
         path: `${process.env.PUBLIC_URL}/lib`,
-        ui: 'beta',
         fullAPI,
         pdftronServer,
         config: [
@@ -91,7 +90,6 @@ export const betad = () => {
       config={{
         l,
         path: `${process.env.PUBLIC_URL}/lib`,
-        ui: 'beta',
         fullAPI,
         pdftronServer,
         config: [

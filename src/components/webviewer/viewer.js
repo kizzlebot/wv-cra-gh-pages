@@ -5,6 +5,8 @@ import Popover from 'react-bootstrap/Popover';
 import Overlay from 'react-bootstrap/Overlay';
 import Button from 'react-bootstrap/Button';
 import Promise from 'bluebird';
+import SelectSigner from './components/SelectSigner';
+
 
 
 class Webviewer extends Component {
@@ -33,38 +35,17 @@ class Webviewer extends Component {
     window.instance = instance;
 
 
+
     instance.annotationPopup.add({
       type: 'customElement',
       title: 'Select Signer',
-      render: (...args) => {
-        const annot = _.head(instance.annotManager.getSelectedAnnotations());
-
-        // TODO: set annot.Author and annot.CustomData.type
-        if (annot instanceof instance.iframeWindow.SigTemplateAnnot) {
-          return (
-            <div>
-              <label htmlFor="signer">Signer: </label>
-              <select
-                onChange={(ev) => {
-                  console.log('annot', annot);
-                  // annot.setContents()
-                }}
-              >
-                {
-                  _.map(this.props.signers, (signer) => {
-                    return (
-                      <option key={signer.id} value={signer.id}>{signer.firstName}</option>
-                    )
-                  })
-                }
-              </select>
-            </div>
-          )
-        }
-        return null;
-
-      }
-    })
+      render: () => (
+        <SelectSigner
+          annotManager={instance.annotManager}
+          signers={instance.iframeWindow.getSigners()}
+        />
+      ),
+    });
 
 
     instance.docViewer.one('ready', async () => {

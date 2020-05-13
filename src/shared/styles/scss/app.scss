@@ -1,0 +1,16 @@
+@import "all.min";
+@import "custom";
+
+// $fa-font-path: '/static/fonts/fa';
+
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import "~bootstrap/scss/bootstrap";
+
+// @import "main"
+.disabled-link,
+a[disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+@import "new-notarization"

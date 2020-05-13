@@ -1,30 +1,27 @@
 import React, { useRef, useEffect } from 'react';
 import Webviewer from "./viewer";
-import config from './lib/config';
 
 
 function WvApp(props) {
   const wvRef = useRef();
 
 
+  const { current } = wvRef;
   useEffect(() => {
-    if (wvRef.current) {
-      wvRef.current.annotManager.setIsAdminUser(props.isAdminUser);
+    console.log('running use effect', current, props.isAdminUser)
+    if (current) {
+      current.annotManager.setIsAdminUser(props.isAdminUser);
     }
-  }, [props.isAdminUser, wvRef])
+  }, [props.isAdminUser, current])
 
 
 
   return (
     <Webviewer
-      config={config}
-      signers={props.signers}
-      selectedSigner={props.selectedSigner}
-      selectedDoc={props.selectedDoc}
-      annotations={props.annotations}
-      docs={props.docs}
+      {...props}
       onReady={(instance) => {
         wvRef.current = instance;
+        wvRef.current.annotManager.setIsAdminUser(props.isAdminUser);
         if (props.onReady) {
           return props.onReady(instance)
         }

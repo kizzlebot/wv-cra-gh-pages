@@ -1,0 +1,79 @@
+<svg enable-background="new 0 0 76 60" viewBox="0 0 76 60" xmlns="http://www.w3.org/2000/svg" aria-labelledby="header-usability">
+  <style>
+    .st1 {
+      fill: #fff;
+    }
+    .st3 {
+      fill: #697177;
+    }
+    .st4,
+    .st5 {
+      enable-background: new;
+    }
+    .st4 {
+      fill: #697177;
+      opacity: 0.5;
+    }
+    .st5 {
+      opacity: 0.75;
+    }
+    .st5,
+    .st6,
+    .st7 {
+      fill: #697177;
+    }
+    .st6 {
+      fill-opacity: 0.25;
+    }
+    .st7 {
+      opacity: 0.5037;
+      enable-background: new;
+    }
+  </style>
+  <defs>
+    <filter filterUnits="userSpaceOnUse" id="Adobe_OpacityMaskFilter">
+      <feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0"></feColorMatrix>
+    </filter>
+  </defs>
+  <mask id="mask-2_2_" maskUnits="userSpaceOnUse">
+    <g filter="url(#Adobe_OpacityMaskFilter)">
+      <path class="st1" d="M31.4 46c.4-1.3.6-2.6.6-4 0-7.7-6.3-14-14-14-1.4 0-2.7.2-4 .6V17.2c0-1.8 1.4-3.2 3.2-3.2h41.6c1.8 0 3.2 1.4 3.2 3.2v25.6c0 1.8-1.4 3.2-3.2 3.2H31.4z" id="path-1_2_"></path>
+    </g>
+  </mask>
+  <path class="st3" d="M14.9 48.4h2v2h-2z" id="Rectangle-54"></path>
+  <path class="st3" d="M20.9 46.4h2v2h-2z" id="Rectangle-54_1_"></path>
+  <path class="st3" d="M22.9 48.4h2v2h-2z" id="Rectangle-54_2_"></path>
+  <path class="st3" d="M24.9 46.4h2v2h-2z" id="Rectangle-54_3_"></path>
+  <path class="st3" d="M36.9 46.4h2v2h-2z" id="Rectangle-54_4_"></path>
+  <path class="st3" d="M34.9 48.4h2v2h-2z" id="Rectangle-54_5_"></path>
+  <path class="st4" d="M38.9 48.4h2v2h-2z" id="Rectangle-54_6_"></path>
+  <path class="st5" d="M24.9 50.4h2v2h-2z" id="Rectangle-54_7_"></path>
+  <path class="st3" d="M36.9 52.4h2v2h-2z" id="Rectangle-54_8_"></path>
+  <path class="st3" d="M50.9 46.4h2v2h-2z" id="Rectangle-54_9_"></path>
+  <path class="st4" d="M52.9 48.4h2v2h-2z" id="Rectangle-54_10_"></path>
+  <path class="st3" d="M54.9 48.4h2v2h-2z" id="Rectangle-54_11_"></path>
+  <path class="st3" d="M56.9 48.4h2v2h-2z" id="Rectangle-54_12_"></path>
+  <path class="st6" d="M58.9 46.4h2v2h-2z" id="Rectangle-54_13_"></path>
+  <path class="st4" d="M50.9 50.4h2v2h-2z" id="Rectangle-54_14_"></path>
+  <path class="st6" d="M61 18.2v23.6c0 1.8-1.4 3.2-3.2 3.2H31.6c.1-.3.2-.7.2-1 .1-.7.2-1.4.2-2.2C32 34.2 25.8 28 18.2 28c-.7 0-1.4.1-2.1.2-.3 0-.7.1-1 .2V18.2c0-1.8 1.4-3.2 3.2-3.2h39.6c1.7 0 3.1 1.4 3.1 3.2z"></path>
+  <path class="st3" d="M57.8 14H18.2c-2.3 0-4.2 1.9-4.2 4.2v10.5c.3-.1.7-.2 1-.3.3-.1.7-.2 1-.2v-10c0-1.2 1-2.2 2.2-2.2h39.6c1.2 0 2.2 1 2.2 2.2v23.6c0 1.2-1 2.2-2.2 2.2h-26c0 .3-.1.7-.2 1-.1.3-.2.7-.3 1h26.5c2.3 0 4.2-1.9 4.2-4.2V18.2c0-2.3-1.9-4.2-4.2-4.2z"></path>
+  <path class="st5" d="M59.2 10.2h2v2h-2z" id="Rectangle-54_15_"></path>
+  <path class="st3" d="M53.2 12.2h2v2h-2z" id="Rectangle-54_16_"></path>
+  <path class="st7" d="M51.2 10.2h2v2h-2z" id="Rectangle-54_17_"></path>
+  <path class="st5" d="M49.2 12.2h2v2h-2z" id="Rectangle-54_18_"></path>
+  <path class="st3" d="M37.2 12.2h2v2h-2z" id="Rectangle-54_19_"></path>
+  <path class="st3" d="M39.2 10.2h2v2h-2z" id="Rectangle-54_20_"></path>
+  <path class="st7" d="M35.2 10.2h2v2h-2z" id="Rectangle-54_21_"></path>
+  <path class="st3" d="M49.2 8.2h2v2h-2z" id="Rectangle-54_22_"></path>
+  <path class="st7" d="M37.2 6.2h2v2h-2z" id="Rectangle-54_23_"></path>
+  <path d="M23.2 12.2h2v2h-2z" enable-background="new" fill="#697177" id="Rectangle-54_24_" opacity=".35"></path>
+  <path d="M21.2 10.2h2v2h-2z" enable-background="new" fill="#697177" id="Rectangle-54_25_" opacity=".2"></path>
+  <path class="st3" d="M19.2 10.2h2v2h-2z" id="Rectangle-54_26_"></path>
+  <path class="st5" d="M17.2 10.2h2v2h-2z" id="Rectangle-54_27_"></path>
+  <path class="st3" d="M15.2 12.2h2v2h-2z" id="Rectangle-54_28_"></path>
+  <path class="st7" d="M23.2 8.2h2v2h-2z" id="Rectangle-54_29_"></path>
+  <path class="st3" d="M18 31c6.1 0 11 4.9 11 11s-4.9 11-11 11S7 48.1 7 42s4.9-11 11-11z" id="Rectangle"></path>
+  <path class="st3" d="M18.1 31c-6 0-10.9 4.9-10.9 10.9 0 1.8.5 3.6 1.3 5.1L1 54.5c-.6.6-1 1.4-1 2.3C0 58.6 1.4 60 3.2 60c.9 0 1.7-.4 2.3-1l7.6-7.6c1.5.8 3.2 1.3 5.1 1.3 6 0 10.9-4.9 10.9-10.9s-5-10.8-11-10.8zM4.3 57.9c-.3.3-.7.5-1.1.5-.9 0-1.6-.7-1.6-1.6 0-.5.2-.9.5-1.1l7.3-7.3c.6.9 1.4 1.6 2.3 2.3l-7.4 7.2z" id="Shape"></path>
+  <path d="M18.1 50.9c-5 0-9.1-4-9.1-9s4.1-9 9.1-9 9.1 4 9.1 9c0 4.9-4.1 9-9.1 9z" id="Path" style="fill: rgb(0, 100, 118);"></path>
+  <path class="st1" d="M18.1 35.5c-3.5 0-6.3 2.8-6.3 6.3 0 .2.2.5.5.5s.5-.2.5-.5c0-3 2.4-5.4 5.4-5.4.2 0 .5-.2.5-.5s-.3-.4-.6-.4z" id="Shape_1_"></path>
+</svg>

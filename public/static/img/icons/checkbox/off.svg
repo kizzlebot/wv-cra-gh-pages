@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Form/checkbox/off</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Form/checkbox/off" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.54">
+        <path d="M19.9,19.9 L4.2,19.9 L4.2,4.2 L19.9,4.2 L19.9,19.9 Z M4.22222222,2 C3,2 2,3 2,4.22222222 L2,19.7777778 C2,21 3,22 4.22222222,22 L19.7777778,22 C21,22 22,21 22,19.7777778 L22,4.22222222 C22,3 21,2 19.7777778,2 L4.22222222,2 Z" id="Shape" fill="#010101"></path>
+    </g>
+</svg>
