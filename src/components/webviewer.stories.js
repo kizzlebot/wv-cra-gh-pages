@@ -36,7 +36,6 @@ export const beta = () => {
   const isAdminUser = boolean('isAdminUser', false, 'props')
 
 
-  console.log('data', data);
   return (
     <Webviewer
       config={{
@@ -44,10 +43,7 @@ export const beta = () => {
         path: `${process.env.PUBLIC_URL}/lib`,
         fullAPI,
         pdftronServer,
-        config: [
-          '/wv-configs/state.js',
-          '/wv-configs/config.js',
-        ]
+        config: '/wv-configs/config.js',
       }}
       annotations={selectAnnotations}
       isAdminUser={isAdminUser}
@@ -92,13 +88,14 @@ export const betad = () => {
         path: `${process.env.PUBLIC_URL}/lib`,
         fullAPI,
         pdftronServer,
-        config: [
-          '/wv-configs/state.js',
-          '/wv-configs/extendAnnotations.js',
-          '/wv-configs/configureHeader.js',
-          '/wv-configs/configureFeatures.js',
-          '/wv-configs/config.js',
-        ]
+        config: '/wv-configs/config.js',
+        // config: [
+        //   '/wv-configs/state.js',
+        //   '/wv-configs/extendAnnotations.js',
+        //   '/wv-configs/configureHeader.js',
+        //   '/wv-configs/configureFeatures.js',
+        //   '/wv-configs/config.js',
+        // ]
       }}
       annotations={selectAnnotations}
       isAdminUser={isAdminUser}

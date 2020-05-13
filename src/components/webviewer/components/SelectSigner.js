@@ -18,7 +18,11 @@ export default class SelectSigner extends Component {
 
   componentDidMount = async () => {
     const selectedAnnots = this.props.annotManager.getSelectedAnnotations();
-    const annots = _.filter(selectedAnnots, (a) => a.constructor.name === 'TemplateFreeText');
+
+    const annots = _.filter(selectedAnnots, (a) => {
+      console.log('a.cons', a.constructor.name)
+      return a.constructor.name === 'Template'
+    });
 
     if (annots) {
       const signerId = _.chain(annots)
@@ -32,7 +36,10 @@ export default class SelectSigner extends Component {
 
   render() {
     const selectedAnnots = this.props.annotManager.getSelectedAnnotations();
-    const annots = _.filter(selectedAnnots, (a) => a.constructor.name === 'TemplateFreeText');
+    const annots = _.filter(selectedAnnots, (a) => {
+      console.log('a.cons', a.constructor.name)
+      return a.constructor.name === 'Template';
+    });
 
     const consumer = _.find(this.props.signers, { type: 'consumer' });
     const otherSigners = _.chain(this.props.signers)
