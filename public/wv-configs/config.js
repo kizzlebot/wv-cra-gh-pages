@@ -86,7 +86,7 @@ const registerTool = ({
 
 /*
  * Creates tool for creating temporary boxes for widget annotations
- * for form fields, signature fields, and checkbox fields
+ * used in signature/initials sign-here fields, and checkbox form fields
  * returns:
  *   {
  *    instance,
@@ -507,6 +507,7 @@ const createSignatureTool = R.pipeP(
     tooltip: 'Signature Field Tool',
   })
 );
+
 const createInitialsTool = R.pipeP(
   initCreator('Initials'),
   registerTool({
@@ -779,85 +780,37 @@ const registerTemplateTools = R.pipeP(
 
 
 
-  Annotations.SignatureWidgetAnnotation.prototype.createSignHereElement = function () {
-    // signHereElement is the default one with dark blue background
-    const signHereElement = createSignHereElement.apply(this, arguments);
+    Annotations.SignatureWidgetAnnotation.prototype.createSignHereElement = function () {
+      // signHereElement is the default one with dark blue background
+      const signHereElement = createSignHereElement.apply(this, arguments);
 
-    const { type, timestamp, id, author, signerId, name } = this.getMetadata();
-    this.Author = signerId;
+      const { type, timestamp, id, author, signerId, name } = this.getMetadata();
+      this.Author = signerId;
 
-    // console.debug('this', { signerId, custom: this.custom, customdata: this.CustomData });
-    this.setCustomData('id', id);
-    this.setCustomData('type', type);
-    this.setCustomData('timestamp', timestamp);
-    this.setCustomData('name', name);
-    this.setCustomData('author', annotManager.getCurrentUser());
-    this.setCustomData('signerId', signerId);
-
-
-    // dont show sign here dupes
-    // const signatures = _.filter(instance.annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.FreeHandAnnotation && annot.Subject === 'Signature');
-    // if (_.findIndex(signatures, (sig) => sig.CustomData.id === id) > -1) {
-    //   signHereElement.style.backgroundColor = 'none';
-    //   signHereElement.style.display = 'none';
-    //   signHereElement.innerText = '';
-    //   return signHereElement;
-    // }
-
-    signHereElement.style.backgroundColor = 'red';
-    signHereElement.innerText = `${_.capitalize(type)}: ${name}`;
-    signHereElement.style.fontSize = '12px';
-    return signHereElement;
-  };
-    // Annotations.SignatureWidgetAnnotation.prototype.createSignHereElement = function () {
-    //   // signHereElement is the default one with dark blue background
-    //   const signHereElement = createSignHereElement.apply(this, arguments);
-
-    //   const { type, timestamp, id, author, signerId, name } = this.getMetadata();
+      // console.debug('this', { signerId, custom: this.custom, customdata: this.CustomData });
+      this.setCustomData('id', id);
+      this.setCustomData('type', type);
+      this.setCustomData('timestamp', timestamp);
+      this.setCustomData('name', name);
+      this.setCustomData('author', annotManager.getCurrentUser());
+      this.setCustomData('signerId', signerId);
 
 
-    //   // if double import, then don't show it.
-    //   const annots = annotManager.getAnnotationsList();
-    //   this.updateCustomData();
-    //   this.setCustomData(this.getMetadata());
-    //   const dup = _.find(annots, (annot) => (annot.Id !== this.Id && annot.CustomData.id === id && annot.hidden === false));
+      // dont show sign here dupes
+      // const signatures = _.filter(instance.annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.FreeHandAnnotation && annot.Subject === 'Signature');
+      // if (_.findIndex(signatures, (sig) => sig.CustomData.id === id) > -1) {
+      //   signHereElement.style.backgroundColor = 'none';
+      //   signHereElement.style.display = 'none';
+      //   signHereElement.innerText = '';
+      //   return signHereElement;
+      // }
 
-    //   if (dup) {
-    //     // this.hidden = true;
-    //     // signHereElement.style.backgroundColor = 'none';
-    //     // signHereElement.style.display = 'none';
-    //     // signHereElement.innerText = '';
-    //     return signHereElement;
-    //   } else {
-    //     this.hidden = false;
-    //   }
+      signHereElement.style.backgroundColor = 'red';
+      signHereElement.innerText = `${_.capitalize(type)}: ${name}`;
+      signHereElement.style.fontSize = '12px';
+      return signHereElement;
+    };
 
-
-    //   this.Author = signerId;
-
-    //   // console.console.debug('this', { signerId, custom: this.custom, customdata: this.CustomData });
-    //   this.setCustomData('id', id);
-    //   this.setCustomData('type', type);
-    //   this.setCustomData('timestamp', timestamp);
-    //   this.setCustomData('name', name);
-    //   this.setCustomData('author', annotManager.getCurrentUser());
-    //   this.setCustomData('signerId', signerId);
-
-
-    //   // dont show sign here dupes
-    //   const signatures = _.filter(instance.annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.FreeHandAnnotation && annot.Subject === 'Signature');
-    //   if (_.findIndex(signatures, (sig) => sig.CustomData.id === id) > -1) {
-    //     // signHereElement.style.backgroundColor = 'none';
-    //     // signHereElement.style.display = 'none';
-    //     // signHereElement.innerText = '';
-    //     return signHereElement;
-    //   }
-
-    //   signHereElement.style.backgroundColor = 'red';
-    //   signHereElement.innerText = `${_.capitalize(type)}: ${toFullName(name)}`;
-    //   signHereElement.style.fontSize = '12px';
-    //   return signHereElement;
-    // };
 
     const { createInnerElement } = Annotations.SignatureWidgetAnnotation.prototype;
 

@@ -48,6 +48,7 @@ class Webviewer extends Component {
     });
 
 
+    // get fired after config.js updates
     instance.docViewer.one('ready', async () => {
       this.setState(({ instance }));
 
