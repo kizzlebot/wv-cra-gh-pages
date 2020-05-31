@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import PdfDropzone from "./PdfDropzone";
+import PdfDropzone from "../PdfDropzone";
 import { withKnobs, text, radios, boolean, number, select, optionsKnob as options } from "@storybook/addon-knobs";
-import data from './data';
+import data from './lib/data';
 import _ from 'lodash';
 
 

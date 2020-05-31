@@ -1,7 +1,7 @@
 import React from "react";
-import Webviewer from "./webviewer";
+import Webviewer from "../webviewer";
 import { withKnobs, text, radios, boolean, number, select, optionsKnob as options } from "@storybook/addon-knobs";
-import data from './data';
+import data from './lib/data';
 
 
 export default {

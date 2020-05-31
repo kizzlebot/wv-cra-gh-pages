@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
 import _ from 'lodash';
-import * as R from 'ramda';
-import Popover from 'react-bootstrap/Popover';
-import Overlay from 'react-bootstrap/Overlay';
-import Button from 'react-bootstrap/Button';
 import Promise from 'bluebird';
 import SelectSigner from './components/SelectSigner';
 
@@ -22,7 +18,6 @@ class Webviewer extends Component {
   componentDidMount = async () => {
     const { default: initWv } = await import('@pdftron/webviewer');
 
-    console.log('prop.config', this.props.config)
     const instance = await initWv({
       ...this.props.config,
       path: '/lib',

@@ -265,7 +265,7 @@ const initApplySigCreator = (name) => async ({ instance, tools, header }) => {
     'TEXT'
   ];
 
-  const importXfdf = async () => {
+  const importXfdf = async (instance, annot) => {
 
     const currentDocument = docViewer.getDocument();
     const pdfDoc = await currentDocument.getPDFDoc();
@@ -282,6 +282,7 @@ const initApplySigCreator = (name) => async ({ instance, tools, header }) => {
     const xmlDoc = parser.parseFromString(xfdf, 'text/xml');
     xmlDoc.querySelector('annots').remove();
     const finalXfdf = xmlDoc.documentElement.outerHTML;
+    console.log('finalXFDF', finalXfdf);
     await annotManager.importAnnotations(finalXfdf, {
       batchSize: 10,
       batchDelay: 500,
@@ -428,7 +429,7 @@ const initApplySigCreator = (name) => async ({ instance, tools, header }) => {
             Annotations.WidgetAnnotation.getCustomStyles(newAnnot);
             await page.annotPushBack(newAnnot);
 
-            await importXfdf(instance);
+            await importXfdf(instance, annot);
             return annot;
           }
         }

@@ -5,11 +5,10 @@ import Webviewer from "./viewer";
 function WvApp(props) {
   const wvRef = useRef();
 
-
   const { current } = wvRef;
+  
   useEffect(() => {
-    console.log('running use effect', current, props.isAdminUser)
-    if (current) {
+    if (current && props.isAdminUser) {
       current.annotManager.setIsAdminUser(props.isAdminUser);
     }
   }, [props.isAdminUser, current])

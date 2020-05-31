@@ -4,8 +4,7 @@
     ".git": true,
     ".gitignore": true,
     "yarn.lock": true,
-    "src/setupTests.js": true,
     "src/style.css": true,
-    "src/App.test.js": true
+    "src/components/PdfDropzone": true
   }
 }
