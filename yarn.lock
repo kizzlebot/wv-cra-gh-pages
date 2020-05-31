@@ -1432,6 +1432,14 @@
   resolved "https://registry.npmjs.org/@mdx-js/util/-/util-1.6.1.tgz#c1e8480844dfaeecde8b827d0e4bbf8793274659"
   integrity sha512-A3TBBjg5iVo8S4TTG0VrW8G9YNLob4+M6rALKjY8Sxr9zPExWQ7iTPUSvJVE7YhF9E08EQMubx1vRal3jtpJ9Q==
 
+"@merlionsolutions/ramda@^1.0.0":
+  version "1.0.0"
+  resolved "https://npm.pkg.github.com/download/@merlionsolutions/ramda/1.0.0/2a95c1380689c7d43cce30db83f9c84241cc3790a48f18b57fbe003edf3125b1#3ac58d941144bb568f2695d35a6fc4d39357088a"
+  integrity sha512-dVWWUp6Kq5Db5Bo0CcQjJZICS1waV2AV5tlJZwkW2iBS15YQ8ep4LRlutOwfNlNTX4vj36PUBGydx86zCvVIug==
+  dependencies:
+    bluebird "^3.5.5"
+    ramda "^0.27.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npmjs.org/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

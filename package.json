@@ -4,6 +4,7 @@
   "private": true,
   "port": 3030,
   "dependencies": {
+    "@merlionsolutions/ramda": "^1.0.0",
     "@pdftron/webviewer": "^6.2.3",
     "@testing-library/jest-dom": "^5.9.0",
     "@testing-library/react": "^9.3.2",
