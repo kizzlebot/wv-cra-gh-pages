@@ -19,29 +19,9 @@ export const initXmlParser = (xml) => {
   return parser.parseFromString(xml, 'text/xml');
 }
 
-export const recurseFindFieldPaths = (node) => {
-  var recurse = (node, parentKey) => {
-    const children = Array.from(node.children);
-    if (!node.children || _.isEmpty(children)){
-      return `${parentKey}.${node.getAttribute('name')}`
-    }
-  
-    const nextParentKey = `${parentKey ? `${parentKey}.` : ''}${node.getAttribute('name')}`;
-    return _.map(children, (c) => recurse(c, nextParentKey === 'null' ? '' : nextParentKey));
-  }
-  
-  return _.flattenDeep(recurse(node, ''));
-}
-
 
 export const xmlFormatter = (xml) => (ids) => {
   const xmlDoc = initXmlParser(xml);
-  const fieldsNames = recurseFindFieldPaths(xmlDoc.querySelector('fields'));
-
-  console.log({xml, ids});
-  // const targetField = xmlDoc.querySelector(`[name="${id}"]`);
-  const fieldNames = _.filter(fieldsNames, (fn) => _.indexOf(ids, (id) => fn.includes(id)) > -1);
-
   const parentElement = xmlDoc.querySelector('fields').children[0].children[0];
 
   // remove all other <fields> except the target id
@@ -68,7 +48,6 @@ export const xmlFormatter = (xml) => (ids) => {
     }
   })
   
-  console.log({ffieldsToRemove, widgetsToRemove, fieldNames})
 
 
   const rnt = xmlDoc.documentElement.outerHTML;
