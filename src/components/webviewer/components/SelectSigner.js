@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import _ from 'lodash';
+import * as R from 'ramda';
 
-
+const getTemplateAnnots = R.filter(R.propEq('Subject', 'Template'))
 const parseName = (user) => {
   const fName = _.get(user, 'firstName', _.get(user, 'user.firstName'));
   const lName = _.get(user, 'lastName', _.get(user, 'user.lastName'));
@@ -20,7 +21,6 @@ export default class SelectSigner extends Component {
     const selectedAnnots = this.props.annotManager.getSelectedAnnotations();
 
     const annots = _.filter(selectedAnnots, (a) => {
-      console.log('a.cons', a.constructor.name)
       return a.constructor.name === 'Template'
     });
 
@@ -36,16 +36,19 @@ export default class SelectSigner extends Component {
 
   render() {
     const selectedAnnots = this.props.annotManager.getSelectedAnnotations();
-    const annots = _.filter(selectedAnnots, (a) => {
-      console.log('a.cons', a.constructor.name)
-      return a.constructor.name === 'Template';
-    });
+    const annots = getTemplateAnnots(selectedAnnots);
+    
 
     const consumer = _.find(this.props.signers, { type: 'consumer' });
     const otherSigners = _.chain(this.props.signers)
       .filter((el) => !_.isEqual(el.type, 'consumer'))
       .sortBy(['lastName', 'firstName'])
       .value();
+      
+    const notary = {
+      id: 'Notary',
+      type: 'notary',
+    }
 
 
 
@@ -59,7 +62,6 @@ export default class SelectSigner extends Component {
           <select
             value={this.state.signerId || consumer.id}
             onChange={(ev) => {
-              // annot.setContents()
               _.map(annots, (a) => {
                 a.setSigner(ev.target.value);
                 this.setState({ signerId: ev.target.value });
@@ -67,9 +69,13 @@ export default class SelectSigner extends Component {
             }}
           >
             {
-              _.map([consumer, ...otherSigners], (signer) => {
+              _.map([notary, consumer, ...otherSigners], (signer) => {
                 return (
-                  <option key={signer.id} value={signer.id}>{parseName(signer)}</option>
+                  <option key={signer.id} value={signer.id}>
+                    {
+                      signer.type !== 'notary' ? parseName(signer) : 'Notary'
+                    }
+                  </option>
                 );
               })
             }

@@ -42,7 +42,7 @@ class Webviewer extends Component {
     });
 
 
-    // get fired after config.js updates
+    // when ready is fired from public/wv-configs/config.js
     instance.docViewer.one('ready', async (instance) => {
       this.instance = instance;
       window.instance = instance;
@@ -50,36 +50,28 @@ class Webviewer extends Component {
       this.setState(({ instance }));
 
 
-      instance.annotManager.on('widgetAdded', (args) => {
-        console.log('widget added', args)
-      });
-
-      instance.annotManager.on('annotationAdded', (args) => {
-        console.log('annotation added', args)
-      });
-
-      instance.annotManager.on('annotationDeleted', (args) => {
-        console.log('annotation deleted', args)
-      });
-
-      instance.annotManager.on('annotationUpdated', (args) => {
-        console.log('annotation updated', args)
-      });
-
+      instance.annotManager.on('widgetAdded', this.props.onWidgetAdded);
+      instance.annotManager.on('annotationAdded', this.props.onAnnotationAdded);
+      instance.annotManager.on('annotationDeleted', this.props.onAnnotationDeleted);
+      instance.annotManager.on('annotationUpdated', this.props.onAnnotationUpdated);
 
 
 
 
       if (!_.isEmpty(this.props.selectedDoc)) {
-        console.log('loading document')
         await this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { l: this.props.config.l, extension: 'pdf' });
       }
 
 
-      console.log('this.props.signers', this.props.signers)
-      instance.annotManager.trigger('setSigners', this.props.signers)
+
+
+      // Set the list of signers to assign template fields for.
+      instance.annotManager.trigger('setSigners', this.props.signers);
+
+      // Set the selected signer
       instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
 
+      
       instance.docViewer.on('annotationsLoaded', async () => {
         console.log('%cannotationsLoaded', 'font-size:20px; color:ref;')
         return this.loadAnnotations()
@@ -165,6 +157,8 @@ class Webviewer extends Component {
   }
 
 
+
+  // load annotations passed as props
   loadAnnotations = async () => {
     const annotations = _.chain(this.props.annotations)
       .toPairs()

@@ -13,13 +13,13 @@ export default {
   custom: {
     fitMode: 'FitPage',
     disableFeatures: [
-      // 'TextSelection',
-      // 'NotesPanel',
-      // 'FilePicker',
-      // 'Redaction',
-      // 'Copy',
-      // 'Download',
-      // 'Print',
+      'TextSelection',
+      'NotesPanel',
+      'FilePicker',
+      'Redaction',
+      'Copy',
+      'Download',
+      'Print',
     ],
     disableTools: [
       'AnnotationCreatePolygon',
@@ -27,18 +27,18 @@ export default {
       'AnnotationCreateTextUnderline',
     ],
     disableElements: [
-      // 'stickyToolButton',
-      // 'leftPanel',
-      // 'freeHandToolGroupButton',
-      // 'menuButton',
-      // 'miscToolGroupButton',
-      // 'leftPanelButton',
-      // 'searchButton',
-      // 'textToolGroupButton',
-      // 'viewControlsButton',
-      // 'linkButton',
-      // 'shapeToolGroupButton',
-      // 'eraserToolButton'
+      'stickyToolButton',
+      'leftPanel',
+      'freeHandToolGroupButton',
+      'menuButton',
+      'miscToolGroupButton',
+      'leftPanelButton',
+      'searchButton',
+      'textToolGroupButton',
+      'viewControlsButton',
+      'linkButton',
+      'shapeToolGroupButton',
+      'eraserToolButton'
     ]
   }
 }

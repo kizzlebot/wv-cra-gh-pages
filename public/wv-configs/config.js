@@ -39,6 +39,7 @@ const toInitials = R.pipe(
 
   // #region get/set signers
   let signer = null;
+  let notary = null;
   let signers = [];
   const signerSigInits = {};
   let locked = false;
@@ -77,9 +78,13 @@ const toInitials = R.pipe(
 
   exports.getSigner = () => signer;
   exports.getSignerById = (id) => _.find(signers, { id });
+  exports.setNotary = (n) => {
+    notary = n;
+    return notary;
+  };
+  exports.getNotary = (n) => notary;;
   exports.addSigner = (s) => {
     signers = _.uniqBy([...signers, s], 'id');
-
     return signers;
   };
 
@@ -727,107 +732,16 @@ const toInitials = R.pipe(
 
 
 
-  const configureHeader = async (instance, opts) => {
-
-
-
-    
-    // const { button: sigTemplateTool, textAnnot: SigTemplateAnnot } = await configureCustomTool(instance, {
-    //   type: 'SignatureTemplate', 
-    //   name: 'SignatureTemplate', 
-    //   label: 'Signature',
-    //   icon: sigTemplateToolIcon
-    // });
-
-    // const { button: initialsTemplateTool, textAnnot: InitialsTemplateAnnot } = await configureCustomTool(instance, {
-    //   type: 'InitialsTemplate', 
-    //   label: 'Initials', 
-    //   name: 'InitialsTemplate', 
-    //   icon: initialsTemplateToolIcon
-    // });
-
-    // const { button: addressTemplateTool, textAnnot: AddressTemplateAnnot } = await configureCustomTool(instance, {
-    //   type: 'AddressTemplate', 
-    //   label: 'Address', 
-    //   name: 'AddressTemplate', 
-    //   icon: addressTemplateToolIcon
-    // });
-
-    // exports.SigTemplateAnnot = SigTemplateAnnot;
-    // exports.InitialsTemplateAnnot = InitialsTemplateAnnot;
-    // exports.AddressTEmplateAnnot = AddressTemplateAnnot;
-
-
-
-    // const selectedSignerTextEl = opts.getSelectedSignerHeader();
-
-    const { header: formFieldHeaderItems } = await registerFormFieldTools(instance);
-    const rtemplate = await registerTemplateTools(instance);
-    const { header: templateHeaderItems } = rtemplate
-    
-
-    console.log('templateHeaderItems', rtemplate)
-
-
-
-
-    const notaryBtns = [
-      {
-        type: 'actionButton',
-        img: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve"><g><rect x="2.5" y="2.5" style="fill:#C8D1DB;" width="35" height="35"/><g><path style="fill:#66798F;" d="M37,3v34H3V3H37 M38,2H2v36h36V2L38,2z"/></g></g><rect x="16" y="18" style="fill:#FFFFFF;" width="18" height="5"/><rect x="6" y="20" style="fill:#788B9C;" width="7" height="1"/><rect x="16" y="10" style="fill:#FFFFFF;" width="18" height="5"/><rect x="6" y="12" style="fill:#788B9C;" width="7" height="1"/><g><rect x="16.5" y="26.5" style="fill:#8BB7F0;" width="17" height="5"/><path style="fill:#4E7AB5;" d="M33,27v4H17v-4H33 M34,26H16v6h18V26L34,26z"/></g></svg>',
-        title: 'Form Field Tools',
-        dataElement: 'formFieldTools',
-        onClick: () => instance.setActiveHeaderGroup('formFieldGroup')
-      },
-      {
-        type: 'actionButton',
-        img: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve"><g><rect x="2.5" y="2.5" style="fill:#C8D1DB;" width="35" height="35"/><g><path style="fill:#66798F;" d="M37,3v34H3V3H37 M38,2H2v36h36V2L38,2z"/></g></g><rect x="16" y="18" style="fill:#FFFFFF;" width="18" height="5"/><rect x="6" y="20" style="fill:#788B9C;" width="7" height="1"/><rect x="16" y="10" style="fill:#FFFFFF;" width="18" height="5"/><rect x="6" y="12" style="fill:#788B9C;" width="7" height="1"/><g><rect x="16.5" y="26.5" style="fill:#8BB7F0;" width="17" height="5"/><path style="fill:#4E7AB5;" d="M33,27v4H17v-4H33 M34,26H16v6h18V26L34,26z"/></g></svg>',
-        title: 'Template Tools',
-        dataElement: 'templateTools',
-        onClick: () => instance.setActiveHeaderGroup('templateToolsGroup')
-      },
-    ];
-
-
-    instance.registerHeaderGroup('formFieldGroup', [
-      { type: 'spacer' },
-      { type: 'divider' },
-      ...formFieldHeaderItems,
-    ]);
-
-    instance.registerHeaderGroup('templateToolsGroup', [
-      { type: 'spacer' },
-      { type: 'divider' },
-      // sigTemplateTool,
-      ...templateHeaderItems,
-      // initialsTemplateTool,
-    ]);
-
-
-    instance.setHeaderItems((header) => {
-      _.map(notaryBtns, (item) => {
-        header.get('eraserToolButton').insertBefore(item);
-      });
-    });
-
-    return instance;
-  };
-
-
-
-
-
-
-
-
-
-
 
 
 
   const configureFeatures = (instance, config = {}) => {
-    // console.log('configureFeaturs', config)
-    const { disableFeatures = [], disableTools = [], fitMode, disableElements = [] } = config;
+    const { 
+      disableFeatures = [], 
+      disableTools = [], 
+      fitMode, 
+      disableElements = [] 
+    } = config;
 
     const { FitMode } = instance;
     if (fitMode) {
@@ -837,7 +751,6 @@ const toInitials = R.pipe(
 
 
     const toDisable = _.pick(instance.Feature, disableFeatures);
-    const toEnable = _.omit(instance.Feature, disableFeatures);
 
     instance.disableFeatures([..._.values(toDisable)]);
 
@@ -1145,6 +1058,8 @@ const toInitials = R.pipe(
       Tools, 
       PDFNet, 
       annotManager,
+      setNotary: exports.setNotary,
+      getNotary: exports.getNotary,
       getSigners: exports.getSigners,
       getSigner: exports.getSigner,
       getSignerById: exports.getSignerById,
@@ -1153,10 +1068,9 @@ const toInitials = R.pipe(
 
 
     await extendAnnotations({ ...instance });
-    // await configureHeader(instance, {})
     const custom = JSON.parse(exports.readerControl.getCustomData()) || {};
     // console.log('finished config', custom)
-    // await configureFeatures(instance, custom)
+    await configureFeatures(instance, custom)
 
 
   
