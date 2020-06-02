@@ -30,16 +30,16 @@ class Webviewer extends Component {
     
 
 
-    // instance.annotationPopup.add({
-    //   type: 'customElement',
-    //   title: 'Select Signer',
-    //   render: () => (
-    //     <SelectSigner
-    //       annotManager={instance.annotManager}
-    //       signers={instance.iframeWindow.getSigners()}
-    //     />
-    //   ),
-    // });
+    instance.annotationPopup.add({
+      type: 'customElement',
+      title: 'Select Signer',
+      render: () => (
+        <SelectSigner
+          annotManager={instance.annotManager}
+          signers={instance.iframeWindow.getSigners()}
+        />
+      ),
+    });
 
 
     // get fired after config.js updates
