@@ -18,6 +18,12 @@ function App() {
         onReady={(viewer) => {
           console.log('viewer', viewer);
         }}
+
+        onAnnotationAdded={() => console.log('annotation added')}
+        onAnnotationUpdated={() => console.log('annotation updated')}
+        onAnnotationDeleted={() => console.log('annotation deleted')}
+        onWidgetAdded={() => console.log('widget added')}
+
         selectedSigner={'1'}
         selectedDoc={'linearized.pdf'}
         isAdminUser

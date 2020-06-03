@@ -156,6 +156,13 @@ const toInitials = R.pipe(
 
     //#region - from enl-fe, ignore
 
+    const origDraw = Annotations.WidgetAnnotation.prototype.draw;
+    Annotations.WidgetAnnotation.prototype.draw = function draw(){
+      const rtn = origDraw.apply(this, arguments);
+      console.log('%coriginal draw called', 'font-size:20px;color:red;')
+      return rtn;
+    }
+
     Annotations.WidgetAnnotation.prototype.getMetadata = function getMetadata() {
       if (!this.getField) {
         return;
@@ -229,7 +236,36 @@ const toInitials = R.pipe(
       return importSignatures.apply(this, arguments);
     };
 
-
+    function extend(sup, base) {
+      const descriptor = Object.getOwnPropertyDescriptor(
+        base.prototype, 'constructor'
+      );
+      base.prototype = Object.create(sup.prototype);
+      const handler = {
+        construct(target, args) {
+          const obj = Object.create(base.prototype);
+          this.apply(target, obj, args);
+          console.log('constructo called')
+          return obj;
+        },
+        apply(target, that, args) {
+          sup.apply(that, args);
+          base.apply(that, args);
+        }
+      };
+      const proxy = new Proxy(base, handler);
+      descriptor.value = proxy;
+      Object.defineProperty(base.prototype, 'constructor', descriptor);
+      return proxy;
+    }
+    
+    const SigWigProxy = new Proxy(Annotations.SignatureWidgetAnnotation, {
+      construct(target, args){
+        console.log('%cconstructor trapped', 'font-size:20px');
+        return new target(...args);
+      }
+    })
+    Annotations.SignatureWidgetAnnotation = SigWigProxy
 
     Annotations.SignatureWidgetAnnotation.prototype.createSignHereElement = function () {
       // signHereElement is the default one with dark blue background
@@ -266,66 +302,66 @@ const toInitials = R.pipe(
     const { createInnerElement } = Annotations.SignatureWidgetAnnotation.prototype;
 
     Annotations.SignatureWidgetAnnotation.prototype.createInnerElement = function () {
-      console.debug('create inner element args', arguments);
+    //   console.debug('create inner element args', arguments);
       const el = createInnerElement.apply(this, arguments);
 
       const signatureWidget = this;
       this.setCustomData(this.getMetadata());
 
-      const handleClick = (e) => {
-        console.debug('create inner element clicked', { signatureWidget, target: e.target });
-        e.preventDefault();
-        e.stopPropagation();
+    //   const handleClick = (e) => {
+    //     console.debug('create inner element clicked', { signatureWidget, target: e.target });
+    //     e.preventDefault();
+    //     e.stopPropagation();
 
-        if (signatureWidget.Custom === 'filled') {
-          return;
-        }
+    //     if (signatureWidget.Custom === 'filled') {
+    //       return;
+    //     }
 
-        const isReadOnly = signatureWidget.fieldFlags.get('ReadOnly');
-        if (isReadOnly) {
-          return;
-        }
-
-
-        instance.setToolMode('AnnotationCreateSignature');
-        const signatureTool = docViewer.getTool('AnnotationCreateSignature');
-
-        // trigger a click from the signature tool
-        signatureTool.mouseLeftDown(e);
-        signatureTool.mouseLeftUp(e);
-
-        signatureTool.one('annotationAdded', async (signatureAnnot) => {
-          signatureWidget.Custom = 'filled';
-          el.removeEventListener('click', handleClick);
-
-          const annotManager = docViewer.getAnnotationManager();
-
-          // delete any signatures that were added previously
-          annotManager.getAnnotationsList().forEach((annot) => {
-            if (annot !== signatureAnnot && annot instanceof Annotations.FreeHandAnnotation && annot.X === signatureAnnot.X && annot.Y === signatureAnnot.Y) {
-              annotManager.deleteAnnotation(annot);
-            }
-          });
-
-          annotManager.drawAnnotations(signatureAnnot.PageNumber);
-
-          const [type, id, author, signerId, name] = signatureWidget.getField().name.split('.');
-          signatureAnnot.CustomData = signatureWidget.getMetadata();
-          await Promise.all([
-            signatureAnnot.setCustomData('id', id),
-            signatureAnnot.setCustomData('refId', id),
-            signatureAnnot.setCustomData('type', type),
-            // signatureAnnot.setCustomData('timestamp', timestamp),
-            signatureAnnot.setCustomData('author', author),
-            signatureAnnot.setCustomData('signerId', signerId),
-            signatureAnnot.setCustomData('name', name)
-          ]);
+    //     const isReadOnly = signatureWidget.fieldFlags.get('ReadOnly');
+    //     if (isReadOnly) {
+    //       return;
+    //     }
 
 
-          instance.setToolMode('AnnotationEdit');
-        });
-      }
-      el.addEventListener('click', handleClick);
+    //     instance.setToolMode('AnnotationCreateSignature');
+    //     const signatureTool = docViewer.getTool('AnnotationCreateSignature');
+
+    //     // trigger a click from the signature tool
+    //     signatureTool.mouseLeftDown(e);
+    //     signatureTool.mouseLeftUp(e);
+
+    //     signatureTool.one('annotationAdded', async (signatureAnnot) => {
+    //       signatureWidget.Custom = 'filled';
+    //       el.removeEventListener('click', handleClick);
+
+    //       const annotManager = docViewer.getAnnotationManager();
+
+    //       // delete any signatures that were added previously
+    //       annotManager.getAnnotationsList().forEach((annot) => {
+    //         if (annot !== signatureAnnot && annot instanceof Annotations.FreeHandAnnotation && annot.X === signatureAnnot.X && annot.Y === signatureAnnot.Y) {
+    //           annotManager.deleteAnnotation(annot);
+    //         }
+    //       });
+
+    //       annotManager.drawAnnotations(signatureAnnot.PageNumber);
+
+    //       const [type, id, author, signerId, name] = signatureWidget.getField().name.split('.');
+    //       signatureAnnot.CustomData = signatureWidget.getMetadata();
+    //       await Promise.all([
+    //         signatureAnnot.setCustomData('id', id),
+    //         signatureAnnot.setCustomData('refId', id),
+    //         signatureAnnot.setCustomData('type', type),
+    //         // signatureAnnot.setCustomData('timestamp', timestamp),
+    //         signatureAnnot.setCustomData('author', author),
+    //         signatureAnnot.setCustomData('signerId', signerId),
+    //         signatureAnnot.setCustomData('name', name)
+    //       ]);
+
+
+    //       instance.setToolMode('AnnotationEdit');
+    //     });
+    //   }
+    //   el.addEventListener('click', handleClick);
 
       return el;
     };
@@ -785,9 +821,9 @@ const toInitials = R.pipe(
     const shouldSendToFbase = (annotations, type, info) => {
 
       // intermediary annotations which are placeholder before applySigConvert
-
       if (info.imported) {
 
+        return { shouldContinue: false }
         if (annotations.length === 1) {
           if (annotations[0].Subject === 'SignatureRectAnnot' || annotations[0].Subject === 'SignatureFreeTextAnnot') {
             // console.log('returning false');
@@ -795,7 +831,7 @@ const toInitials = R.pipe(
           }
         }
         // if all are widgets annots
-        if ((annotations = []).filter(annot => annot instanceof this.instance.Annotations.WidgetAnnotation).length === annotations.length) {
+        if ((annotations.filter(annot => annot instanceof instance.Annotations.WidgetAnnotation).length === annotations.length)) {
           // if operation is delete
           if (type === 'delete') {
             // then ignore
@@ -826,79 +862,72 @@ const toInitials = R.pipe(
       const authorId = annotManager.getCurrentUser();
 
 
-      const { shouldContinue } = shouldSendToFbase(annotations, type, info);
 
-      if (!shouldContinue) {
-        return;
-      }
 
-      const annotType = annotations[0] instanceof Annotations.WidgetAnnotation ? 'widget' : 'annotation';
+      annotations.forEach(async (annotation) => {
+        const { shouldContinue } = shouldSendToFbase([annotation], type, info);
 
-      // if type is annotation then export using exportAnnotCommand
-      if (annotType === 'annotation') {
-        try {
+        if (!shouldContinue) {
+          return;
+        }
+
+        const annotType = annotation instanceof Annotations.WidgetAnnotation ? 'widget' : 'annotation';
+
+        // if type is annotation then export using exportAnnotCommand
+        if (annotType === 'annotation') {
+          let parentAuthorId = null;
           let xfdf;
-          try {
-            xfdf = await annotManager.exportAnnotCommand();
-          } catch (err) {
-          }
+          xfdf = await annotManager.exportAnnotCommand({
+            annots: [annotation],
+            widgets: false,
+            links: false,
+            fields: false,
+          });
 
-          annotations.forEach(async (annotation) => {
+          if (type === 'add') {
+            // In case of replies, add extra field for server-side permission to be granted to the
+            // parent annotation's author
+            if (annotation.InReplyTo) {
+              parentAuthorId = annotManager.getAnnotationById(annotation.InReplyTo).authorId || 'default';
+            }
+            annotManager.trigger('annotationAdded', {
+              id: annotation.Id,
+              authorId,
+              parentAuthorId,
+              type: 'annotation',
+              createdBy: authorId,
+              xfdf
+            });
+          } else if (type === 'modify') {
+            // In case of replies, add extra field for server-side permission to be granted to the
+            // parent annotation's author
+            if (annotation.InReplyTo) {
+              parentAuthorId = annotManager.getAnnotationById(annotation.InReplyTo).authorId || 'default';
+            }
 
-            let parentAuthorId = null;
-            xfdf = await annotManager.exportAnnotations({
-              annots: [annotation],
-              widgets: false,
-              links: false,
-              fields: false,
+            annotManager.trigger('annotationUpdated', {
+              id: annotation.Id,
+              authorId,
+              parentAuthorId,
+              type: 'annotation',
+              xfdf
             });
 
-            if (type === 'add') {
-              // In case of replies, add extra field for server-side permission to be granted to the
-              // parent annotation's author
-              if (annotation.InReplyTo) {
-                parentAuthorId = annotManager.getAnnotationById(annotation.InReplyTo).authorId || 'default';
-              }
-              annotManager.trigger('annotationAdded', {
-                id: annotation.Id,
-                authorId,
-                parentAuthorId,
-                type: 'annotation',
-                createdBy: authorId,
-                xfdf
-              });
-            } else if (type === 'modify') {
-              // In case of replies, add extra field for server-side permission to be granted to the
-              // parent annotation's author
-              if (annotation.InReplyTo) {
-                parentAuthorId = annotManager.getAnnotationById(annotation.InReplyTo).authorId || 'default';
-              }
+          } else if (type === 'delete') {
+            // server.deleteAnnotation(annotation.Id);
+            annotManager.trigger('annotationDeleted', {
+              id: annotation.Id,
+              authorId,
+              parentAuthorId,
+              type: 'annotation',
+              xfdf
+            });
+          }
+        } 
 
-              annotManager.trigger('annotationUpdated', {
-                id: annotation.Id,
-                authorId,
-                parentAuthorId,
-                type: 'annotation',
-                xfdf
-              });
+        // type is a widget 
+        else {
 
-            } else if (type === 'delete') {
-              // server.deleteAnnotation(annotation.Id);
-              annotManager.trigger('annotationDeleted', {
-                id: annotation.Id,
-                authorId,
-                parentAuthorId,
-                type: 'annotation',
-                xfdf
-              });
-            }
-          });
-        } catch (err) {
-          console.error('caught error', err);
-        }
-      } else {
-        // if type is a widget, then export using exportAnnotation
-        annotations.forEach(async annotation => {
           if (!annotation.getField) {
             // console.log('!annotation.getField. was page deleted?');
             return;
@@ -966,8 +995,8 @@ const toInitials = R.pipe(
             annotManager.trigger('annotationDeleted', id);
             // annotManager.trigger('widgetDeleted', id);
           }
-        });
-      }
+        }
+      });
     }
   }
 

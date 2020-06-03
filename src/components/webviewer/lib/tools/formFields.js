@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import registerTool from "../initializers/registerTool";
 import { initRectAnnot, initApplySigCreator } from "../initializers";
 import registerAnnotationType from "../initializers/registerAnnotationType";
-import { toHeaderGroup } from "../initializers/injectors";
+import { setHeaderItems, toHeaderGroup, injectHeaderItem, registerHeaderGroup } from "../initializers/injectors";
 
 
 const createSignatureTool = R.pipeP(
@@ -44,7 +44,16 @@ const registerFormFieldTools = R.pipeP(
   createSignatureTool,
   createInitialsTool,
   createApplySigFieldTool,
-  toHeaderGroup('formFieldTools')
+  toHeaderGroup('formFieldGroup'),
+  injectHeaderItem({
+    type: 'actionButton',
+    img: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve"><g><rect x="2.5" y="2.5" style="fill:#C8D1DB;" width="35" height="35"/><g><path style="fill:#66798F;" d="M37,3v34H3V3H37 M38,2H2v36h36V2L38,2z"/></g></g><rect x="16" y="18" style="fill:#FFFFFF;" width="18" height="5"/><rect x="6" y="20" style="fill:#788B9C;" width="7" height="1"/><rect x="16" y="10" style="fill:#FFFFFF;" width="18" height="5"/><rect x="6" y="12" style="fill:#788B9C;" width="7" height="1"/><g><rect x="16.5" y="26.5" style="fill:#8BB7F0;" width="17" height="5"/><path style="fill:#4E7AB5;" d="M33,27v4H17v-4H33 M34,26H16v6h18V26L34,26z"/></g></svg>',
+    title: 'Form Field Tools',
+    dataElement: 'formFieldTools',
+    onClick: (instance) => () => instance.setActiveHeaderGroup('formFieldGroup')
+  }),
+  setHeaderItems({ insertBefore: 'eraserToolButton' }),
+  registerHeaderGroup({ groupName: 'formFieldGroup' })
 );
 
 export default registerFormFieldTools;
