@@ -11,7 +11,7 @@ const addressTemplateToolIcon = `<svg aria-hidden="true" focusable="false" data-
 
 
 const createSigTemplateTool = R.pipeP(
-  initRectAnnot('Signature', 'Template'),
+  initRectAnnot('SignatureTemplate', { label: 'Signature' }),
   registerAnnotationType({ elementName: 'template' }),
   registerTool({
     toolName: 'SignatureTemplateTool',
@@ -22,7 +22,7 @@ const createSigTemplateTool = R.pipeP(
 );
 
 const createInitialsTemplateTool = R.pipeP(
-  initRectAnnot('Initials', 'Template'),
+  initRectAnnot('InitialsTemplate', { label: 'Initials'}),
   registerAnnotationType({ elementName: 'template' }),
   registerTool({
     toolName: 'InitialsTemplateTool',
@@ -33,7 +33,7 @@ const createInitialsTemplateTool = R.pipeP(
 );
 
 const createAddressTemplateTool = R.pipeP(
-  initRectAnnot('Address', 'Template'),
+  initRectAnnot('AddressTemplate', { label: 'Address' }),
   registerAnnotationType({ elementName: 'template' }),
   registerTool({
     toolName: 'AddressTemplateTool',
@@ -44,7 +44,7 @@ const createAddressTemplateTool = R.pipeP(
 );
 
 const createDateTemplateTool = R.pipeP(
-  initRectAnnot('Date', 'Template'),
+  initRectAnnot('DateTemplate', { label: 'Date' }),
   registerAnnotationType({ elementName: 'template' }),
   registerTool({
     toolName: 'DateTemplateTool',

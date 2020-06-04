@@ -41,6 +41,7 @@ const toInitials = R.pipe(
   let signer = null;
   let notary = null;
   let signers = [];
+  const runId = `${Math.floor(Math.random() * 100)}`;
   const signerSigInits = {};
   let locked = false;
   const { Annotations, Tools, PDFNet } = exports;
@@ -135,9 +136,8 @@ const toInitials = R.pipe(
   const extendAnnotations = (instance) => {
     const { PDFNet, docViewer, Annotations, Tools } = instance;
     const annotManager = docViewer.getAnnotationManager();
-    const { createSignHereElement, draw } = Annotations.SignatureWidgetAnnotation.prototype;
+    const { createSignHereElement, serialize, deserialize, draw } = Annotations.SignatureWidgetAnnotation.prototype;
 
-    const { deserialize, serialize } = Annotations.Annotation.prototype;
     const rubberStampTool = instance.docViewer.getTool('AnnotationCreateRubberStamp');
     docViewer
       .getTool('AnnotationCreateFreeText')
@@ -149,16 +149,6 @@ const toInitials = R.pipe(
         FontSize: '20pt'
       });
 
-    const sigTool = docViewer.getTool('AnnotationCreateSignature');
-
-    //#region - from enl-fe, ignore
-
-    const origDraw = Annotations.WidgetAnnotation.prototype.draw;
-    Annotations.WidgetAnnotation.prototype.draw = function draw(){
-      const rtn = origDraw.apply(this, arguments);
-      console.log('%coriginal draw called', 'font-size:20px;color:red;')
-      return rtn;
-    }
 
     Annotations.WidgetAnnotation.prototype.getMetadata = function getMetadata() {
       if (!this.getField) {
@@ -239,18 +229,17 @@ const toInitials = R.pipe(
 
 
     class BetterSigWidgetAnnotation extends Annotations.SignatureWidgetAnnotation {
-
-
       createInnerElement(...args){
         const rtn = super.createInnerElement(...args)
-
-        const signatureWidget = this;
+        console.log('createInnterElment', rtn.parentElement)
         this.setCustomData(this.getMetadata());
         return rtn;
       }
+
       createSignHereElement(...args){
 
         const signHereElement = super.createSignHereElement(...args);
+        console.log('createSignerHere', signHereElement.parentElement)
 
         const { type, runId, id, author, signerId, name } = this.getMetadata();
         this.Author = signerId;
@@ -264,22 +253,23 @@ const toInitials = R.pipe(
         this.setCustomData('author', annotManager.getCurrentUser());
         this.setCustomData('signerId', signerId);
 
-
-        // dont show sign here dupes
-        // const signatures = _.filter(instance.annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.FreeHandAnnotation && annot.Subject === 'Signature');
-        // if (_.findIndex(signatures, (sig) => sig.CustomData.id === id) > -1) {
-        //   signHereElement.style.backgroundColor = 'none';
-        //   signHereElement.style.display = 'none';
-        //   signHereElement.innerText = '';
-        //   return signHereElement;
-        // }
-
-        signHereElement.style.backgroundColor = 'red';
-        signHereElement.innerText = `${_.capitalize(type)}: ${name}`;
+        signHereElement.style.backgroundColor = 'blue';
+        signHereElement.innerText = `${_.capitalize(type)}: ${this.CustomData.fullName}`;
         signHereElement.style.fontSize = '12px';
         return signHereElement;
       }
+
+      serialize(...args) {
+        console.log('serializing signaturewidget', args);
+        return serialize.apply(this, ...args);
+      }
+      deserialize(...args){
+        console.log('deserializing signaturewidget', args);
+        return deserialize.apply(this, ...args);
+      }
     }
+    BetterSigWidgetAnnotation.elementName = 'AnnotationBetterSignatureWidget';
+    instance.annotManager.registerAnnotationType(BetterSigWidgetAnnotation.elementName, BetterSigWidgetAnnotation);
 
     Annotations.BetterSigWidgetAnnotation = BetterSigWidgetAnnotation;
 
@@ -300,87 +290,10 @@ const toInitials = R.pipe(
       this.setCustomData('signerId', signerId);
 
 
-      // dont show sign here dupes
-      // const signatures = _.filter(instance.annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.FreeHandAnnotation && annot.Subject === 'Signature');
-      // if (_.findIndex(signatures, (sig) => sig.CustomData.id === id) > -1) {
-      //   signHereElement.style.backgroundColor = 'none';
-      //   signHereElement.style.display = 'none';
-      //   signHereElement.innerText = '';
-      //   return signHereElement;
-      // }
-
-      signHereElement.style.backgroundColor = 'red';
+      // signHereElement.style.backgroundColor = 'red';
       signHereElement.innerText = `${_.capitalize(type)}: ${name}`;
       signHereElement.style.fontSize = '12px';
       return signHereElement;
-    };
-
-
-    const { createInnerElement } = Annotations.SignatureWidgetAnnotation.prototype;
-
-    Annotations.SignatureWidgetAnnotation.prototype.createInnerElement = function () {
-    //   console.debug('create inner element args', arguments);
-      const el = createInnerElement.apply(this, arguments);
-
-      const signatureWidget = this;
-      this.setCustomData(this.getMetadata());
-
-    //   const handleClick = (e) => {
-    //     console.debug('create inner element clicked', { signatureWidget, target: e.target });
-    //     e.preventDefault();
-    //     e.stopPropagation();
-
-    //     if (signatureWidget.Custom === 'filled') {
-    //       return;
-    //     }
-
-    //     const isReadOnly = signatureWidget.fieldFlags.get('ReadOnly');
-    //     if (isReadOnly) {
-    //       return;
-    //     }
-
-
-    //     instance.setToolMode('AnnotationCreateSignature');
-    //     const signatureTool = docViewer.getTool('AnnotationCreateSignature');
-
-    //     // trigger a click from the signature tool
-    //     signatureTool.mouseLeftDown(e);
-    //     signatureTool.mouseLeftUp(e);
-
-    //     signatureTool.one('annotationAdded', async (signatureAnnot) => {
-    //       signatureWidget.Custom = 'filled';
-    //       el.removeEventListener('click', handleClick);
-
-    //       const annotManager = docViewer.getAnnotationManager();
-
-    //       // delete any signatures that were added previously
-    //       annotManager.getAnnotationsList().forEach((annot) => {
-    //         if (annot !== signatureAnnot && annot instanceof Annotations.FreeHandAnnotation && annot.X === signatureAnnot.X && annot.Y === signatureAnnot.Y) {
-    //           annotManager.deleteAnnotation(annot);
-    //         }
-    //       });
-
-    //       annotManager.drawAnnotations(signatureAnnot.PageNumber);
-
-    //       const [type, id, author, signerId, name] = signatureWidget.getField().name.split('.');
-    //       signatureAnnot.CustomData = signatureWidget.getMetadata();
-    //       await Promise.all([
-    //         signatureAnnot.setCustomData('id', id),
-    //         signatureAnnot.setCustomData('refId', id),
-    //         signatureAnnot.setCustomData('type', type),
-    //         // signatureAnnot.setCustomData('timestamp', timestamp),
-    //         signatureAnnot.setCustomData('author', author),
-    //         signatureAnnot.setCustomData('signerId', signerId),
-    //         signatureAnnot.setCustomData('name', name)
-    //       ]);
-
-
-    //       instance.setToolMode('AnnotationEdit');
-    //     });
-    //   }
-    //   el.addEventListener('click', handleClick);
-
-      return el;
     };
   };
 
@@ -424,42 +337,32 @@ const toInitials = R.pipe(
         'InitialsRectAnnot',
         'SignatureFreeTextAnnot',
         'SignatureRectAnnot',
+        'TemplateRectAnnot',
         'CheckboxFreeTextAnnot',
         'CheckboxRectAnnot',
         'FormFreeTextAnnot',
         'FormRectAnnot'
       ];
-      return customClasses.indexOf(annot.Subject) > -1;
+      return _.findIndex(customClasses, (cc) => annot.Subject.includes(cc)) > -1
     };
 
     const shouldSendToFbase = (annotation, type, info) => {
-      return { shouldContinue: true };
 
-      // intermediary annotations which are placeholder before applySigConvert
       if (info.imported) {
-
-        if (annotation.Subject === 'SignatureRectAnnot' || annotation.Subject === 'SignatureFreeTextAnnot') {
-          // console.log('returning false');
-          return { shouldContinue: false }
-        }
-
-        // not all are widgets, ignore import of annotations
-        return { shouldContinue: false };
+        return { shouldContinue: false }
       }
 
       // if its an intermediary annotation
-      if (isIntermediateField(annotation[0])) {
+      if (isIntermediateField(annotation)) {
         return { shouldContinue: false };
       }
 
       // if all are widgets annots
       if (annotation instanceof instance.Annotations.WidgetAnnotation) {
-        // if operation is delete
-        if (type === 'delete') {
-          // then ignore
-          return { shouldContinue: false };
-        }
-        return { shouldContinue: true, type: 'widget' };
+        return { 
+          shouldContinue: true, 
+          type: 'widget' 
+        };
       }
 
       return {
@@ -479,7 +382,7 @@ const toInitials = R.pipe(
 
       annotations.forEach(async (annotation) => {
 
-        const { shouldContinue } = shouldSendToFbase([annotation], type, info);
+        const { shouldContinue } = shouldSendToFbase(annotation, type, info);
 
         if (!shouldContinue) {
           return;
@@ -490,8 +393,7 @@ const toInitials = R.pipe(
         // if type is annotation then export using exportAnnotCommand
         if (annotType === 'annotation') {
           let parentAuthorId = null;
-          let xfdf;
-          xfdf = await annotManager.exportAnnotCommand({
+          let xfdf = await annotManager.exportAnnotCommand({
             annots: [annotation],
             widgets: false,
             links: false,
@@ -549,14 +451,6 @@ const toInitials = R.pipe(
           const fieldName = annotation.getField().name;
           const [, , id, author, signerId] = fieldName.split('.');
 
-          if (author !== authorId) {
-            // console.log('not exporting b/c we didnt created this annotation');
-            await annotation.updateCustomData();
-            const signer = exports.getSigner();
-            const locked = exports.getLock();
-            await annotation.updateReadOnly('consumer', signer, locked);
-            return;
-          }
 
           if (type === 'add' || type === 'modify') {
             const xfdf = await annotManager.exportAnnotations({
@@ -617,7 +511,6 @@ const toInitials = R.pipe(
   const handleAddAnnotation = (instance) => async (val) => {
     const { Annotations, annotManager } = instance;
 
-    console.log('addAnnotationCalled', val)
     if (!val) {
       return;
     }
@@ -826,14 +719,11 @@ const toInitials = R.pipe(
     annotManager.on('setSigners', async (...args) => exports.setSigners(args));
 
 
-
-
-
     docViewer.on('updateFeatures', configureFeatures(instance));
 
 
     // TODO: use this when at v6.3
-    // readerControl.setColorPalette(['#4B92DB', '#000000']);
+    readerControl.setColorPalette(['#4B92DB', '#000000']);
 
 
 

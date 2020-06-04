@@ -19,10 +19,10 @@ function App() {
           console.log('viewer', viewer);
         }}
 
-        onAnnotationAdded={() => console.log('annotation added')}
-        onAnnotationUpdated={() => console.log('annotation updated')}
-        onAnnotationDeleted={() => console.log('annotation deleted')}
-        onWidgetAdded={() => console.log('widget added')}
+        onAnnotationAdded={(args) => console.log('annotation added', args)}
+        onAnnotationUpdated={(args) => console.log('annotation updated', args)}
+        onAnnotationDeleted={(args) => console.log('annotation deleted', args)}
+        onWidgetAdded={(args) => console.log('widget added', args)}
 
         selectedSigner={'1'}
         selectedDoc={'linearized.pdf'}
