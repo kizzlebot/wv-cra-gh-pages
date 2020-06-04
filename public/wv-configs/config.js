@@ -132,9 +132,6 @@ const toInitials = R.pipe(
 
 
 
-
-
-
   const extendAnnotations = (instance) => {
     const { PDFNet, docViewer, Annotations, Tools } = instance;
     const annotManager = docViewer.getAnnotationManager();
@@ -167,9 +164,10 @@ const toInitials = R.pipe(
       if (!this.getField) {
         return;
       }
-      const [type, id, author, signerId, name] = this.getField().name.split('.');
+      const [type, runId, id, author, signerId, name] = this.getField().name.split('.');
       return {
         id,
+        runId,
         type,
         author,
         signerId,
@@ -182,12 +180,12 @@ const toInitials = R.pipe(
         return;
       }
 
-      const [type, id, author, signerId, name] = this.getField().name.split('.');
+      const [type, runId, id, author, signerId, name] = this.getField().name.split('.');
       const CustomData = this.getMetadata();
       console.table(CustomData)
       await Promise.all([
         this.setCustomData('type', type),
-        // this.setCustomData('timestamp', timestamp),
+        this.setCustomData('runId', runId),
         this.setCustomData('id', id),
         this.setCustomData('author', author),
         this.setCustomData('signerId', signerId),
@@ -236,46 +234,65 @@ const toInitials = R.pipe(
       return importSignatures.apply(this, arguments);
     };
 
-    function extend(sup, base) {
-      const descriptor = Object.getOwnPropertyDescriptor(
-        base.prototype, 'constructor'
-      );
-      base.prototype = Object.create(sup.prototype);
-      const handler = {
-        construct(target, args) {
-          const obj = Object.create(base.prototype);
-          this.apply(target, obj, args);
-          console.log('constructo called')
-          return obj;
-        },
-        apply(target, that, args) {
-          sup.apply(that, args);
-          base.apply(that, args);
-        }
-      };
-      const proxy = new Proxy(base, handler);
-      descriptor.value = proxy;
-      Object.defineProperty(base.prototype, 'constructor', descriptor);
-      return proxy;
-    }
-    
-    const SigWigProxy = new Proxy(Annotations.SignatureWidgetAnnotation, {
-      construct(target, args){
-        console.log('%cconstructor trapped', 'font-size:20px');
-        return new target(...args);
+
+
+
+
+    class BetterSigWidgetAnnotation extends Annotations.SignatureWidgetAnnotation {
+
+
+      createInnerElement(...args){
+        const rtn = super.createInnerElement(...args)
+
+        const signatureWidget = this;
+        this.setCustomData(this.getMetadata());
+        return rtn;
       }
-    })
-    Annotations.SignatureWidgetAnnotation = SigWigProxy
+      createSignHereElement(...args){
+
+        const signHereElement = super.createSignHereElement(...args);
+
+        const { type, runId, id, author, signerId, name } = this.getMetadata();
+        this.Author = signerId;
+
+        // console.debug('this', { signerId, custom: this.custom, customdata: this.CustomData });
+        this.setCustomData('id', id);
+        this.setCustomData('runId', runId);
+        this.setCustomData('type', type);
+        // this.setCustomData('timestamp', timestamp);
+        this.setCustomData('name', name);
+        this.setCustomData('author', annotManager.getCurrentUser());
+        this.setCustomData('signerId', signerId);
+
+
+        // dont show sign here dupes
+        // const signatures = _.filter(instance.annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.FreeHandAnnotation && annot.Subject === 'Signature');
+        // if (_.findIndex(signatures, (sig) => sig.CustomData.id === id) > -1) {
+        //   signHereElement.style.backgroundColor = 'none';
+        //   signHereElement.style.display = 'none';
+        //   signHereElement.innerText = '';
+        //   return signHereElement;
+        // }
+
+        signHereElement.style.backgroundColor = 'red';
+        signHereElement.innerText = `${_.capitalize(type)}: ${name}`;
+        signHereElement.style.fontSize = '12px';
+        return signHereElement;
+      }
+    }
+
+    Annotations.BetterSigWidgetAnnotation = BetterSigWidgetAnnotation;
 
     Annotations.SignatureWidgetAnnotation.prototype.createSignHereElement = function () {
       // signHereElement is the default one with dark blue background
       const signHereElement = createSignHereElement.apply(this, arguments);
 
-      const { type, id, author, signerId, name } = this.getMetadata();
+      const { type, runId, id, author, signerId, name } = this.getMetadata();
       this.Author = signerId;
 
       // console.debug('this', { signerId, custom: this.custom, customdata: this.CustomData });
       this.setCustomData('id', id);
+      this.setCustomData('runId', runId);
       this.setCustomData('type', type);
       // this.setCustomData('timestamp', timestamp);
       this.setCustomData('name', name);
@@ -368,409 +385,6 @@ const toInitials = R.pipe(
   };
 
 
-
-
-
-
-
-
-  async function createStampTool(instance, options) {
-    const { Annotations, Tools, docViewer } = instance;
-
-    class NotaryCertAnnotation extends Annotations.StampAnnotation {
-      constructor(...args) {
-        super(...args);
-        console.debug('args', args);
-      }
-
-      draw(ctx, pageMatrix) {
-        super.draw(ctx, pageMatrix);
-      }
-    }
-
-    class StampCreateTool extends Tools.GenericAnnotationCreateTool {
-      constructor(docViewer) {
-        super(docViewer, NotaryCertAnnotation);
-        delete this.defaults.StrokeColor;
-        delete this.defaults.FillColor;
-        delete this.defaults.StrokeThickness;
-      }
-
-      mouseLeftDown(e) {
-        const am = instance.docViewer.getAnnotationManager();
-        const annot = am.getAnnotationByMouseEvent(e);
-        if (annot) {
-          return;
-        }
-        Tools.AnnotationSelectTool.prototype.mouseLeftDown.apply(this, [e]);
-      }
-
-      mouseMove(...args) {
-        Tools.AnnotationSelectTool.prototype.mouseMove.apply(this, args);
-      }
-
-      mouseLeftUp(e) {
-        let annotation;
-
-        Tools.GenericAnnotationCreateTool.prototype.mouseLeftDown.call(this, e);
-
-        if (this.annotation) {
-          const { img, dataUrl } = options.getImage();
-          if (!img) {
-            return;
-          }
-          this.aspectRatio = img.width / img.height;
-          let width = 300;
-
-          let height = width / this.aspectRatio;
-
-          const rotation = this.docViewer.getCompleteRotation(this.annotation.PageNumber) * 90;
-          this.annotation.Rotation = rotation;
-
-          if (rotation === 270 || rotation === 90) {
-            const t = height;
-            height = width;
-            width = t;
-          }
-
-          this.annotation.ImageData = dataUrl;
-          this.annotation.Width = width;
-          this.annotation.Height = height;
-          this.annotation.X -= width / 2;
-          this.annotation.Y -= height / 2;
-
-          annotation = this.annotation;
-        }
-
-        Tools.GenericAnnotationCreateTool.prototype.mouseLeftUp.call(this, e);
-
-        if (annotation) {
-          const annotManager = instance.docViewer.getAnnotationManager();
-          annotManager.deselectAllAnnotations();
-          annotManager.redrawAnnotation(annotation);
-          annotManager.selectAnnotation(annotation);
-          instance.setToolMode('AnnotationEdit');
-        }
-      }
-    }
-
-
-    const customStampTool = new StampCreateTool(docViewer);
-
-
-    // register the tool
-    await instance.registerTool({
-      toolName: options.toolName || 'NotaryCertTool',
-      image: options.image || '/static/img/notary_seal.png',
-      buttonImage: options.buttonImage || '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="stamp" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-stamp fa-w-16 fa-5x"><path fill="currentColor" d="M32 512h448v-64H32v64zm384-256h-66.56c-16.26 0-29.44-13.18-29.44-29.44v-9.46c0-27.37 8.88-53.41 21.46-77.72 9.11-17.61 12.9-38.39 9.05-60.42-6.77-38.78-38.47-70.7-77.26-77.45C212.62-9.04 160 37.33 160 96c0 14.16 3.12 27.54 8.69 39.58C182.02 164.43 192 194.7 192 226.49v.07c0 16.26-13.18 29.44-29.44 29.44H96c-53.02 0-96 42.98-96 96v32c0 17.67 14.33 32 32 32h448c17.67 0 32-14.33 32-32v-32c0-53.02-42.98-96-96-96z" class=""></path></svg>',
-      tooltip: options.tooltip || 'Notary Cert',
-      toolObject: customStampTool,
-      group: 'notaryCerts',
-    }, NotaryCertAnnotation);
-
-
-    return customStampTool;
-  }
-
-
-
-
-
-
-
-
-
-
-  const configureCustomTool = (instance, {
-    type,
-    name,
-    label,
-    icon,
-    register = true
-  }) => {
-    const { Annotations, Tools, docViewer } = instance;
-
-    // create a placeholder which will then be converted to template field
-    const initCreator = () => {
-      const annotManager = instance.docViewer.getAnnotationManager();
-
-
-      // convert rectangle into free text annotation
-      const createFreeText = async (rectAnnot, custom) => {
-        const {
-          type = _.toUpper(name),
-          value = '',
-          flag = false,
-        } = (custom || {});
-
-        console.debug('this type type', type);
-        const pageIndex = (rectAnnot.PageNumber) ? rectAnnot.PageNumber - 1 : docViewer.getCurrentPage() - 1;
-
-
-        const zoom = docViewer.getZoom();
-        const textAnnot = new TemplateFreeText();
-
-        const rotation = docViewer.getCompleteRotation(pageIndex + 1) * 90;
-
-        textAnnot.Rotation = rotation;
-        textAnnot.X = rectAnnot.X;
-        textAnnot.Y = rectAnnot.Y;
-        textAnnot.Width = rectAnnot.Width;
-        textAnnot.Height = rectAnnot.Height;
-        textAnnot.setPadding(new Annotations.Rect(0, 0, 0, 0));
-
-        // get currently selected signer.
-        const signers = exports.getSigners();
-        const signer = _.find(signers, { id: exports.getSigner() });
-
-        if (!signer) {
-          return;
-        }
-
-
-        textAnnot.custom = {
-          type,
-          value,
-          flag,
-          fieldType: type,
-          signerId: signer.id,
-          id: rectAnnot.Id,
-          color: [signer.color.R, signer.color.G, signer.color.B, signer.color.A],
-          author: annotManager.getCurrentUser(),
-          name: parseName(signer),
-        };
-
-        _.mapKeys(textAnnot.custom, (val, key) => textAnnot.setCustomData(key, (val || '').toString()));
-        textAnnot.CustomData = textAnnot.custom;
-        textAnnot.setContents(`${label}: ${parseName(textAnnot.custom.name)}`);
-        textAnnot.FontSize = `${15.0 / zoom}px`;
-        textAnnot.FillColor = rectAnnot.FillColor;
-        textAnnot.TextColor = new Annotations.Color(0, 0, 0);
-        textAnnot.StrokeThickness = 1;
-        textAnnot.StrokeColor = new Annotations.Color(0, 165, 228);
-        textAnnot.TextAlign = 'center';
-        textAnnot.PageNumber = rectAnnot.PageNumber || (pageIndex + 1);
-
-
-        // TODO: Set the author here
-        // textAnnot.Author = annotManager.getCurrentUser();
-        console.log('rectAnnot', rectAnnot)
-        await annotManager.deleteAnnotation(rectAnnot, false, true);
-        await annotManager.addAnnotation(textAnnot, false, true);
-        await annotManager.deselectAllAnnotations();
-        await annotManager.redrawAnnotation(textAnnot);
-        await annotManager.selectAnnotation(textAnnot);
-      };
-
-
-
-      const createToolClass = (className) => {
-        class TemplateRectangle extends Annotations.RectangleAnnotation {
-          constructor(...args) {
-            super(...args);
-
-            this.Subject = `${className}Rectangle`;
-            this.MaintainAspectRatio = true;
-
-
-            if (this.setCustomData) {
-              this.setCustomData('type', className);
-              this.setCustomData('label', label);
-              this.setCustomData('color', [this.FillColor.R, this.FillColor.G, this.FillColor.B, this.FillColor.A]);
-            }
-          }
-        }
-
-
-
-        class TemplateAnnotationTool extends Tools.GenericAnnotationCreateTool {
-          constructor(docViewer) {
-            super(docViewer, TemplateRectangle);
-            this.on('annotationAdded', async (annot) => {
-              await createFreeText(annot);
-
-              return instance.setActiveHeaderGroup('default');
-            });
-          }
-
-          switchIn(...args) {
-            super.switchIn(...args);
-
-            const currSigner = exports.getSigner();
-            const signers = exports.getSigners();
-            const signer = _.find(signers, { id: currSigner });
-
-            this.defaults.FillColor = signer.color;
-          }
-        }
-
-        Object.defineProperty(TemplateAnnotationTool, 'name', { value: className });
-
-        // TemplateAnnotationTool.prototype.mouseLeftDown = Tools.RectangleCreateTool.prototype.mouseLeftDown;
-        TemplateAnnotationTool.prototype.mouseLeftUp = Tools.RectangleCreateTool.prototype.mouseLeftUp;
-
-        return TemplateAnnotationTool;
-      };
-
-
-
-
-      class TemplateFreeText extends Annotations.FreeTextAnnotation {
-        constructor(...args) {
-          super(...args);
-
-          this.Subject = 'Template';
-          this.MaintainAspectRatio = true;
-          this.LockedContents = true;
-
-          const currSigner = exports.getSigner();
-          const signers = exports.getSigners();
-          const signer = _.find(signers, { id: currSigner });
-
-          this.FillColor = signer?.color;
-          this.Author = signer?.id;
-
-          if (this.setCustomData) {
-            this.setCustomData('type', 'Template');
-            label && this.setCustomData('label', label);
-            if (signer){
-              this.setCustomData('color', [signer.color.R, signer.color.G, signer.color.B, signer.color.A]);
-            }
-          }
-
-
-          this.on('setSigner', (id) => this.setSigner(id));
-        }
-
-        setSigner(id) {
-          const signers = exports.getSigners();
-          const signer = _.find(signers, { id: id.toString() });
-
-          const fullName = parseName(signer);
-
-          this.FillColor = signer.color;
-          this.setContents(`${label}: ${fullName}`);
-          this.Author = signer.id;
-          const customdata = {
-            ...this.CustomData,
-            label,
-            signerId: id,
-            color: [signer.color.R, signer.color.G, signer.color.B, signer.color.A],
-            name: fullName,
-          };
-
-          this.setCustomData(customdata);
-          this.CustomData = customdata;
-
-          annotManager.redrawAnnotation(this);
-        }
-      }
-
-      TemplateFreeText.convert = (rectAnnots) => {
-        return _.reduce(rectAnnots, (acc, rectAnnot) => {
-          if (!_.get(rectAnnot, 'CustomData.type', '').includes('TEMPLATE') || rectAnnot instanceof TemplateFreeText || rectAnnot.constructor.name === 'TemplateFreeText') {
-            return acc;
-          }
-
-
-          console.log('rectAnnot.Author', rectAnnot.Author);
-          const tAnnot = new TemplateFreeText();
-
-          tAnnot.Id = rectAnnot.Id;
-          const zoom = docViewer.getZoom();
-
-          tAnnot.Rotation = rectAnnot.Rotation;
-          const pageIndex = (rectAnnot.PageNumber) ? rectAnnot.PageNumber - 1 : docViewer.getCurrentPage() - 1;
-
-          tAnnot.Author = rectAnnot.CustomData.signerId;
-          tAnnot.X = rectAnnot.X;
-          tAnnot.Y = rectAnnot.Y;
-          tAnnot.Width = rectAnnot.Width;
-          tAnnot.Height = rectAnnot.Height;
-          tAnnot.setPadding(new Annotations.Rect(0, 0, 0, 0));
-          tAnnot.CustomData = { ...rectAnnot.CustomData };
-          tAnnot.custom = { ...rectAnnot.CustomData };
-
-          const lbl = rectAnnot.CustomData.type === 'SIGNATURETEMPLATE' ? 'Signature' : (rectAnnot.CustomData.type === 'INITIALSTEMPLATE' ? 'Initials' : 'Address');
-
-          tAnnot.setContents(`${lbl}: ${tAnnot.custom.name}`);
-          // tAnnot.FontSize = `${15.0 / zoom}px`;
-          tAnnot.FillColor = new Annotations.Color(...rectAnnot.CustomData.color);
-          tAnnot.TextColor = new Annotations.Color(0, 0, 0);
-          tAnnot.StrokeThickness = 1;
-          tAnnot.StrokeColor = new Annotations.Color(0, 165, 228);
-          tAnnot.TextAlign = 'center';
-          tAnnot.PageNumber = rectAnnot.PageNumber || (pageIndex + 1);
-
-          return {
-            ...acc,
-            toAdd: [...acc.toAdd, tAnnot],
-            toDelete: [...acc.toDelete, rectAnnot],
-          };
-        }, {
-          toAdd: [],
-          toDelete: [],
-        });
-      };
-
-
-      // const CustomFreeTextAnnot = createAnnotClass(`${name}FreeTextAnnot`, Annotations.FreeTextAnnotation);
-      const CreateTool = createToolClass(`${name}CreateTool`);
-
-
-      const customSignatureTool = new CreateTool(docViewer);
-
-      return {
-        tool: customSignatureTool,
-        annot: TemplateFreeText,
-        textAnnot: TemplateFreeText,
-      };
-    };
-
-    const createSignatureTool = async () => {
-      const {
-        tool,
-        annot,
-        textAnnot,
-      } = initCreator();
-
-      const dataElement = `${_.lowerFirst(type)}FieldTool`;
-      const toolName = `${type}FieldTool`;
-
-      instance.registerTool({
-        toolName: `${type}FieldTool`,
-        toolObject: tool,
-        buttonImage: icon,
-        buttonName: dataElement,
-        tooltip: `${type} Field Tool`,
-      }, annot);
-
-      return {
-        annot,
-        textAnnot,
-        tool,
-        button: {
-          type: 'toolButton',
-          toolName,
-          dataElement,
-          hidden: ['tablet', 'mobile'],
-        },
-      };
-    };
-
-
-    return createSignatureTool();
-  };
-
-
-
-
-
-
-
-
-
-
   const configureFeatures = (instance, config = {}) => {
     const { 
       disableFeatures = [], 
@@ -818,26 +432,15 @@ const toInitials = R.pipe(
       return customClasses.indexOf(annot.Subject) > -1;
     };
 
-    const shouldSendToFbase = (annotations, type, info) => {
+    const shouldSendToFbase = (annotation, type, info) => {
+      return { shouldContinue: true };
 
       // intermediary annotations which are placeholder before applySigConvert
       if (info.imported) {
 
-        return { shouldContinue: false }
-        if (annotations.length === 1) {
-          if (annotations[0].Subject === 'SignatureRectAnnot' || annotations[0].Subject === 'SignatureFreeTextAnnot') {
-            // console.log('returning false');
-            return { shouldContinue: false }
-          }
-        }
-        // if all are widgets annots
-        if ((annotations.filter(annot => annot instanceof instance.Annotations.WidgetAnnotation).length === annotations.length)) {
-          // if operation is delete
-          if (type === 'delete') {
-            // then ignore
-            return { shouldContinue: false };
-          }
-          return { shouldContinue: true, type: 'widget' };
+        if (annotation.Subject === 'SignatureRectAnnot' || annotation.Subject === 'SignatureFreeTextAnnot') {
+          // console.log('returning false');
+          return { shouldContinue: false }
         }
 
         // not all are widgets, ignore import of annotations
@@ -845,8 +448,18 @@ const toInitials = R.pipe(
       }
 
       // if its an intermediary annotation
-      if (isIntermediateField(annotations[0])) {
+      if (isIntermediateField(annotation[0])) {
         return { shouldContinue: false };
+      }
+
+      // if all are widgets annots
+      if (annotation instanceof instance.Annotations.WidgetAnnotation) {
+        // if operation is delete
+        if (type === 'delete') {
+          // then ignore
+          return { shouldContinue: false };
+        }
+        return { shouldContinue: true, type: 'widget' };
       }
 
       return {
@@ -865,6 +478,7 @@ const toInitials = R.pipe(
 
 
       annotations.forEach(async (annotation) => {
+
         const { shouldContinue } = shouldSendToFbase([annotation], type, info);
 
         if (!shouldContinue) {
@@ -933,7 +547,7 @@ const toInitials = R.pipe(
             return;
           }
           const fieldName = annotation.getField().name;
-          const [, id, author, signerId] = fieldName.split('.');
+          const [, , id, author, signerId] = fieldName.split('.');
 
           if (author !== authorId) {
             // console.log('not exporting b/c we didnt created this annotation');
@@ -999,7 +613,6 @@ const toInitials = R.pipe(
       });
     }
   }
-
 
   const handleAddAnnotation = (instance) => async (val) => {
     const { Annotations, annotManager } = instance;
@@ -1087,6 +700,7 @@ const toInitials = R.pipe(
       Tools, 
       PDFNet, 
       annotManager,
+      getRunId: () => runId,
       setNotary: exports.setNotary,
       getNotary: exports.getNotary,
       getSigners: exports.getSigners,

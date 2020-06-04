@@ -18,6 +18,7 @@ const parseName = (user) => {
 }
 
 
+const runId = `${Math.random() * 10000}`;
 
 
 
@@ -72,15 +73,29 @@ export const initRectAnnot = (name, ogClassName) => async ({ instance, tools, he
       }
     })[className];
 
+
+    const { serialize, deserialize } = ClassDef.prototype;
+    C.prototype.serialize = function (){
+      const rtn = serialize.apply(this, arguments);
+      console.log('serialize called');
+      return rtn;
+    }
+    
+    C.prototype.deserialize = function (){
+      const rtn = deserialize.apply(this, arguments);
+      console.log('deserialize called');
+      return rtn;
+    }
+
     Object.defineProperty(C, 'name', { value: className });
     return C;
   };
 
-  const createFreeText = async (rectAnnot, custom) => {
+  const createFreeText = async (rectAnnot, custom = {}) => {
     const {
       type = (!ogClassName) ? _.toUpper(name) : _.toUpper(`${name}${ogClassName}`),
       value = '',
-      flag = false
+      flags = { readOnly: false, multiline: false }
     } = (custom || {});
 
     // console.debug('type', type);
@@ -106,7 +121,7 @@ export const initRectAnnot = (name, ogClassName) => async ({ instance, tools, he
     textAnnot.custom = {
       type,
       value,
-      flag,
+      flags: flags,
       fieldType: type,
       signerId: signer.id,
       id: rectAnnot.Id,
@@ -245,6 +260,7 @@ export const initApplySigCreator = (name) => async ({ instance, tools, header, .
     const currentDocument = docViewer.getDocument();
     await PDFNet.initialize();
     const pdfDoc = await currentDocument.getPDFDoc();
+    const fieldManager = instance.annotManager.getFieldManager();
 
     const annotationsList = _.filter(
       annotations,
@@ -254,9 +270,11 @@ export const initApplySigCreator = (name) => async ({ instance, tools, header, .
         (!_.isEmpty(annot.custom) || !_.isEmpty(annot.CustomData))
     );
 
+    let annotsToDraw = [];
     const annotsToDelete = await Promise.all(
       annotationsList.map(async (annot, index) => {
         let field;
+        let inputAnnot;
         let newAnnot = annot;
 
         // if existing annotation has a `custom` property then use its value to convert to our custom annotation
@@ -265,72 +283,119 @@ export const initApplySigCreator = (name) => async ({ instance, tools, header, .
             annot instanceof Annotations.FreeTextAnnotation &&
             customTypes.indexOf(annot.custom.type) !== -1
           ) {
+
+            // check if there is a flag
+            const flags = new Annotations.WidgetFlags();
+            if (annot.custom.flags.readOnly) {
+              flags.set('ReadOnly', true);
+            }
+            if (annot.custom.flags.multiline) {
+              flags.set('Multiline', true);
+            }
+
+
+
             // create a form field based on the type of annotation
             if (annot.custom.type === 'TEXT' || annot.custom.type === 'FORM') {
-              field = await pdfDoc.fieldCreateFromStrings(`form.${annot.custom.id}.${annot.custom.author}.${annot.custom.signerId}.${annot.custom.name}`, PDFNet.Field.Type.e_text, annot.custom.value, '');
-            } else if (annot.custom.type === 'SIGNATURE') {
-              field = await pdfDoc.fieldCreateFromStrings(`signature.${annot.custom.id}.${annot.custom.author}.${annot.custom.signerId}.${annot.custom.name}`, PDFNet.Field.Type.e_signature, annot.getContents(), '');
-            } else if (annot.custom.type === 'INITIALS') {
-              field = await pdfDoc.fieldCreateFromStrings(`initials.${annot.custom.id}.${annot.custom.author}.${annot.custom.signerId}.${annot.custom.name}`, PDFNet.Field.Type.e_signature, annot.getContents(), '');
+              field = await pdfDoc.fieldCreateFromStrings(`form.${runId}.${annot.custom.id}.${annot.custom.author}.${annot.custom.signerId}.${annot.custom.name}`, PDFNet.Field.Type.e_text, annot.custom.value, '');
+            } else if (annot.custom.type === 'SIGNATURE' || annot.custom.type === 'INITIALS') {
+
+              const type = (annot.custom.type === 'INITIALS') ? 'initials' : 'signature';
+              const identifier = `${type}.${runId}.${annot.custom.id}.${annot.custom.author}.${annot.custom.signerId}.${annot.custom.name}`;
+              field = new Annotations.Forms.Field(identifier, { type: 'Sig', flags });
+              
+              inputAnnot = new Annotations.BetterSigWidgetAnnotation(field, {
+                appearance: '_DEFAULT',
+                appearances: {
+                  _DEFAULT: {
+                    Normal: {
+                      data: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAANSURBVBhXY/j//z8DAAj8Av6IXwbgAAAAAElFTkSuQmCC',
+                      offset: {
+                        x: 100,
+                        y: 100,
+                      },
+                    },
+                  },
+                },
+              }); 
+              inputAnnot.PageNumber = annot.getPageNumber();
+              inputAnnot.X = annot.getX();
+              inputAnnot.Y = annot.getY();
+              inputAnnot.rotation = annot.Rotation;
+              if (annot.Rotation === 0 || annot.Rotation === 180) {
+                inputAnnot.Width = annot.getWidth();
+                inputAnnot.Height = annot.getHeight();
+              } else {
+                inputAnnot.Width = annot.getHeight();
+                inputAnnot.Height = annot.getWidth();
+              }
+              inputAnnot.custom = inputAnnot.CustomData = annot.custom;
+              inputAnnot.Author = annot.custom.name;
+              annotManager.addAnnotation(inputAnnot, false);
+              fieldManager.addField(field);
+              annotsToDraw.push(inputAnnot);
+
+              // field = await pdfDoc.fieldCreateFromStrings(`signature.${runId}.${annot.custom.id}.${annot.custom.author}.${annot.custom.signerId}.${annot.custom.name}`, PDFNet.Field.Type.e_signature, annot.getContents(), '');
             } else if (annot.custom.type === 'CHECKBOX' || annot.custom.type === 'CHECK') {
-              field = await pdfDoc.fieldCreateFromStrings(`checkbox.${annot.custom.id}.${annot.custom.author}.${annot.custom.signerId}.${annot.custom.name}`, PDFNet.Field.Type.e_check, '', '');
+              field = await pdfDoc.fieldCreateFromStrings(`checkbox.${runId}.${annot.custom.id}.${annot.custom.author}.${annot.custom.signerId}.${annot.custom.name}`, PDFNet.Field.Type.e_check, '', '');
             } else {
               // exit early for other annotations
               return annotManager.deleteAnnotation(annot, false, true); // prevent duplicates when importing xfdf
             }
 
-            // check if there is a flag
-            if (annot.custom.flag === true) {
-              field.setFlag(PDFNet.Field.Flag.e_read_only, true);
-            }
 
+
+    
+    
             // translate coordinates
-            const pageNumber = annot.getPageNumber();
-            const annotRect = await annot.getRect();
-            const setTopLeft = currentDocument.getPDFCoordinates(
-              pageNumber - 1,
-              annotRect.x1,
-              annotRect.y1
-            );
-            const setBottomRight = currentDocument.getPDFCoordinates(
-              pageNumber - 1,
-              annotRect.x2,
-              annotRect.y2
-            );
+            // const pageNumber = annot.getPageNumber();
+            // const annotRect = await annot.getRect();
+            // const setTopLeft = currentDocument.getPDFCoordinates(
+            //   pageNumber - 1,
+            //   annotRect.x1,
+            //   annotRect.y1
+            // );
+            // const setBottomRight = currentDocument.getPDFCoordinates(
+            //   pageNumber - 1,
+            //   annotRect.x2,
+            //   annotRect.y2
+            // );
 
-            // create an annotation with a form field created
-            newAnnot = await PDFNet.WidgetAnnot.create(
-              pdfDoc,
-              await PDFNet.Rect.init(
-                setTopLeft.x,
-                setTopLeft.y,
-                setBottomRight.x,
-                setBottomRight.y
-              ),
-              field
-            );
+            // // create an annotation with a form field created
+            // newAnnot = await PDFNet.WidgetAnnot.create(
+            //   pdfDoc,
+            //   await PDFNet.Rect.init(
+            //     setTopLeft.x,
+            //     setTopLeft.y,
+            //     setBottomRight.x,
+            //     setBottomRight.y
+            //   ),
+            //   field
+            // );
 
-            newAnnot.custom = newAnnot.CustomData = annot.custom;
-            // NOTE: this is where the .Author is set.
-            newAnnot.Author = annot.custom.name;
+            // newAnnot.custom = newAnnot.CustomData = annot.custom;
+            // // NOTE: this is where the .Author is set.
+            // newAnnot.Author = annot.custom.name;
 
             // Make sure annot.CustomData sticks
-            await _.chain(annot.custom)
-              .map(async (val, key) =>
-                newAnnot.setCustomData(key, (val || '').toString())
-              )
-              .thru(proms => Promise.all(proms))
-              .value();
+            // await _.chain(annot.custom)
+            //   .map(async (val, key) =>
+            //     newAnnot.setCustomData(key, (val || '').toString())
+            //   )
+            //   .thru(proms => Promise.all(proms))
+            //   .value();
 
             // delete original annotation
             // await annotManager.deleteAnnotation(annot, true, false, false);
 
             // draw the annotation the viewer
-            const page = await pdfDoc.getPage(pageNumber);
+            // const page = await pdfDoc.getPage(pageNumber);
 
             // customize styles of the form field
-            Annotations.WidgetAnnotation.getCustomStyles(newAnnot);
-            await page.annotPushBack(newAnnot);
+            // Annotations.WidgetAnnotation.getCustomStyles(newAnnot);
+            // await page.annotPushBack(newAnnot);
+
+            
 
             return annot;
           }
@@ -339,11 +404,13 @@ export const initApplySigCreator = (name) => async ({ instance, tools, header, .
     );
 
     if (annotsToDelete.length > 0) {
-      await importXfdf(instance, _.filter(annotsToDelete, (a) => !_.isNil(a)));
+      // await importXfdf(instance, _.filter(annotsToDelete, (a) => !_.isNil(a)));
       Promise.map(annotsToDelete, async (annot) => {
         await annotManager.deleteAnnotations([annot], true, false, false);
       })
     }
+    annotManager.drawAnnotationsFromList(annotsToDraw);
+
     await pdfDoc.refreshFieldAppearances();
 
     return instance.setActiveHeaderGroup('default');
