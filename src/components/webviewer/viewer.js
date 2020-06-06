@@ -32,8 +32,6 @@ class Webviewer extends Component {
     }, this.viewerRef.current);
 
 
-    
-
 
     instance.annotationPopup.add({
       type: 'customElement',
@@ -75,6 +73,7 @@ class Webviewer extends Component {
 
 
       instance.docViewer.on('documentLoaded', this.props.onDocumentLoaded);
+      instance.docViewer.on('documentUnloaded', this.props.onDocumentUnloaded);
       instance.docViewer.on('annotationsLoaded', this.props.onAnnotationsLoaded);
 
 
@@ -118,22 +117,43 @@ class Webviewer extends Component {
     });
   }
 
+
+
+
+
   componentDidUpdate = async (prevProps, prevState) => {
 
     if (prevProps.selectedSigner !== this.props.selectedSigner) {
       await this.instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
     }
 
-    if (prevProps.selectedDoc !== this.props.selectedDoc) {
+    console.log('selectedDoc', this.props.selectedDoc)
+    if (prevProps.selectedDoc !== this.props.selectedDoc && this.instance) {
       if (!_.isEmpty(this.props.selectedDoc)) {
-        console.log(this.props.docs[this.props.selectedDoc]);
         return this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { l: this.props.config.l, extension: 'pdf' });
       }
     }
 
 
-    if (prevProps.annotations !== this.props.annotations) {
-      await this.loadAnnotations();
+    if (prevProps.toImport !== this.props.toImport) {
+      console.log('%cannotations changed', 'font-size:20px;color:red;')
+      if (this.props.toImport) {
+        console.log(`%c${this.props.toImport.xfdf}`, 'font-size:20px;color:red;')
+        if (this.props.toImport.type === 'delete'){
+          const toDel = this.instance.annotManager.getAnnotationById(this.props.toImport.id);
+          if (toDel){
+            this.instance.annotManager.deleteAnnotation(toDel, true);
+          }
+        } else {
+          const annots = await this.instance.annotManager.importAnnotCommand(this.props.toImport.xfdf);
+          console.log(annots);
+          await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
+        }
+        // await instance.annotManager.redrawAnnotation(annot);
+        // await instance.getInstance().fireEvent('updateAnnotationPermission', [annot]);
+        this.props.onImported();
+      }
+      // await this.loadAnnotations();
     }
   }
 

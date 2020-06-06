@@ -26,12 +26,10 @@ const defineToolClass = ({
     }
 
     mouseLeftDown(...args){
-      console.log('onMouseLeftUp');
       return onMouseLeftDown && onMouseLeftDown({ context: { tool: this, args }, instance, tools, annotClasses, ...rest })
     }
 
     mouseLeftUp(...args){
-      console.log('onMouseLeftUp');
       return onMouseLeftUp && onMouseLeftUp({ context: { tool: this, args }, instance, tools, annotClasses, ...rest })
     }
   };

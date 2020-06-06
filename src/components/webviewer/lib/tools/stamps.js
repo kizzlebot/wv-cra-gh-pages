@@ -39,7 +39,7 @@ const onMouseLeftUp = ({ imageUrl }) => async ({ context, instance, ...rest }) =
 
     let height = width / inst.aspectRatio;
 
-    const rotation = instance.docViewer.getCompleteRotation(inst.annotation.PageNumber) * 90;
+    const rotation = instance.docViewer.getCompleteRotation(1) * 90;
     inst.annotation.Rotation = rotation;
 
     if (rotation === 270 || rotation === 90) {

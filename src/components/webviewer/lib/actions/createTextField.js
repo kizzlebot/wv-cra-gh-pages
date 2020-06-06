@@ -60,7 +60,7 @@ const createTextField = ({ name, label, annotClassName }) => ({ instance, annotC
     textAnnot.StrokeThickness = 1;
     textAnnot.StrokeColor = new Annotations.Color(0, 165, 228);
     textAnnot.TextAlign = 'center';
-    textAnnot.PageNumber = rectAnnot.PageNumber || (pageIndex + 1);
+    textAnnot.PageNumber = rectAnnot?.PageNumber || (pageIndex + 1);
     textAnnot.LockedContents = true;
 
 

@@ -121,7 +121,7 @@ export const applyFormFieldCreate = (name) => async ({ instance, tools, header, 
         }
 
 
-        inputAnnot.PageNumber = annot.getPageNumber();
+        // inputAnnot.PageNumber = annot.getPageNumber();
         inputAnnot.X = annot.getX();
         inputAnnot.Y = annot.getY();
         inputAnnot.rotation = annot.Rotation;

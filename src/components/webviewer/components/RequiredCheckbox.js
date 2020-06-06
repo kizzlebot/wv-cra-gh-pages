@@ -30,7 +30,6 @@ export default class SelectSigner extends Component {
     if (annots.length === selectedAnnots.length) {
       const checked = _.reduce(annots, (acc, annot) => acc && _.get(annot, 'CustomData.flags.required', false), true);
       const indeterminate = _.reduce(annots, (acc, annot) => acc || _.get(annot, 'CustomData.flags.required', false), false);
-      console.log({ checked, indeterminate })
 
       await this.setState({ checked, indeterminate });
     }
