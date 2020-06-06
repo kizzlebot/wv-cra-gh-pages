@@ -25,7 +25,7 @@ const createTemplateTool = (name, buttonImage) => R.pipeP(
       annotClassName: `${name}TemplateFreeTextAnnot`
     })
   }),
-  registerAnnotationType({ elementName: 'template' }),
+  registerAnnotationType({ elementName: 'template', annotClassName: `${name}TemplateFreeTextAnnot`  }),
   registerTool({
     annotClassName: `${name}TemplateFreeTextAnnot`,
     toolName: `${name}TemplateTool`,

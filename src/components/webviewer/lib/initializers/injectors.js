@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import _ from 'lodash';
 
 export const injectToolArr = async (instance) => ({
@@ -56,12 +55,21 @@ export const setHeaderItems = ({ insertBefore }) => async ({ headerItems, instan
 
 
 export const registerHeaderGroup = ({ groupName }) => async ({ instance, headers, ...rest }) => {
-  instance.registerHeaderGroup(groupName, [
-    { type: 'spacer' },
-    { type: 'divider' },
-    ...headers[groupName],
-  ]);
+  // instance.registerHeaderGroup(groupName, [
+  //   { type: 'spacer' },
+  //   { type: 'divider' },
+  //   ...headers[groupName],
+  // ]);
 
+  instance.setHeaderItems((obj) => {
+    obj.headers[groupName] = [
+      { type: 'spacer' },
+      { type: 'divider' },
+      ...headers[groupName]
+    ]
+    return obj;
+  });
+  
   return {
     ...rest,
     headers: _.omit(headers, groupName),

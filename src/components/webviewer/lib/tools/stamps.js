@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import registerAnnotationType from "../initializers/registerAnnotationType";
 import registerTool from "../initializers/registerTool";
-import { setHeaderItems, toHeaderGroup, injectHeaderItem, updateTool } from "../initializers/injectors";
+import { setHeaderItems, injectHeaderItem, updateTool } from "../initializers/injectors";
 import defineToolClass from '../initializers/defineToolClass';
 import defineAnnotClass from '../initializers/defineAnnotClass';
 
@@ -97,7 +97,10 @@ const createNotaryCertAnnotation = R.pipeP(
     onMouseLeftDown: onMouseLeftDown(),
     onMouseLeftUp: onMouseLeftUp({ imageUrl: '/imgs/stamp.png' })
   }),
-  registerAnnotationType({ elementName: 'stamp' }),
+  registerAnnotationType({ 
+    elementName: 'stamp', 
+    annotClassName: 'NotaryCertAnnotation' 
+  }),
   registerTool({
     type: 'toolButton',
     toolName: 'NotaryCertTool',

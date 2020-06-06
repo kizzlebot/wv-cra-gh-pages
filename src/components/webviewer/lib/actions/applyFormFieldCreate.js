@@ -1,11 +1,10 @@
-import * as R from 'ramda';
 import Promise from 'bluebird';
 import _ from 'lodash';
 
 
 
 export const applyFormFieldCreate = (name) => async ({ instance, tools, header, ...rest }) => {
-  const { PDFNet, docViewer, Annotations, Tools } = instance;
+  const { PDFNet, docViewer, Annotations } = instance;
   const annotManager = instance.docViewer.getAnnotationManager();
 
   Annotations.WidgetAnnotation.getCustomStyles = function (widget) {

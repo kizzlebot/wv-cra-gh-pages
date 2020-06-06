@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import _ from 'lodash';
 import Promise from 'bluebird';
 import SelectSigner from './components/SelectSigner';
+import RequiredCheckbox from './components/RequiredCheckbox';
 import registerTools from './lib/tools';
 import { Modal } from 'react-bootstrap';
 
@@ -46,6 +47,18 @@ class Webviewer extends Component {
     });
 
 
+    instance.annotationPopup.add({
+      type: 'customElement',
+      title: 'Required',
+      render: () => (
+        <RequiredCheckbox
+          annotManager={instance.annotManager}
+          signers={instance.iframeWindow.getSigners()}
+        />
+      ),
+    });
+    
+
     // when ready is fired from public/wv-configs/config.js
     instance.docViewer.one('ready', async (instance) => {
       this.instance = instance;
@@ -60,6 +73,9 @@ class Webviewer extends Component {
       instance.annotManager.on('annotationUpdated', this.props.onAnnotationUpdated);
       instance.annotManager.on('fieldUpdated', this.props.onFieldUpdated);
 
+
+      instance.docViewer.on('documentLoaded', this.props.onDocumentLoaded);
+      instance.docViewer.on('annotationsLoaded', this.props.onAnnotationsLoaded);
 
 
 
@@ -92,10 +108,12 @@ class Webviewer extends Component {
       });
   
 
+
+
+
+
       if (_.isFunction(this.props.onReady)) {
-        this.props.onReady({
-          ...instance,
-        });
+        this.props.onReady({ ...instance, });
       }
     });
   }

@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { toFullName } from '../helpers/parseName';
 
-const createTextField = ({ name, label, annotClassName, customData }) => ({ instance, annotClasses, tools, header, ...rest }) => {
-  const { Annotations, Tools, docViewer } = instance;
+const createTextField = ({ name, label, annotClassName }) => ({ instance, annotClasses, tools, header, ...rest }) => {
+  const { Annotations, docViewer } = instance;
   const annotManager = instance.docViewer.getAnnotationManager();
 
   return async (rectAnnot, custom = {}) => {

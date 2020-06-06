@@ -1,6 +1,6 @@
 const registerAnnotationType = ({ elementName, annotClassName }) => async ({ instance, annotClasses, ...rest }) => {
-  console.log('annotclasses', annotClasses)
-  await instance.annotManager.registerAnnotationType(elementName, annotClasses[annotClassName]);
+  console.log(annotClassName, { annotClasses })
+  await instance.annotManager.registerAnnotationType(annotClasses[annotClassName].prototype.elementName, annotClasses[annotClassName]);
   return ({
     ...rest,
     annotClasses,

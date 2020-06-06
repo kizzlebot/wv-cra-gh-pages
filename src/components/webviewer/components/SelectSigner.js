@@ -25,7 +25,6 @@ export default class SelectSigner extends Component {
   componentDidMount = async () => {
     const selectedAnnots = this.props.annotManager.getSelectedAnnotations();
 
-    console.log({selectedAnnots});
     const annots = _.filter(selectedAnnots, (a) => {
       return a.constructor.name.includes('Template')
     });
