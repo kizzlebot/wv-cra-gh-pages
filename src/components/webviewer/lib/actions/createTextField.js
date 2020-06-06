@@ -50,7 +50,7 @@ const createTextField = ({ name, label, annotClassName }) => ({ instance, annotC
     textAnnot.custom.fullName = toFullName(textAnnot.custom.name);
 
 
-    _.mapKeys(textAnnot.custom, (val, key) => textAnnot.setCustomData(key, (val || '').toString()));
+    // _.mapKeys(textAnnot.custom, (val, key) => textAnnot.setCustomData(key, (val || '').toString()));
     textAnnot.CustomData = textAnnot.custom;
     textAnnot.setContents(`${label ? label : name}: ${toFullName(textAnnot.custom.name)}`);
     textAnnot.FontSize = `${15.0 / zoom}px`;

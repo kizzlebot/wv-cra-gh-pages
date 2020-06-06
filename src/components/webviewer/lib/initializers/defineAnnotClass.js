@@ -24,7 +24,7 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
         name: fullName,
       };
 
-      this.setCustomData(customdata);
+      // this.setCustomData(customdata);
       this.CustomData = customdata;
 
       instance.annotManager.redrawAnnotation(this);

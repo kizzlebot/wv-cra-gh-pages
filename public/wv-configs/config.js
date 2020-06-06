@@ -226,7 +226,11 @@ const toInitials = R.pipe(
       return importSignatures.apply(this, arguments);
     };
 
-
+    const setCustomData = Annotations.Annotation.prototype.setCustomData;
+    Annotations.Annotation.prototype.setCustomData = function(){
+      setCustomData.apply(this, arguments);
+      // annotManager.trigger('annotationChanged', [[this], 'modify', { imported: false, isUndoRedo: false }]);
+    }
 
 
 
