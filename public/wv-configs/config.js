@@ -36,12 +36,12 @@ const toInitials = R.pipe(
 ((exports) => {
 
   const { Promise, R, _ } = exports.getExternalLibs()
+  const runId = `${Math.random() * 10000}`;
 
   // #region get/set signers
   let signer = null;
   let notary = null;
   let signers = [];
-  const runId = `${Math.floor(Math.random() * 100)}`;
   const signerSigInits = {};
   let locked = false;
   const { Annotations, Tools, PDFNet } = exports;
@@ -231,7 +231,6 @@ const toInitials = R.pipe(
     class BetterSigWidgetAnnotation extends Annotations.SignatureWidgetAnnotation {
       createInnerElement(...args){
         const rtn = super.createInnerElement(...args)
-        console.log('createInnterElment', rtn.parentElement)
         this.setCustomData(this.getMetadata());
         return rtn;
       }
@@ -239,7 +238,6 @@ const toInitials = R.pipe(
       createSignHereElement(...args){
 
         const signHereElement = super.createSignHereElement(...args);
-        console.log('createSignerHere', signHereElement.parentElement)
 
         const { type, runId, id, author, signerId, name } = this.getMetadata();
         this.Author = signerId;
@@ -260,11 +258,9 @@ const toInitials = R.pipe(
       }
 
       serialize(...args) {
-        console.log('serializing signaturewidget', args);
         return serialize.apply(this, ...args);
       }
       deserialize(...args){
-        console.log('deserializing signaturewidget', args);
         return deserialize.apply(this, ...args);
       }
     }
@@ -507,6 +503,17 @@ const toInitials = R.pipe(
       });
     }
   }
+  const onFieldChanged = (instance) => {
+    return (field, value) => {
+      instance.annotManager.trigger('fieldUpdated', {
+        type: 'field',
+        name: field.name,
+        value: value
+      })
+    }
+  }
+
+
 
   const handleAddAnnotation = (instance) => async (val) => {
     const { Annotations, annotManager } = instance;
@@ -540,6 +547,15 @@ const toInitials = R.pipe(
       }
 
       annotations = await annotManager.importAnnotations(val.xfdf);
+      const toDelete = _.chain(annotManager.getAnnotationsList())
+        .groupBy('CustomData.id')
+        .omit(['undefined'])
+        .mapValues((val) => val.length > 1 ? _.tail(val) : [])
+        .values()
+        .flatten()
+        .value()
+      console.log('groupoing', toDelete);
+      annotManager.deleteAnnotations(toDelete, true);
     }
 
     const locked = exports.getLock();
@@ -658,6 +674,7 @@ const toInitials = R.pipe(
 
     // register events to trigger on annotManager. subscribed by parent component
     annotManager.on('annotationChanged', onAnnotationChanged(instance))
+    annotManager.on('fieldChanged', onFieldChanged(instance))
 
 
     // register listeners. triggered from parent component

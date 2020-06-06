@@ -58,6 +58,7 @@ class Webviewer extends Component {
       instance.annotManager.on('annotationAdded', this.props.onAnnotationAdded);
       instance.annotManager.on('annotationDeleted', this.props.onAnnotationDeleted);
       instance.annotManager.on('annotationUpdated', this.props.onAnnotationUpdated);
+      instance.annotManager.on('fieldUpdated', this.props.onFieldUpdated);
 
 
 
@@ -77,7 +78,6 @@ class Webviewer extends Component {
 
       
       instance.docViewer.on('annotationsLoaded', async () => {
-        console.log('%cannotationsLoaded', 'font-size:20px; color:ref;')
         return this.loadAnnotations()
       });
 
@@ -108,6 +108,7 @@ class Webviewer extends Component {
 
     if (prevProps.selectedDoc !== this.props.selectedDoc) {
       if (!_.isEmpty(this.props.selectedDoc)) {
+        console.log(this.props.docs[this.props.selectedDoc]);
         return this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { l: this.props.config.l, extension: 'pdf' });
       }
     }

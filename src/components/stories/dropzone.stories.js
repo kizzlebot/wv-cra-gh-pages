@@ -24,7 +24,6 @@ export function Beta() {
   const disabled = boolean('disabled', false, 'props')
 
 
-  console.log('data', data);
   return (
     <div className='container'>
 
@@ -36,7 +35,6 @@ export function Beta() {
             disabled={disabled}
             files={files}
             onFilesChanged={(newFiles) => {
-              console.log('files changed', newFiles);
               setFiles(newFiles);
               // dispatch({ type: 'set-files', payload: { ...state.files, ...newFiles } });
               // // dispatch({ type: 'clear-uploaded-files', payload: false });

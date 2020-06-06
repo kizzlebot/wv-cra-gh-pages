@@ -14,7 +14,7 @@ export default {
 };
 
 export const beta = () => {
-  const selectedDoc = select('documents', ['linearized.pdf', 'ack.pdf'], 'linearized.pdf', 'props');
+  const selectedDoc = select('documents', ['ack.pdf', 'linearized.pdf'], 'ack.pdf', 'props');
 
 
   const selectAnnotations = options('annotations', data, data.first, {
@@ -80,7 +80,6 @@ export const betad = () => {
 
   const config = text('config', '/config.js', 'config');
 
-  console.log('data', data);
   return (
     <Webviewer
       config={{

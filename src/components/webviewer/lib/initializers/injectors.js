@@ -4,17 +4,17 @@ import _ from 'lodash';
 export const injectToolArr = async (instance) => ({
   instance,
   header: [],
-  tools: [],
+  annotClasses: {},
+  tools: {},
   headers: {},
   headerItems: [],
 });
 
 
 
-export const toHeaderGroup = (groupName) => ({ instance, header, headers, ...rest }) => ({
+export const toHeaderGroup = (groupName) => async ({ instance, header, headers, ...rest }) => ({
   ...rest,
   header: [],
-  tools: [],
   instance,
   headers: {
     ...headers,
@@ -56,7 +56,6 @@ export const setHeaderItems = ({ insertBefore }) => async ({ headerItems, instan
 
 
 export const registerHeaderGroup = ({ groupName }) => async ({ instance, headers, ...rest }) => {
-  console.log(headers);
   instance.registerHeaderGroup(groupName, [
     { type: 'spacer' },
     { type: 'divider' },

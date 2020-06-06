@@ -16,13 +16,17 @@ function App() {
       <Webviewer
         // selectedDoc={`https://storage.googleapis.com/enl-static-files/local/linearized.pdf`}
         onReady={(viewer) => {
-          console.log('viewer', viewer);
+          console.log('onReady', viewer);
+          
         }}
 
         onAnnotationAdded={(args) => console.log('annotation added', args)}
         onAnnotationUpdated={(args) => console.log('annotation updated', args)}
         onAnnotationDeleted={(args) => console.log('annotation deleted', args)}
         onWidgetAdded={(args) => console.log('widget added', args)}
+        onFieldUpdated={(args) => console.log('field changed', args)}
+
+
 
         selectedSigner={'1'}
         selectedDoc={'linearized.pdf'}

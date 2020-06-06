@@ -1,4 +1,9 @@
 // Do this as the first thing so that any code reading it knows the right env.
+import "jest-canvas-mock";
+import '../../public/lib/core/CoreControls.js';
+
+
+
 process.env.BABEL_ENV = 'test';
 process.env.NODE_ENV = 'test';
 process.env.PUBLIC_URL = '';
@@ -9,7 +14,4 @@ process.env.PUBLIC_URL = '';
 process.on('unhandledRejection', err => {
   throw err;
 });
-
-
-
 require('dotenv').config()

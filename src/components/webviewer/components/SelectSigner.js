@@ -2,7 +2,12 @@ import React, { Component } from 'react'
 import _ from 'lodash';
 import * as R from 'ramda';
 
-const getTemplateAnnots = R.filter(R.propEq('Subject', 'Template'))
+const getTemplateAnnots = R.filter(
+  R.pipe(
+    R.path(['constructor', 'name']),
+    R.includes('Template')
+  )
+)
 const parseName = (user) => {
   const fName = _.get(user, 'firstName', _.get(user, 'user.firstName'));
   const lName = _.get(user, 'lastName', _.get(user, 'user.lastName'));
@@ -20,8 +25,9 @@ export default class SelectSigner extends Component {
   componentDidMount = async () => {
     const selectedAnnots = this.props.annotManager.getSelectedAnnotations();
 
+    console.log({selectedAnnots});
     const annots = _.filter(selectedAnnots, (a) => {
-      return a.constructor.name === 'Template'
+      return a.constructor.name.includes('Template')
     });
 
     if (annots) {

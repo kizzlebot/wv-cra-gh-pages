@@ -1,7 +1,5 @@
 import * as R from 'ramda';
-import registerAnnotationType from "../initializers/registerAnnotationType";
-import registerTool from "../initializers/registerTool";
-import { setHeaderItems, toHeaderGroup, injectHeaderItem, updateTool, registerHeaderGroup } from "../initializers/injectors";
+import { setHeaderItems, toHeaderGroup, injectHeaderItem, registerHeaderGroup } from "../initializers/injectors";
 
 const createStampAnnotTool = R.pipeP(
   async ({ ...rest }) => ({

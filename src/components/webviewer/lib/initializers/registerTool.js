@@ -2,31 +2,35 @@ import _ from 'lodash';
 
 const registerTool = ({
   toolName,
+  annotClassName,
   buttonImage,
   buttonName,
   tooltip
-}, opts = {}) => async ({ instance, tools, header, toolObject, annotClass, ...rest }) => {
+}, opts = {}) => async ({ instance, tools, header, annotClasses, ...rest }) => {
 
+
+  // register the tool
+  const toolObject = new tools[toolName](instance.docViewer);
   if (opts.clearOnDraw){
     toolObject.on('annotationAdded', () => {
       return instance.setActiveHeaderGroup('default');
     })
   }
-
-  // register the tool
+  
   await instance.registerTool({
     toolName,
     buttonImage,
     buttonName,
     tooltip,
     toolObject,
-  }, annotClass);
+  }, annotClasses[annotClassName]);
 
 
   return {
     ...rest,
     instance,
     tools,
+    annotClasses,
     header: [...header, {
       type: 'toolButton',
       toolName,

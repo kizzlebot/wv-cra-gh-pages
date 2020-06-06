@@ -71,7 +71,6 @@ describe('xmlFormatter', () => {
       const str = `{&quot;author&quot;:&quot;1&quot;,&quot;color&quot;:&quot;153,215,114,0.5&quot;,&quot;fieldType&quot;:&quot;SIGNATURE&quot;,&quot;flag&quot;:&quot;&quot;,&quot;id&quot;:&quot;be2b1f9d-6c48-173c-3a9f-8d3730f31699&quot;,&quot;name&quot;:&quot;james Choi&quot;,&quot;signerId&quot;:&quot;1&quot;,&quot;type&quot;:&quot;SIGNATURE&quot;,&quot;value&quot;:&quot;&quot;}`
 
       const obj = unescapeQuotes(str);
-      console.log(obj);
     });
   });
 

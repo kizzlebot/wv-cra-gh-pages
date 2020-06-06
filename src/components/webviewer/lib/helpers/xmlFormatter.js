@@ -51,6 +51,5 @@ export const xmlFormatter = (xml) => (ids) => {
 
 
   const rnt = xmlDoc.documentElement.outerHTML;
-  console.log({ rnt })
   return rnt;
 }
