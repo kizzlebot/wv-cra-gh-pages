@@ -8,6 +8,7 @@
     "@pdftron/webviewer": "^6.2.3",
     "bluebird": "^3.7.2",
     "bootstrap": "^4.5.0",
+    "faker": "^4.1.0",
     "firebase": "^7.15.0",
     "node-sass": "^4.14.1",
     "polished": "^3.5.1",
@@ -83,7 +84,7 @@
     "react-test-renderer": "^16.13.1",
     "sass-loader": "^8.0.2",
     "storybook-dark-mode": "^0.4.1",
-    "webpack": "^4.43.0",
+    "webpack": "4.42.0",
     "webpack-cli": "^3.3.11"
   },
   "jest": {
