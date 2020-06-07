@@ -42,8 +42,10 @@ const toInitials = R.pipe(
 
   // #region get/set signers
   let signer = null;
+  let docId = null;
   let notary = null;
   let signers = [];
+  let selectedSigner = null;
   const signerSigInits = {};
   let locked = false;
   const { Annotations, Tools, PDFNet } = exports;
@@ -61,6 +63,12 @@ const toInitials = R.pipe(
   ];
 
 
+  exports.setDocId = (id) => {
+    docId = id;
+    return docId;
+  };
+  exports.getDocId = () => docId;
+
   exports.setSigners = (s) => {
     // console.log('setSigners called', s);
     signers = _.map(s, (signer, i) => {
@@ -73,13 +81,12 @@ const toInitials = R.pipe(
     return signers;
   };
 
-  exports.setSigner = (s) => {
-    signer = s;
-
-    return signer;
+  exports.setSelectedSigner = (s) => {
+    selectedSigner = s;
+    return selectedSigner;
   };
 
-  exports.getSigner = () => signer;
+  exports.getSigner = () => signer || _.head(signers).id;
   exports.getSignerById = (id) => _.find(signers, { id });
   exports.setNotary = (n) => {
     notary = n;
@@ -234,10 +241,29 @@ const toInitials = R.pipe(
 
 
 
+    // const freeTextSerialize = Annotations.FreeTextAnnotation.prototype.serialize;
+    // const freeTextDeserialize = Annotations.FreeTextAnnotation.prototype.deserialize;
+    // Annotations.FreeTextAnnotation.prototype.serialize = function(...args){
+    //   const el = freeTextSerialize.apply(this, args);
+    //   if (this.CustomData.color){
+    //     el.setAttribute('customColor', JSON.stringify(this.CustomData.color))
+    //   }
+    //   console.log('freetext el', el, this)
+    //   return el;
+    // }
+    // Annotations.FreeTextAnnotation.prototype.deserialize = function(element, pageMatrix){
+    //   freeTextDeserialize.call(this, element, pageMatrix);
+    //   if (element.getAttribute('customColor')){
+    //     this.Color = new Annotations.Color(...JSON.parse(element.getAttribute('customColor')))
+    //   }
+    // }
+
+
+
     class BetterSigWidgetAnnotation extends Annotations.SignatureWidgetAnnotation {
       createInnerElement(...args){
         const rtn = super.createInnerElement(...args)
-        this.setCustomData(this.getMetadata());
+        // this.setCustomData(this.getMetadata());
         return rtn;
       }
 
@@ -499,6 +525,7 @@ const toInitials = R.pipe(
             };
 
             // annotation.updateVisibility();
+            annotManager.trigger('updateAnnotationPermission');
             annotManager.trigger('widgetAdded', payload);
             // annotManager.trigger('annotationAdded', payload);
           } else if (type === 'delete') {
@@ -702,41 +729,40 @@ const toInitials = R.pipe(
 
 
     annotManager.on('updateAnnotationPermission', async annotation => {
-      if (!annotation) {
-        const allAnnots = annotManager.getAnnotationsList();
+      console.log('updateAnnotationPermission called');
+      const allAnnots = annotManager.getAnnotationsList();
 
 
-        const locked = exports.getLock();
-        const currUserId = annotManager.getCurrentUser();
-        const isAdminUser = annotManager.getIsAdminUser();
+      const locked = exports.getLock();
+      const currUserId = annotManager.getCurrentUser();
+      const isAdminUser = annotManager.getIsAdminUser();
 
-        await Promise.map(allAnnots, (annot) => {
-          if (annot instanceof Annotations.WidgetAnnotation) {
-            const signerId = _.get(annot.getMetadata(), 'signerId');
+      await Promise.map(allAnnots, (annot) => {
+        if (annot instanceof Annotations.WidgetAnnotation) {
+          const signerId = _.get(annot.getMetadata(), 'signerId');
 
-            if (isAdminUser) {
-              annot.fieldFlags.set('ReadOnly', false);
-              return;
-            }
-
-            if (signerId !== currUserId || locked) {
-              // console.log('isReadOnly', signerId, currUserId);
-              annot.fieldFlags.set('ReadOnly', true);
-            } else {
-              annot.fieldFlags.set('ReadOnly', false);
-            }
+          if (isAdminUser) {
+            annot.fieldFlags.set('ReadOnly', false);
+            return;
           }
-        });
-      }
+
+          if (signerId !== currUserId || locked) {
+            // console.log('isReadOnly', signerId, currUserId);
+            annot.fieldFlags.set('ReadOnly', true);
+          } else {
+            annot.fieldFlags.set('ReadOnly', false);
+          }
+        }
+      });
     });
 
 
-    annotManager.on('setSelectedSigner', async (val) => {
-      const newSigner = exports.setSigner(val);
-      const signers = exports.getSigners();
-      const selSigner = _.find(signers, { id: newSigner });
-      return annotManager.setCurrentUser(_.get(selSigner, 'id', 'guest'))
+    annotManager.on('setSelectedSigner', exports.setSelectedSigner);
+    annotManager.on('setCurrentUser', (currentUser) => {
+      annotManager.setCurrentUser(currentUser);
+      annotManager.trigger('currentUserChanged', currentUser);
     });
+
 
 
     annotManager.on('addSigner', async (args) => exports.addSigner(args));
@@ -744,6 +770,7 @@ const toInitials = R.pipe(
 
 
     docViewer.on('updateFeatures', configureFeatures(instance));
+    docViewer.on('setDocId', (docId) => exports.setDocId(docId));
 
 
     // TODO: use this when at v6.3
@@ -765,7 +792,16 @@ const toInitials = R.pipe(
 
 
 
-    return docViewer.trigger('ready', { ...instance, Annotations, });
+    const { loadDocument } = instance;
+    return docViewer.trigger('ready', { 
+      ...instance, 
+      getDocId: () => exports.getDocId(),
+      loadDocument: (pdfUrl, config) => {
+        instance.docViewer.trigger('setDocId', config.docId);
+        return loadDocument(pdfUrl, config);
+      },
+      Annotations, 
+    });
 
   });
 })(window);

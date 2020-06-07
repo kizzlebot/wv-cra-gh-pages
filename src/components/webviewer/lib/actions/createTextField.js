@@ -36,6 +36,7 @@ const createTextField = ({ name, label, annotClassName }) => ({ instance, annotC
 
     textAnnot.custom = {
       ...custom,
+      ...rectAnnot.CustomData,
       type,
       value,
       flags: flags,

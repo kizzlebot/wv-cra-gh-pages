@@ -18,7 +18,7 @@ const checkboxToolImg = '<svg aria-hidden="true" focusable="false" data-prefix="
 
 
 const createFormFieldTool = (name, buttonImage) => R.pipeP(
-  initRectAnnot(name, { type: _.toUpper(name) }),
+  initRectAnnot(name, { type: _.toUpper(name), label: 'Signature' }),
   defineToolClass({
     className: `${_.upperFirst(name)}FieldTool`,
     annotClassName: `${name}RectAnnot`,

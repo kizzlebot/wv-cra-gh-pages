@@ -6,11 +6,12 @@ import _ from 'lodash';
 export default async (firebase, serverOpts) => {
   // console.debug('serverOpts', serverOpts, firebase);
   class Server {
-    constructor({ nsId, userId, signers, userType, token, rtdbNamespace }) {
+    constructor({ nsId, userId, user, signers, userType, token, rtdbNamespace }) {
       this.nsId = nsId;
       this.userId = userId;
       this.userType = userType;
       this.signers = signers;
+      this.user = user;
       this.rtdbNamespace = _.isEmpty(rtdbNamespace) ? 'rooms' : `organization/${rtdbNamespace}/rooms`;
 
       // Initialize Firebase
@@ -92,40 +93,13 @@ export default async (firebase, serverOpts) => {
 
         console.debug('%cfirebase connected 🔥!', 'color: blue; font-size:20px');
 
-        // if consumer, then mark all signers that are physically present with me as connected including self
-        if (this.userType === 'consumer' && this.signers && this.signers.length > 0) {
-          await _.chain(this.signers)
-            .map(async (signee) => {
-              await this.authorsRef
-                .child(signee.id)
-                .onDisconnect()
-                .set(null);
-              return this.authorsRef
-                .child(signee.id)
-                .set({
-                  connectedAt: +new Date(),
-                  connected: true
-                });
-            })
-            .thru(proms => Promise.all(proms))
-            .value();
-        }
-
-
-        // remove exported xfdf on disconnect
-        if (this.userType === 'notary') {
-          await this.xfdfRef
-            .onDisconnect()
-            .set({});
-        }
         // If we are currently connected, then use the 'onDisconnect()'
         // method to add a set which will only trigger once this
         // client has disconnected by closing the app,
         // losing internet, or any other means.
-        if (!_.isNil(userId)) {
+        if (!_.isNil(userId) && !_.isNil(this.user)) {
           await this.authorsRef
             .child(userId)
-            // .child('connected')
             .onDisconnect()
             .set(null);
 
@@ -133,6 +107,7 @@ export default async (firebase, serverOpts) => {
             .child(userId)
             // .child('connected')
             .set({
+              ...this.user,
               connected: true,
               connectedAt: +new Date()
             });
@@ -171,7 +146,10 @@ export default async (firebase, serverOpts) => {
 
     setVaDisclaimerRejected = val => this.vaDisclaimerRejectedRef.set(val);
 
-    bind = (action, cbFunc) => {
+    bind = (action, docId, cbFunc) => {
+      if (_.isFunction(docId)){
+        cbFunc = docId;
+      }
 
       const callbackFunction = R.pipe(R.applySpec({ val: R.invoker(0, 'val'), key: R.prop('key') }), cbFunc);
       
@@ -196,13 +174,23 @@ export default async (firebase, serverOpts) => {
           return this.annotationsRef.on('value', callbackFunction);
         case 'onAnnotationCreated':
           this.bindings.annotations[action] = callbackFunction;
-          return this.annotationsRef.on('child_added', callbackFunction);
+          return this.annotationsRef
+            .orderByChild('docId')
+            .equalTo(docId)
+            .on('child_added', callbackFunction);
         case 'onAnnotationUpdated':
           this.bindings.annotations[action] = callbackFunction;
-          return this.annotationsRef.on('child_changed', callbackFunction);
+          return this.annotationsRef
+            .orderByChild('docId')
+            .equalTo(docId)
+            .on('child_changed', callbackFunction);
         case 'onAnnotationDeleted':
           this.bindings.annotations[action] = callbackFunction;
-          return this.annotationsRef.on('child_removed', callbackFunction);
+          return this.annotationsRef
+            .orderByChild('docId')
+            .equalTo(docId)
+            .on('child_removed', callbackFunction);
+
         case 'onSelectedSignerChange':
           return this.selectedSignerRef.on('value', callbackFunction);
         case 'onBlankPageAdded':

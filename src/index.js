@@ -3,9 +3,41 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { FirebaseProvider } from './lib/hooks/useFirebase';
 import { ServerProvider } from './lib/hooks/useServerProvider';
+import faker from 'faker';
 
 const userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : `${Math.floor(Math.random() * 10000000)}`;
 sessionStorage.setItem('userId', userId);
+
+const user = (sessionStorage.getItem(userId)) ? JSON.parse(sessionStorage.getItem(userId)) : {
+  id: userId,
+  firstName: faker.name.firstName(),
+  lastName: faker.name.lastName(),
+}
+
+sessionStorage.setItem(userId, JSON.stringify(user));
+
+const signers = [
+  {
+    firstName: "james",
+    lastName: "Choi",
+    id: '1',
+    type: 'consumer'
+  },
+  {
+    firstName: "joe",
+    lastName: "done",
+    id: '2'
+  }
+];
+
+const docs = {
+  'linearized.pdf': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
+  'ack.pdf': 'https://storage.googleapis.com/enl-static-files/local/ack.pdf',
+};
+
+
+
+
 
 if (process.env.NODE_ENV !== 'production') {
   ReactDOM.render(
@@ -15,11 +47,17 @@ if (process.env.NODE_ENV !== 'production') {
           config={{ 
             nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
             userId,
+            user,
             rtdbNamespace:'8d976a23-b865-4fcd-9165-ddc0aedaf614'
           }}
         >
           <App 
             userId={userId}
+            user={user}
+
+            docs={docs}
+            signers={signers}
+            isAdminUser={false}
           />
         </ServerProvider>
       </FirebaseProvider>

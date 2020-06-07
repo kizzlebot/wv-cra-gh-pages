@@ -33,34 +33,35 @@ class Webviewer extends Component {
 
 
 
-    instance.annotationPopup.add({
-      type: 'customElement',
-      title: 'Select Signer',
-      render: () => (
-        <SelectSigner
-          annotManager={instance.annotManager}
-          signers={instance.iframeWindow.getSigners()}
-        />
-      ),
-    });
-
-
-    instance.annotationPopup.add({
-      type: 'customElement',
-      title: 'Required',
-      render: () => (
-        <RequiredCheckbox
-          annotManager={instance.annotManager}
-          signers={instance.iframeWindow.getSigners()}
-        />
-      ),
-    });
-    
-
     // when ready is fired from public/wv-configs/config.js
     instance.docViewer.one('ready', async (instance) => {
       this.instance = instance;
       window.instance = instance;
+      instance.annotationPopup.add({
+        type: 'customElement',
+        title: 'Select Signer',
+        render: () => (
+          <SelectSigner
+            annotManager={instance.annotManager}
+            instance={instance}
+            signers={instance.getSigners()}
+          />
+        ),
+      });
+
+
+      instance.annotationPopup.add({
+        type: 'customElement',
+        title: 'Required',
+        render: () => (
+          <RequiredCheckbox
+            annotManager={instance.annotManager}
+            signers={instance.getSigners()}
+          />
+        ),
+      });
+    
+
 
       this.setState(({ instance }));
 
@@ -71,25 +72,30 @@ class Webviewer extends Component {
       instance.annotManager.on('annotationUpdated', this.props.onAnnotationUpdated);
       instance.annotManager.on('fieldUpdated', this.props.onFieldUpdated);
 
+      
+      instance.docViewer.on('documentUnloaded', this.props.onDocumentUnloaded);
 
       instance.docViewer.on('documentLoaded', this.props.onDocumentLoaded);
-      instance.docViewer.on('documentUnloaded', this.props.onDocumentUnloaded);
-      instance.docViewer.on('annotationsLoaded', this.props.onAnnotationsLoaded);
+      instance.docViewer.on('annotationsLoaded', () => this.props.onAnnotationsLoaded(instance.getDocId()));
 
 
 
-      if (!_.isEmpty(this.props.selectedDoc)) {
-        await this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { l: this.props.config.l, extension: 'pdf' });
+      if (this.props.docs[this.props.selectedDoc]) {
+        await this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
+          l: this.props.config.l, 
+          docId: this.props.selectedDoc,
+          extension: 'pdf' 
+        });
       }
-
-
-
 
       // Set the list of signers to assign template fields for.
       instance.annotManager.trigger('setSigners', this.props.signers);
 
       // Set the selected signer
       instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
+
+      // Set the currentUser
+      instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
 
       
       instance.docViewer.on('annotationsLoaded', async () => {
@@ -122,21 +128,38 @@ class Webviewer extends Component {
 
 
   componentDidUpdate = async (prevProps, prevState) => {
+    if (!this.instance){
+      return;
+    }
+    if (prevProps.currentUser !== this.props.currentUser) {
+      await this.instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
+    }
+
+    if (prevProps.signers !== this.props.signers) {
+      await this.instance.annotManager.trigger('setSigners', this.props.signers);
+    }
 
     if (prevProps.selectedSigner !== this.props.selectedSigner) {
       await this.instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
     }
 
-    console.log('selectedDoc', this.props.selectedDoc)
     if (prevProps.selectedDoc !== this.props.selectedDoc && this.instance) {
-      if (!_.isEmpty(this.props.selectedDoc)) {
-        return this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { l: this.props.config.l, extension: 'pdf' });
+      if (this.props.docs[this.props.selectedDoc]) {
+        return this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
+          docId: this.props.selectedDoc, 
+          l: this.props.config.l, 
+          extension: 'pdf' 
+        });
+      } else {
+        return this.instance.closeDocument(); 
       }
     }
 
 
+    // toImport will be a single annotation annotation
     if (prevProps.toImport !== this.props.toImport) {
       console.log('%cannotations changed', 'font-size:20px;color:red;')
+
       if (this.props.toImport) {
         console.log(`%c${this.props.toImport.xfdf}`, 'font-size:20px;color:red;')
         if (this.props.toImport.type === 'delete'){
@@ -149,8 +172,7 @@ class Webviewer extends Component {
           console.log(annots);
           await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
         }
-        // await instance.annotManager.redrawAnnotation(annot);
-        // await instance.getInstance().fireEvent('updateAnnotationPermission', [annot]);
+
         this.props.onImported();
       }
       // await this.loadAnnotations();

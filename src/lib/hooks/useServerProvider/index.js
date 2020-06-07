@@ -22,7 +22,6 @@ export function ServerProvider({ config, ...props }) {
 
 
   useEffect(() => {
-    console.log('useEffect called')
     const importServer = async () => {
       if (wvmod || server) {
         dispatch({ type: 'set', payload: wvmod || server });
@@ -31,7 +30,6 @@ export function ServerProvider({ config, ...props }) {
       }
   
       const { default: createServer } = await import('./server');
-      console.log('createServer', createServer);
       const _server = wvmod = await createServer(firebase, { ...config });
       window.server = _server;
   

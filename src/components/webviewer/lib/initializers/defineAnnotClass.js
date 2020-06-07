@@ -5,6 +5,8 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
     constructor(...args) {
       super(...args);
       this.Subject = className;
+      console.log('customData', customData);
+      this.CustomData = { ...customData }
     }
     draw(ctx, pageMatrix) {
       super.draw(ctx, pageMatrix);
@@ -14,18 +16,20 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
       const fullName = parseName(signer);
 
       this.FillColor = signer.color;
-      this.setContents(`${customData.label}: ${fullName}`);
-      this.Author = signer.id;
+      // this.Author = signer.id;
       const customdata = {
         ...this.CustomData,
         ...customData,
         signerId: id,
         color: [signer.color.R, signer.color.G, signer.color.B, signer.color.A],
         name: fullName,
+        fullName,
       };
 
+      this.setContents(`${this.CustomData.label}: ${fullName}`);
+
       // this.setCustomData(customdata);
-      this.CustomData = customdata;
+      this.CustomData = this.custom = customdata;
 
       instance.annotManager.redrawAnnotation(this);
       return this;

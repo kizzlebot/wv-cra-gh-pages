@@ -1,5 +1,5 @@
 import React from "react";
-import Webviewer from "../webviewer";
+import Webviewer from "../components/webviewer";
 import { withKnobs, text, radios, boolean, number, select, optionsKnob as options } from "@storybook/addon-knobs";
 import data from './lib/data';
 
@@ -13,19 +13,19 @@ export default {
   },
 };
 
+
+
+const userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : `${Math.floor(Math.random() * 10000000)}`;
+sessionStorage.setItem('userId', userId);
+
 export const beta = () => {
   const selectedDoc = select('documents', ['ack.pdf', 'linearized.pdf'], 'ack.pdf', 'props');
-
-
-  const selectAnnotations = options('annotations', data, data.first, {
-    display: 'select',
-  }, 'props')
 
 
   const pdftronServer = text('pdftronServer', `https://webviewer-server.staging.enotarylog.com`, 'config');
 
   const signers = [
-    { id: '1', firstName: 'John', lastName: 'Schmoe' },
+    { id: userId, firstName: 'John', lastName: 'Schmoe' },
     { id: '2', firstName: 'Joe', lastName: 'Exotic' },
   ];
 
@@ -45,7 +45,6 @@ export const beta = () => {
         pdftronServer,
         config: '/wv-configs/config.js',
       }}
-      annotations={selectAnnotations}
       isAdminUser={isAdminUser}
       signers={signers}
       selectedSigner={selectedSigner}
@@ -57,6 +56,10 @@ export const beta = () => {
     />
   );
 }
+
+
+
+
 
 export const betad = () => {
   const selectedDoc = select('documents', ['linearized.pdf', 'ack.pdf'], 'linearized.pdf', 'props');

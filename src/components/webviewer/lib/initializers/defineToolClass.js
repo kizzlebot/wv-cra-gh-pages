@@ -26,20 +26,26 @@ const defineToolClass = ({
     }
 
     mouseLeftDown(...args){
-      return onMouseLeftDown && onMouseLeftDown({ context: { tool: this, args }, instance, tools, annotClasses, ...rest })
+      if (onMouseLeftDown){
+        return onMouseLeftDown({ context: { tool: this, args }, instance, tools, annotClasses, ...rest })
+      }
+      // super.mouseLeftDown(...args);
     }
 
     mouseLeftUp(...args){
-      return onMouseLeftUp && onMouseLeftUp({ context: { tool: this, args }, instance, tools, annotClasses, ...rest })
+      if (onMouseLeftUp){
+        return onMouseLeftUp({ context: { tool: this, args }, instance, tools, annotClasses, ...rest })
+      }
+      // super.mouseLeftDown(...args);
     }
   };
 
 
   if (!onMouseLeftDown){
-    C.prototype.mouseLeftDown = instance.Tools.RectangleCreateTool.prototype.mouseLeftDown;
+    C.prototype.mouseLeftDown = BaseClass.prototype.mouseLeftDown;
   }
   if (!onMouseLeftUp){
-    C.prototype.mouseLeftUp = instance.Tools.RectangleCreateTool.prototype.mouseLeftUp;
+    C.prototype.mouseLeftUp = BaseClass.prototype.mouseLeftUp;
   }
 
   return {

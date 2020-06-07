@@ -49,14 +49,8 @@ export default class SelectSigner extends Component {
       .filter((el) => !_.isEqual(el.type, 'consumer'))
       .sortBy(['lastName', 'firstName'])
       .value();
-      
-    const notary = {
-      id: 'Notary',
-      type: 'notary',
-    }
 
-
-
+    const signers = _.filter([consumer, ...otherSigners], (el) => !_.isNil(el));
 
 
     // TODO: set annot.Author and annot.CustomData.type
@@ -65,7 +59,7 @@ export default class SelectSigner extends Component {
         <div>
           <label htmlFor='signer'>Signer: </label>
           <select
-            value={this.state.signerId || consumer.id}
+            value={this.state.signerId}
             onChange={(ev) => {
               _.map(annots, (a) => {
                 a.setSigner(ev.target.value);
@@ -74,7 +68,7 @@ export default class SelectSigner extends Component {
             }}
           >
             {
-              _.map([notary, consumer, ...otherSigners], (signer) => {
+              _.map(signers, (signer) => {
                 return (
                   <option key={signer.id} value={signer.id}>
                     {
