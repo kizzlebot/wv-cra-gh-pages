@@ -6,9 +6,6 @@
   "dependencies": {
     "@enotarylog/ramda": "^1.0.0",
     "@pdftron/webviewer": "^6.2.3",
-    "@testing-library/jest-dom": "^5.9.0",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "bluebird": "^3.7.2",
     "bootstrap": "^4.5.0",
     "firebase": "^7.15.0",
@@ -50,21 +47,28 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-react": "^7.10.1",
     "@storybook/addon-a11y": "^5.3.18",
     "@storybook/addon-actions": "^5.3.18",
     "@storybook/addon-backgrounds": "^5.3.18",
     "@storybook/addon-console": "^1.2.1",
     "@storybook/addon-docs": "^5.3.18",
-    "@storybook/addon-knobs": "^5.3.18",
+    "@storybook/addon-knobs": "^5.3.19",
     "@storybook/addon-links": "^5.3.18",
     "@storybook/addon-storysource": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/preset-create-react-app": "^2.1.1",
-    "@storybook/react": "^5.3.18",
+    "@storybook/react": "^5.3.19",
+    "@testing-library/jest-dom": "^5.9.0",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/react-hooks": "^3.3.0",
+    "@testing-library/user-event": "^7.1.2",
     "babel-core": "^6.26.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "identity-obj-proxy": "3.0.0",
@@ -73,9 +77,14 @@
     "jest-environment-jsdom-fourteen": "1.0.1",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.2",
+    "node-sass": "^4.14.1",
     "prettier": "^2.0.4",
+    "react-hot-loader": "^4.12.21",
     "react-test-renderer": "^16.13.1",
-    "storybook-dark-mode": "^0.4.1"
+    "sass-loader": "^8.0.2",
+    "storybook-dark-mode": "^0.4.1",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   },
   "jest": {
     "roots": [
@@ -90,7 +99,7 @@
       "react-app-polyfill/jsdom"
     ],
     "setupFilesAfterEnv": [
-      "<rootDir>/src/setupTests.js"
+      "<rootDir>/config/jest/setupTests.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
@@ -136,6 +145,9 @@
     "presets": [
       "@babel/preset-env",
       "react-app"
+    ],
+    "plugins": [
+      "react-hot-loader/babel"
     ]
   }
 }

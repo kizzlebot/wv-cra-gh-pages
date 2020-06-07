@@ -274,30 +274,17 @@ export default async (firebase, serverOpts) => {
     }
 
     signInWithToken = async (token) => {
-      await firebase
-        .auth()
-        .setPersistence(firebase.auth.Auth.Persistence.SESSION);
+      // await firebase
+      //   .auth()
+      //   .setPersistence(firebase.auth.Auth.Persistence.SESSION);
       return firebase.auth().signInWithCustomToken(token);
     };
 
     signInAnonymously = async (token) => {
-      try {
-        await firebase
-          .auth()
-          .setPersistence(firebase.auth.Auth.Persistence.SESSION);
-        return firebase.auth().signInAnonymously();
-      } catch (error) {
-        // Handle Errors here.
-        const errorCode = error.code;
-
-        if (errorCode === 'auth/operation-not-allowed') {
-          window.alert(
-            'You must enable Anonymous auth in the Firebase Console.'
-          );
-        } else {
-          console.error(error);
-        }
-      }
+      await firebase
+        .auth()
+        .setPersistence(firebase.auth.Auth.Persistence.SESSION);
+      return firebase.auth().signInAnonymously();
     };
     removeAllXfdf = () => this.xfdfRef.set({});
     setSelectedSigner = signerId => this.selectedSignerRef.set(signerId);
@@ -351,8 +338,7 @@ export default async (firebase, serverOpts) => {
       .then(R.invoker(0, 'val'))
     setSelectedDocTitle = (title) => this.selectedDocTitleRef.set(title);
 
-    createSignatures = (signerId, data) =>
-      this.consumerSignatures.child(signerId).update(data);
+    createSignatures = (signerId, data) => this.consumerSignatures.child(signerId).update(data);
     getSignatures = (signerId) => this.consumerSignatures.child(signerId).once('value')
       .then(R.invoker(0, 'val'))
 
