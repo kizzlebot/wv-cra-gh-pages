@@ -25,8 +25,8 @@ class Webviewer extends Component {
     const { default: initWv } = await import('@pdftron/webviewer');
 
     const instance = await initWv({
-      ...this.props.config,
       path: '/lib',
+      ...this.props.config,
       // pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
@@ -37,6 +37,7 @@ class Webviewer extends Component {
     instance.docViewer.one('ready', async (instance) => {
       this.instance = instance;
       window.instance = instance;
+
       instance.annotationPopup.add({
         type: 'customElement',
         title: 'Select Signer',
@@ -71,14 +72,12 @@ class Webviewer extends Component {
       instance.annotManager.on('annotationDeleted', this.props.onAnnotationDeleted);
       instance.annotManager.on('annotationUpdated', this.props.onAnnotationUpdated);
       instance.annotManager.on('fieldUpdated', this.props.onFieldUpdated);
-
-      
       instance.docViewer.on('documentUnloaded', this.props.onDocumentUnloaded);
-
       instance.docViewer.on('documentLoaded', this.props.onDocumentLoaded);
       instance.docViewer.on('annotationsLoaded', () => this.props.onAnnotationsLoaded(instance.getDocId()));
 
 
+      instance.annotManager.setIsAdminUser(this.props.isAdminUser);
 
       if (this.props.docs[this.props.selectedDoc]) {
         await this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
@@ -99,6 +98,11 @@ class Webviewer extends Component {
 
       
       instance.docViewer.on('annotationsLoaded', async () => {
+        // Set the selected signer
+        instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
+
+        // Set the currentUser
+        instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
         return this.loadAnnotations()
       });
 
@@ -131,6 +135,11 @@ class Webviewer extends Component {
     if (!this.instance){
       return;
     }
+
+    if (prevProps.isAdminUser !== this.props.isAdminUser) {
+      await this.instance.annotManager.setIsAdminUser(this.props.isAdminUser);
+    }
+
     if (prevProps.currentUser !== this.props.currentUser) {
       await this.instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
     }
@@ -144,6 +153,7 @@ class Webviewer extends Component {
     }
 
     if (prevProps.selectedDoc !== this.props.selectedDoc && this.instance) {
+      
       if (this.props.docs[this.props.selectedDoc]) {
         return this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
           docId: this.props.selectedDoc, 
@@ -156,25 +166,51 @@ class Webviewer extends Component {
     }
 
 
+    if (prevProps.widgetToImport !== this.props.widgetToImport) {
+      console.log('%cwidget changed', 'font-size:20px;color:red;')
+
+      if (this.props.widgetToImport) {
+        const existing = await this.instance.annotManager.getWidgetById(this.props.widgetToImport.id)
+
+
+        // if delete called an
+        if (this.props.widgetToImport.type === 'delete' && existing){
+          console.log('deleting widget');
+          await this.instance.annotManager.deleteAnnotation(existing, true);
+        } 
+        else if (this.instance.getRunId() === this.props.widgetToImport.runId && existing) {
+          console.log('%cwidget created by this browser skipping...', 'font-size:19px;color:red;')
+          this.props.onWidgetImported();
+        }
+        else {
+          const annots = await this.instance.annotManager.importAnnotations(this.props.widgetToImport.xfdf);
+          await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
+          this.props.onWidgetImported();
+          this.instance.annotManager.trigger('updateAnnotationPermission');
+        }
+      }
+    }
+
     // toImport will be a single annotation annotation
-    if (prevProps.toImport !== this.props.toImport) {
+    if (prevProps.annotToImport !== this.props.annotToImport) {
       console.log('%cannotations changed', 'font-size:20px;color:red;')
 
-      if (this.props.toImport) {
-        console.log(`%c${this.props.toImport.xfdf}`, 'font-size:20px;color:red;')
-        if (this.props.toImport.type === 'delete'){
-          const toDel = this.instance.annotManager.getAnnotationById(this.props.toImport.id);
+      if (this.props.annotToImport) {
+        if (this.props.annotToImport.type === 'delete'){
+          const toDel = this.instance.annotManager.getAnnotationById(this.props.annotToImport.id);
           if (toDel){
             this.instance.annotManager.deleteAnnotation(toDel, true);
           }
         } else {
-          const annots = await this.instance.annotManager.importAnnotCommand(this.props.toImport.xfdf);
+          const annots = await this.instance.annotManager.importAnnotCommand(this.props.annotToImport.xfdf);
           console.log(annots);
           await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
         }
 
-        this.props.onImported();
+        this.props.onAnnotImported();
       }
+
+
       // await this.loadAnnotations();
     }
   }

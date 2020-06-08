@@ -1,42 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import _ from 'lodash';
-import Webviewer from "./components/webviewer";
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './style.css';
 import config from './stories/lib/config';
-import { useServer } from './lib/hooks/useServerProvider';
-import { useMap, useQueue, useGetSetState } from 'react-use';
-
+import { useGetSetState } from 'react-use';
+import Collab from './components/webviewer/collab';
 
 
 function App({ 
-  signers, 
   userId, 
   isAdminUser,
   docs
 }) {
-
-  const server = useServer();
-  const { add, remove, first, last, size } = useQueue();
-  const [getState, setState] = useGetSetState({ selectedDocId: '-1', signers: {} });
-
-
-
-  useEffect(() => {
-    server.bind('onAuthorsChanged', ({ val }) => {
-      setState({
-        ...getState(),
-        signers: val
-      });
-    })
-
-  }, [getState, server, setState])
-
-
+  const [getState, setState] = useGetSetState({ 
+    selectedDocId: _.head(_.keys(docs)),
+    signers: {},
+    selectedSigner: null
+  });
 
   return (
-
-    <div className="App h-101" style={{ height: '100% !important' }}>
+    <>
       <div>
         <label htmlFor='signer'>Doc: </label>
         <select
@@ -56,46 +37,26 @@ function App({
         </select>
       </div>
 
-      <Webviewer
-        onReady={(viewer) => {
-          console.log('onReady', viewer);
-        }}
-
-        onAnnotationAdded={(args) => server.createAnnotation(args.id, { ...args, docId: getState().selectedDocId })}
-        onAnnotationUpdated={(args) => server.updateAnnotation(args.id, { ...args, docId: getState().selectedDocId })}
-        onAnnotationDeleted={(args) => server.deleteAnnotation(args.id, { ...args, docId: getState().selectedDocId })}
-        onWidgetAdded={(args) => console.log('widget added', args)}
-        onFieldUpdated={(args) => console.log('field changed', args)}
-
-        toImport={first}
-        onImported={() => remove()}
-
-        // when document + annotations have loaded. Start listening on firebase
-        onAnnotationsLoaded={async (docId) => {
-          await Promise.all([
-            server.bind('onAnnotationCreated', docId, ({ val, key }) => add(val)),
-            server.bind('onAnnotationUpdated', docId, ({ val, key }) => add(val)), 
-            server.bind('onAnnotationDeleted', docId, ({ val, key }) => add({ ...val, type: 'delete' }))
-          ])
-        }}
-        // When document is unloaded (`selectedDoc` changed). Clear queue and unbind from firebase
-        onDocumentUnloaded={() => {
-          while(size > 0){
-            remove();
-          }
-          server.unbindAll();
-        }}
 
 
-        selectedSigner={'1'}
-        currentUser={userId}
-        selectedDoc={getState().selectedDocId}
-        isAdminUser={isAdminUser}
-        docs={docs}
-        config={config}
-        signers={_.values(getState().signers)}
-      />
-    </div>
+
+      <div className="App" style={{ height: '100% !important' }}>
+
+        <Collab
+          config={config}
+          userId={userId}
+          isAdminUser={isAdminUser}
+          docs={docs}
+          selectedDocId={getState().selectedDocId}
+          selectedSigner={getState().selectedSigner}
+          onSignersUpdated={(signers) => setState({
+            ...getState(),
+            signers: signers,
+            selectedSigner: _.head(_.keys(signers))
+          })}
+        />
+      </div>
+    </>
   );
 }
 

@@ -1,7 +1,5 @@
 
-const config = [
-  '/wv-configs/config.js',
-]
+
 
 export default {
   l: 'eNotaryLog, LLC(enotarylog.com):OEM:eNotaryLog::B+:AMS(20201230):76A52CDD0477580A3360B13AC982537860612F83FF486E45958D86734C8F4E902A4935F5C7',
@@ -9,10 +7,11 @@ export default {
   fullAPI: true,
   // ui: 'beta',
   // config: config ? `${process.env.PUBLIC_URL}${config}` : undefined,
-  config,
+  config: '/wv-configs/config.js',
 
   custom: {
-    fitMode: 'FitPage',
+    // fitMode: 'FitPage',
+    layoutMode: 'Single',
     disableFeatures: [
       'TextSelection',
       'NotesPanel',
@@ -21,6 +20,7 @@ export default {
       'Copy',
       'Download',
       'Print',
+      'ThumbnailReordering'
     ],
     disableTools: [
       'AnnotationCreatePolygon',
@@ -29,17 +29,22 @@ export default {
     ],
     disableElements: [
       'stickyToolButton',
-      'leftPanel',
+      // 'leftPanel',
       'freeHandToolGroupButton',
       'menuButton',
       'miscToolGroupButton',
-      'leftPanelButton',
+      // 'leftPanelButton',
       'searchButton',
       'textToolGroupButton',
       'viewControlsButton',
       'linkButton',
       'shapeToolGroupButton',
-      'eraserToolButton'
+      'eraserToolButton',
+      'thumbnailControl',
+      'outlinesPanel',
+      'outlinesPanelButton',
+      'thumbnailsPanelButton',
+      'leftPanelTabs'
     ]
   }
 }

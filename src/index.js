@@ -4,6 +4,8 @@ import App from './App';
 import { FirebaseProvider } from './lib/hooks/useFirebase';
 import { ServerProvider } from './lib/hooks/useServerProvider';
 import faker from 'faker';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './style.css';
 
 const userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : `${Math.floor(Math.random() * 10000000)}`;
 sessionStorage.setItem('userId', userId);
@@ -15,20 +17,6 @@ const user = (sessionStorage.getItem(userId)) ? JSON.parse(sessionStorage.getIte
 }
 
 sessionStorage.setItem(userId, JSON.stringify(user));
-
-const signers = [
-  {
-    firstName: "james",
-    lastName: "Choi",
-    id: '1',
-    type: 'consumer'
-  },
-  {
-    firstName: "joe",
-    lastName: "done",
-    id: '2'
-  }
-];
 
 const docs = {
   'linearized.pdf': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
@@ -54,9 +42,7 @@ if (process.env.NODE_ENV !== 'production') {
           <App 
             userId={userId}
             user={user}
-
             docs={docs}
-            signers={signers}
             isAdminUser={false}
           />
         </ServerProvider>

@@ -32,6 +32,7 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
       this.CustomData = this.custom = customdata;
 
       instance.annotManager.redrawAnnotation(this);
+      instance.annotManager.trigger('annotationChanged', [[this], 'modify', { imported: false, isUndoRedo: false }]);
       return this;
     }
 

@@ -14,36 +14,36 @@ export default {
   },
 };
 
-export function Beta() {
-  const [files, setFiles] = useState({});
-  const signers = [
-    { id: '1', firstName: 'John', lastName: 'Schmoe' },
-    { id: '2', firstName: 'Joe', lastName: 'Exotic' },
-  ];
+// export function Beta() {
+//   const [files, setFiles] = useState({});
+//   const signers = [
+//     { id: '1', firstName: 'John', lastName: 'Schmoe' },
+//     { id: '2', firstName: 'Joe', lastName: 'Exotic' },
+//   ];
 
-  const disabled = boolean('disabled', false, 'props')
+//   const disabled = boolean('disabled', false, 'props')
 
 
-  return (
-    <div className='container'>
+//   return (
+//     <div className='container'>
 
-      <div className='row'>
+//       <div className='row'>
 
-        <div className='col-xs-12'>
-          <PdfDropzone
-            signers={signers}
-            disabled={disabled}
-            files={files}
-            onFilesChanged={(newFiles) => {
-              setFiles(newFiles);
-              // dispatch({ type: 'set-files', payload: { ...state.files, ...newFiles } });
-              // // dispatch({ type: 'clear-uploaded-files', payload: false });
-              // dispatch({ type: 'action-confirmed', payload: true });
-            }}
-          // onReady={setWv}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
+//         <div className='col-xs-12'>
+//           <PdfDropzone
+//             signers={signers}
+//             disabled={disabled}
+//             files={files}
+//             onFilesChanged={(newFiles) => {
+//               setFiles(newFiles);
+//               // dispatch({ type: 'set-files', payload: { ...state.files, ...newFiles } });
+//               // // dispatch({ type: 'clear-uploaded-files', payload: false });
+//               // dispatch({ type: 'action-confirmed', payload: true });
+//             }}
+//           // onReady={setWv}
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }

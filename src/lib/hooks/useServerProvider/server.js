@@ -45,6 +45,8 @@ export default async (firebase, serverOpts) => {
 
       this.selectedSignerRef = roomRef.child('selectedSigner');
       this.annotationsRef = roomRef.child('annotations');
+      this.widgetRef = roomRef.child('widgets');
+
       this.xfdfRef = roomRef.child('xfdf');
       this.connectionRef = firebase.database().ref('.info/connected');
       this.authorsRef = roomRef.child('authors');
@@ -63,6 +65,7 @@ export default async (firebase, serverOpts) => {
 
       this.refs = [
         this.selectedSignerRef,
+        this.widgetRef,
         this.annotationsRef,
         this.xfdfRef,
         this.participantsRef,
@@ -134,14 +137,6 @@ export default async (firebase, serverOpts) => {
 
     pauseAnnotUpdates = () => this.annotationsRef.off();
 
-    resumeAnnotUpdates = () =>
-      _.mapValues(this.bindings.annotations, (cb, action) => {
-        return this.annotationsRef.on(
-          this.bindingsMapping.annotations[action],
-          cb
-        );
-      });
-
     setShowVaDisclaimer = val => this.vaDisclaimerRef.set(val);
 
     setVaDisclaimerRejected = val => this.vaDisclaimerRejectedRef.set(val);
@@ -170,22 +165,35 @@ export default async (firebase, serverOpts) => {
             }
           });
         case 'onAnnotation':
-          this.bindings.annotations[action] = callbackFunction;
           return this.annotationsRef.on('value', callbackFunction);
         case 'onAnnotationCreated':
-          this.bindings.annotations[action] = callbackFunction;
           return this.annotationsRef
             .orderByChild('docId')
             .equalTo(docId)
             .on('child_added', callbackFunction);
+
+        case 'onWidgetCreated':
+          return this.widgetRef
+            .orderByChild('docId')
+            .equalTo(docId)
+            .on('child_added', callbackFunction);
+        case 'onWidgetUpdated':
+          return this.widgetRef
+            .orderByChild('docId')
+            .equalTo(docId)
+            .on('child_changed', callbackFunction);
+        case 'onWidgetDeleted':
+          return this.widgetRef
+            .orderByChild('docId')
+            .equalTo(docId)
+            .on('child_removed', callbackFunction);
+
         case 'onAnnotationUpdated':
-          this.bindings.annotations[action] = callbackFunction;
           return this.annotationsRef
             .orderByChild('docId')
             .equalTo(docId)
             .on('child_changed', callbackFunction);
         case 'onAnnotationDeleted':
-          this.bindings.annotations[action] = callbackFunction;
           return this.annotationsRef
             .orderByChild('docId')
             .equalTo(docId)
@@ -279,15 +287,16 @@ export default async (firebase, serverOpts) => {
 
     clearAnnotations = () => this.annotationsRef.set({});
 
+    createWidget = (widgetId, widgetData) => this.widgetRef.child(widgetId).set(widgetData); 
+
     createAnnotation = (annotationId, annotationData) =>
       this.annotationsRef.child(annotationId).set(annotationData);
 
     updateAnnotation = (annotationId, annotationData) =>
       this.annotationsRef.child(annotationId).update(annotationData);
 
-    getAnnotation = annotationId =>
-      this.annotationRef.child(annotationId).once('value');
-    getAnnotations = annotationId => this.annotationRef.once('value').then(
+    getAnnotation = annotationId => this.annotationsRef.child(annotationId).once('value');
+    getAnnotations = annotationId => this.annotationsRef.once('value').then(
       R.pipe(R.invoker(0, 'val'), R.defaultTo({}))
     )
 
