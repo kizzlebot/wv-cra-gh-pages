@@ -121,7 +121,7 @@ export const applyFormFieldCreate = (name) => async ({ instance, tools, header, 
         }
 
 
-        // inputAnnot.PageNumber = annot.getPageNumber();
+        inputAnnot.PageNumber = annot.getPageNumber();
         inputAnnot.X = annot.getX();
         inputAnnot.Y = annot.getY();
         inputAnnot.rotation = annot.Rotation;
@@ -132,7 +132,7 @@ export const applyFormFieldCreate = (name) => async ({ instance, tools, header, 
           inputAnnot.Width = annot.getHeight();
           inputAnnot.Height = annot.getWidth();
         }
-        inputAnnot.custom = inputAnnot.CustomData = { ...annot.custom, ...annot.CustomData, id: annot.Id };
+        inputAnnot.custom = inputAnnot.CustomData = { ...annot.custom, ...annot.CustomData, id: annot.custom.id };
         inputAnnot.Author = annot.custom.name;
         Annotations.WidgetAnnotation.getCustomStyles(inputAnnot);
 
