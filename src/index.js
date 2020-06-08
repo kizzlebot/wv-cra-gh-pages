@@ -20,7 +20,7 @@ sessionStorage.setItem(userId, JSON.stringify(user));
 
 const docs = {
   'doc_a': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
-  'doc_b': 'https://storage.googleapis.com/enl-static-files/local/ack.pdf',
+  'doc_b': 'https://storage.googleapis.com/enl-static-files/local/discrete.pdf',
 };
 
 

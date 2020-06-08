@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import * as R from 'ramda';
 import Webviewer from "./viewer";
 import { useServer } from '../../lib/hooks/useServerProvider';
-import { useMap, useQueue, useGetSetState } from 'react-use';
+import { useQueue, useGetSetState } from 'react-use';
 
 
 
@@ -49,17 +49,10 @@ function Collab({
 
   useEffect(() => {
     onSignersUpdated(signers);
-  }, [signers])
+  }, [signers]);
 
 
-  const getPageNumber = useCallback(() => {
-    return getState().pageNumber[getState().selectedDocId]
-  }, [getState, getState().pageNumber])
   return (
-
-
-    <>
-    <div>{JSON.stringify({ pageNumber: getPageNumber() })}</div>
     <Webviewer
       onReady={(viewer) => {
         console.log('onReady', viewer);
@@ -92,13 +85,10 @@ function Collab({
       // when document + annotations have loaded. Start listening on firebase
       onAnnotationsLoaded={async (docId) => {
         await Promise.all([
-          server.bind('onPageChanged', docId, ({ val, key }) => {
-            console.table(val)
-            setPageState({
-              ...getPageState(),
-              ...val,
-            })
-          }),
+          server.bind('onPageChanged', docId, ({ val, key }) => setPageState({
+            ...getPageState(),
+            ...val,
+          })),
           server.bind('onWidgetCreated', docId, ({ val, key }) => addWidget(val)),
           // TODO: fix this. After first widget is delete from fbase, everything stops syncing
           server.bind('onWidgetDeleted', docId, ({ val, key }) => addWidget({ ...val, type: 'delete' })),
@@ -130,7 +120,6 @@ function Collab({
       config={config}
       signers={_.values(getState().signers)}
     />
-    </>
   );
 }
 
