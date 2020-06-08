@@ -67,6 +67,7 @@ class Webviewer extends Component {
       this.setState(({ instance }));
 
 
+      // Bind event handlers to functions passed as prop
       instance.annotManager.on('widgetAdded', this.props.onWidgetAdded);
       instance.annotManager.on('annotationAdded', this.props.onAnnotationAdded);
       instance.annotManager.on('annotationDeleted', this.props.onAnnotationDeleted);
@@ -109,6 +110,7 @@ class Webviewer extends Component {
       });
 
 
+      // initialize custom annotation tools
       await registerTools(instance);
 
 
@@ -188,6 +190,18 @@ class Webviewer extends Component {
         }
         else {
           const annots = await this.instance.annotManager.importAnnotations(this.props.widgetToImport.xfdf);
+          const toDelete = _.chain(this.instance.annotManager.getAnnotationsList())
+            .filter(el => el instanceof this.instance.Annotations.WidgetAnnotation)
+            .groupBy('CustomData.id')
+            .mapValues((vals) => vals.length > 1 ? _.tail(vals) : [])
+            .values()
+            .flatten()
+            .value()
+          if (toDelete.length > 0){
+            await this.instance.annotManager.deleteAnnotations(toDelete, true);
+          }
+
+
           await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
           this.props.onWidgetImported();
           this.instance.annotManager.trigger('updateAnnotationPermission');

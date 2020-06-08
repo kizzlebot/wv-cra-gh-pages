@@ -7,14 +7,7 @@ const getTemplateAnnots = R.filter(
     R.path(['constructor', 'name']),
     R.includes('Template')
   )
-)
-const parseName = (user) => {
-  const fName = _.get(user, 'firstName', _.get(user, 'user.firstName'));
-  const lName = _.get(user, 'lastName', _.get(user, 'user.lastName'));
-
-  return `${_.upperFirst(fName)} ${_.upperFirst(lName)}`;
-};
-
+);
 
 export default class SelectSigner extends Component {
   constructor(...args) {
