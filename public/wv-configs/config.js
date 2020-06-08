@@ -430,7 +430,7 @@ const toInitials = R.pipe(
         // if type is annotation then export using exportAnnotCommand
         if (annotType === 'annotation') {
           let parentAuthorId = null;
-          let xfdf = await annotManager.exportAnnotCommand({
+          let xfdf = await annotManager.exportAnnotations({
             annots: [annotation],
             widgets: false,
             links: false,

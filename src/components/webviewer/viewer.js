@@ -206,7 +206,7 @@ class Webviewer extends Component {
             this.instance.annotManager.deleteAnnotation(toDel, true);
           }
         } else {
-          const annots = await this.instance.annotManager.importAnnotCommand(this.props.annotToImport.xfdf);
+          const annots = await this.instance.annotManager.importAnnotations(this.props.annotToImport.xfdf);
           await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
         }
 
