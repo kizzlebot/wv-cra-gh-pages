@@ -19,8 +19,8 @@ const user = (sessionStorage.getItem(userId)) ? JSON.parse(sessionStorage.getIte
 sessionStorage.setItem(userId, JSON.stringify(user));
 
 const docs = {
-  'linearized.pdf': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
-  'ack.pdf': 'https://storage.googleapis.com/enl-static-files/local/ack.pdf',
+  'doc_a': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
+  'doc_b': 'https://storage.googleapis.com/enl-static-files/local/ack.pdf',
 };
 
 

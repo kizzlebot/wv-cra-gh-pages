@@ -447,6 +447,7 @@ const toInitials = R.pipe(
               id: annotation.Id,
               authorId,
               parentAuthorId,
+              pageNumber: annotation.getPageNumber(),
               type: 'annotation',
               createdBy: authorId,
               xfdf
@@ -523,11 +524,11 @@ const toInitials = R.pipe(
             // console.log('server.createAnnotation called with', xfdf);
             const parentAuthorId = author || 'default';
 
-            console.log('building payload', annotation.getMetadata())
             const payload = {
               id: annotation.CustomData.id,
               authorId,
               runId: exports.getRunId(),
+              pageNumber: annotation.getPageNumber(),
               parentAuthorId,
               signerId,
               type: 'widget',
@@ -617,7 +618,7 @@ const toInitials = R.pipe(
     // Import the annotation based on xfdf command
     if (type === 'annotation') {
       try {
-        const annotations = await annotManager.importAnnotCommand(xfdf);
+        const annotations = await annotManager.importAnnotations(xfdf);
         const annotation = annotations[0];
 
         const locked = exports.getLock();
@@ -628,7 +629,7 @@ const toInitials = R.pipe(
           await annotation.resourcesLoaded();
           // NOTE: Set a custom field authorId to be used in client-side permission check
           annotation.authorId = authorId;
-          annotManager.redrawAnnotation(annotation);
+          // annotManager.redrawAnnotation(annotation);
         }
       } catch (error) {
         console.error('error updating annotation', error);

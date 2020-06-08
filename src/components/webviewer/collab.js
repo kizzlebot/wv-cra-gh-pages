@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import _ from 'lodash';
 import * as R from 'ramda';
 import Webviewer from "./viewer";
@@ -21,9 +21,11 @@ function Collab({
   const server = useServer();
   const { add: addAnnot, remove: removeAnnot, first: firstAnnot, size: annotSize } = useQueue();
   const { add: addWidget, remove: removeWidget, first: firstWidget, size: widgetSize } = useQueue();
-  const [getState, setState] = useGetSetState({ signers: {} });
+  const [getState, setState] = useGetSetState({ pageNumber: {}, signers: {} });
+  const [getPageState, setPageState] = useGetSetState({ });
 
 
+  // when current document toggled. update fbase
   useEffect(() => {
     server.setSelectedDocId(selectedDocId);
   }, [selectedDocId])
@@ -49,31 +51,54 @@ function Collab({
     onSignersUpdated(signers);
   }, [signers])
 
+
+  const getPageNumber = useCallback(() => {
+    return getState().pageNumber[getState().selectedDocId]
+  }, [getState, getState().pageNumber])
   return (
 
 
+    <>
+    <div>{JSON.stringify({ pageNumber: getPageNumber() })}</div>
     <Webviewer
       onReady={(viewer) => {
         console.log('onReady', viewer);
       }}
 
-      onAnnotationAdded={(args) => server.createAnnotation(args.id, { ...args, docId: selectedDocId })}
+      onAnnotationAdded={(args) => {
+        server.createAnnotation(args.id, { ...args, docId: selectedDocId })
+        server.setPageNumber(selectedDocId, args.pageNumber)
+      }}
       onAnnotationUpdated={(args) => server.updateAnnotation(args.id, { ...args, docId: selectedDocId })}
       onAnnotationDeleted={(args) => server.deleteAnnotation(args.id, { ...args, docId: selectedDocId })}
-      onWidgetAdded={(args) => server.createWidget(args.id, { ...args, docId: selectedDocId })}
+      onWidgetAdded={(args) => {
+        server.createWidget(args.id, { ...args, docId: selectedDocId })
+        server.setPageNumber(selectedDocId, args.pageNumber)
+      }}
+
+      // TODO: implement on field changed
       onFieldUpdated={(args) => console.log('field changed', args)}
 
       // Pass the next item in the annot queue
       annotToImport={firstAnnot}
+      annotSize={annotSize}
       onAnnotImported={() => removeAnnot()}
 
       // Pass the next item in the widget queue
       widgetToImport={firstWidget}
+      widgetSize={widgetSize}
       onWidgetImported={() => removeWidget()}
 
       // when document + annotations have loaded. Start listening on firebase
       onAnnotationsLoaded={async (docId) => {
         await Promise.all([
+          server.bind('onPageChanged', docId, ({ val, key }) => {
+            console.table(val)
+            setPageState({
+              ...getPageState(),
+              ...val,
+            })
+          }),
           server.bind('onWidgetCreated', docId, ({ val, key }) => addWidget(val)),
           // TODO: fix this. After first widget is delete from fbase, everything stops syncing
           server.bind('onWidgetDeleted', docId, ({ val, key }) => addWidget({ ...val, type: 'delete' })),
@@ -95,6 +120,8 @@ function Collab({
       }}
 
 
+      pageNumber={getPageState()[getState().selectedDocId]}
+
       selectedSigner={selectedSigner}
       currentUser={userId}
       selectedDoc={getState().selectedDocId}
@@ -103,6 +130,7 @@ function Collab({
       config={config}
       signers={_.values(getState().signers)}
     />
+    </>
   );
 }
 

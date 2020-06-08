@@ -74,7 +74,9 @@ class Webviewer extends Component {
       instance.annotManager.on('fieldUpdated', this.props.onFieldUpdated);
       instance.docViewer.on('documentUnloaded', this.props.onDocumentUnloaded);
       instance.docViewer.on('documentLoaded', this.props.onDocumentLoaded);
-      instance.docViewer.on('annotationsLoaded', () => this.props.onAnnotationsLoaded(instance.getDocId()));
+      instance.docViewer.on('annotationsLoaded', async () => {
+        await this.props.onAnnotationsLoaded(instance.getDocId())
+      });
 
 
       instance.annotManager.setIsAdminUser(this.props.isAdminUser);
@@ -136,6 +138,7 @@ class Webviewer extends Component {
       return;
     }
 
+
     if (prevProps.isAdminUser !== this.props.isAdminUser) {
       await this.instance.annotManager.setIsAdminUser(this.props.isAdminUser);
     }
@@ -166,6 +169,7 @@ class Webviewer extends Component {
     }
 
 
+    // import widgets if it changes
     if (prevProps.widgetToImport !== this.props.widgetToImport) {
       console.log('%cwidget changed', 'font-size:20px;color:red;')
 
@@ -191,7 +195,7 @@ class Webviewer extends Component {
       }
     }
 
-    // toImport will be a single annotation annotation
+    // annotsToImport will be a xfdf containing single annotation
     if (prevProps.annotToImport !== this.props.annotToImport) {
       console.log('%cannotations changed', 'font-size:20px;color:red;')
 
@@ -203,16 +207,22 @@ class Webviewer extends Component {
           }
         } else {
           const annots = await this.instance.annotManager.importAnnotCommand(this.props.annotToImport.xfdf);
-          console.log(annots);
           await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
         }
 
         this.props.onAnnotImported();
       }
-
-
       // await this.loadAnnotations();
     }
+
+
+    if (prevProps.pageNumber !== this.props.pageNumber && _.isNumber(this.props.pageNumber)){
+      const currPageNum = this.instance.docViewer.getCurrentPage();
+      if (currPageNum !== this.props.pageNumber){
+        await this.instance.setCurrentPageNumber(this.props.pageNumber);
+      }
+    }
+
   }
 
 

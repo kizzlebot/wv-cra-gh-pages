@@ -21,8 +21,8 @@ export default {
 };
 
 const docs = {
-  'linearized.pdf': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
-  'ack.pdf': 'https://storage.googleapis.com/enl-static-files/local/ack.pdf',
+  'doc_a': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
+  'doc_b': 'https://storage.googleapis.com/enl-static-files/local/ack.pdf',
 }
 
 
@@ -43,7 +43,7 @@ sessionStorage.setItem(userId, JSON.stringify(user));
 
 
 export function Beta() {
-  const selectedDoc = select('documents', ['ack.pdf', 'linearized.pdf'], 'linearized.pdf', 'props');
+  const selectedDoc = select('documents', ['doc_b', 'doc_a'], 'doc_a', 'props');
   const [getState, setState] = useGetSetState({ signers: {} });
 
   const signerIds = _.keys(getState().signers)

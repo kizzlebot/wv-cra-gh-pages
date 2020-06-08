@@ -55,6 +55,7 @@ export default async (firebase, serverOpts) => {
       this.lockRef = roomRef.child('locked');
       this.vaDisclaimerRef = roomRef.child('vaDisclaimerShown');
       this.selectedDocIdRef = roomRef.child('selectedDocId');
+      this.pageRef = roomRef.child('pageNumber');
       this.selectedDocTitleRef = roomRef.child('selectedDocTitle');
       this.vaDisclaimerRejectedRef = roomRef.child('vaDisclaimerRejected');
       this.completingRef = roomRef.child('isCompleting');
@@ -68,6 +69,7 @@ export default async (firebase, serverOpts) => {
         this.widgetRef,
         this.annotationsRef,
         this.xfdfRef,
+        this.pageRef,
         this.participantsRef,
         this.blankPagesRef,
         this.lockRef,
@@ -164,6 +166,11 @@ export default async (firebase, serverOpts) => {
               throw error;
             }
           });
+        case 'onPageChanged':
+          return this.pageRef
+            .orderByKey()
+            .equalTo(docId)
+            .on('value', callbackFunction);
         case 'onAnnotation':
           return this.annotationsRef.on('value', callbackFunction);
         case 'onAnnotationCreated':
@@ -249,6 +256,7 @@ export default async (firebase, serverOpts) => {
       });
     };
 
+    setPageNumber = (docId, num = 1) => this.pageRef.child(docId).set(num);
     setBlankPages = (docId, num = 0) => this.blankPagesRef.child(docId).set(num);
     getBlankPagesByDocId = (docId) => this.blankPagesRef.child(docId).once('value').then(R.invoker(0, 'val'))
     getBlankPages = () => this.blankPagesRef.once('value').then(R.invoker(0, 'val')) || {}
