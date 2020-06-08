@@ -20,20 +20,6 @@ const runId = !!window.sessionStorage.getItem('runId') ? window.sessionStorage.g
 window.sessionStorage.setItem('runId', runId);
 
 
-const toFullName = R.pipe(
-  R.split(' '),
-  R.map(R.pipe(_.upperFirst)),
-  R.join(' ')
-);
-
-
-const toInitials = R.pipe(
-  R.split(' '),
-  R.map(R.pipe(R.head, R.toUpper)),
-  R.join('')
-);
-
-
 
 ((exports) => {
 
@@ -145,11 +131,10 @@ const toInitials = R.pipe(
 
 
   const extendAnnotations = (instance) => {
-    const { PDFNet, docViewer, Annotations, Tools } = instance;
+    const { docViewer, Annotations, Tools } = instance;
     const annotManager = docViewer.getAnnotationManager();
     const { createSignHereElement, serialize, deserialize, draw } = Annotations.SignatureWidgetAnnotation.prototype;
 
-    const rubberStampTool = instance.docViewer.getTool('AnnotationCreateRubberStamp');
     docViewer
       .getTool('AnnotationCreateFreeText')
       .setStyles({
@@ -238,34 +223,14 @@ const toInitials = R.pipe(
     const setCustomData = Annotations.Annotation.prototype.setCustomData;
     Annotations.Annotation.prototype.setCustomData = function(){
       setCustomData.apply(this, arguments);
-      // annotManager.trigger('annotationChanged', [[this], 'modify', { imported: false, isUndoRedo: false }]);
     }
 
-
-
-    // const freeTextSerialize = Annotations.FreeTextAnnotation.prototype.serialize;
-    // const freeTextDeserialize = Annotations.FreeTextAnnotation.prototype.deserialize;
-    // Annotations.FreeTextAnnotation.prototype.serialize = function(...args){
-    //   const el = freeTextSerialize.apply(this, args);
-    //   if (this.CustomData.color){
-    //     el.setAttribute('customColor', JSON.stringify(this.CustomData.color))
-    //   }
-    //   console.log('freetext el', el, this)
-    //   return el;
-    // }
-    // Annotations.FreeTextAnnotation.prototype.deserialize = function(element, pageMatrix){
-    //   freeTextDeserialize.call(this, element, pageMatrix);
-    //   if (element.getAttribute('customColor')){
-    //     this.Color = new Annotations.Color(...JSON.parse(element.getAttribute('customColor')))
-    //   }
-    // }
 
 
 
     class BetterSigWidgetAnnotation extends Annotations.SignatureWidgetAnnotation {
       createInnerElement(...args){
         const rtn = super.createInnerElement(...args)
-        // this.setCustomData(this.getMetadata());
         return rtn;
       }
 
@@ -547,6 +512,7 @@ const toInitials = R.pipe(
       });
     }
   }
+
   const onFieldChanged = (instance) => {
     return (field, value) => {
       instance.annotManager.trigger('fieldUpdated', {
@@ -608,6 +574,9 @@ const toInitials = R.pipe(
     }
 
   }
+
+
+
   const handleUpdateAnnotation = (instance) => async (val) => {
     const { annotManager } = instance;
     const { xfdf, type, authorId } = val;
@@ -692,15 +661,7 @@ const toInitials = R.pipe(
         const rtn = parseName(signer);
         console.log('returning', rtn);
         return rtn;
-        // const type = _.get(annot, 'CustomData.type', annot.Author);
-        // if (signerId && type) {
-        //   const user = _.find(signers, { id: signerId });
 
-        //   if (user) {
-        //     const fullName = parseName(user);
-        //     return fullName;
-        //   }
-        // }
       }
 
       if (_.get(annot, 'Author')) {
@@ -776,6 +737,7 @@ const toInitials = R.pipe(
     annotManager.on('setSelectedSigner', (signerId) => {
       exports.setSelectedSigner(signerId)
     });
+
     annotManager.on('setCurrentUser', (currentUser) => {
       annotManager.setCurrentUser(currentUser);
       annotManager.trigger('currentUserChanged', currentUser);
@@ -795,6 +757,10 @@ const toInitials = R.pipe(
     readerControl.setColorPalette(['#4B92DB', '#000000']);
 
 
+    readerControl.docViewer.on('documentLoaded', () => {
+      return configureFeatures(instance, custom)
+    });
+   
 
     // disables hotkeys when document loads
     readerControl.docViewer.on('annotationsLoaded', () => {
@@ -823,4 +789,5 @@ const toInitials = R.pipe(
     });
 
   });
+  
 })(window);
