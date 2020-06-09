@@ -1,11 +1,21 @@
 import React, { Component } from 'react'
 import _ from 'lodash';
+import * as R from 'ramda';
 import Promise from 'bluebird';
 import SelectSigner from './components/SelectSigner';
 import RequiredCheckbox from './components/RequiredCheckbox';
 import registerTools from './lib/tools';
 import { Modal } from 'react-bootstrap';
+import initWv from '@pdftron/webviewer';
 
+
+const callIfDefined = R.when(
+  R.isNil,
+  R.pipe(
+    R.tap((val) => console.log('callback not defined', val)),
+    R.identity
+  )
+)
 
 
 class Webviewer extends Component {
@@ -22,7 +32,7 @@ class Webviewer extends Component {
 
 
   componentDidMount = async () => {
-    const { default: initWv } = await import('@pdftron/webviewer');
+    // const { default: initWv } = await import('@pdftron/webviewer');
 
     const instance = await initWv({
       path: '/lib',
@@ -31,10 +41,9 @@ class Webviewer extends Component {
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
 
-
-
     // when ready is fired from public/wv-configs/config.js
     instance.docViewer.one('ready', async (instance) => {
+
       this.instance = instance;
       window.instance = instance;
 
@@ -68,13 +77,13 @@ class Webviewer extends Component {
 
 
       // Bind event handlers to functions passed as prop
-      instance.annotManager.on('widgetAdded', this.props.onWidgetAdded);
-      instance.annotManager.on('annotationAdded', this.props.onAnnotationAdded);
-      instance.annotManager.on('annotationDeleted', this.props.onAnnotationDeleted);
-      instance.annotManager.on('annotationUpdated', this.props.onAnnotationUpdated);
-      instance.annotManager.on('fieldUpdated', this.props.onFieldUpdated);
-      instance.docViewer.on('documentUnloaded', this.props.onDocumentUnloaded);
-      instance.docViewer.on('documentLoaded', this.props.onDocumentLoaded);
+      instance.annotManager.on('widgetAdded', callIfDefined(this.props.onWidgetAdded));
+      instance.annotManager.on('annotationAdded', callIfDefined(this.props.onAnnotationAdded));
+      instance.annotManager.on('annotationDeleted', callIfDefined(this.props.onAnnotationDeleted));
+      instance.annotManager.on('annotationUpdated', callIfDefined(this.props.onAnnotationUpdated));
+      instance.annotManager.on('fieldUpdated', callIfDefined(this.props.onFieldUpdated));
+      instance.docViewer.on('documentUnloaded', callIfDefined(this.props.onDocumentUnloaded));
+      instance.docViewer.on('documentLoaded', callIfDefined(this.props.onDocumentLoaded));
       instance.docViewer.on('annotationsLoaded', async () => {
         await this.props.onAnnotationsLoaded(instance.getDocId())
       });
@@ -173,33 +182,33 @@ class Webviewer extends Component {
 
     // import widgets if it changes
     if (prevProps.widgetToImport !== this.props.widgetToImport) {
-      console.log('%cwidget changed', 'font-size:20px;color:red;')
 
       if (this.props.widgetToImport) {
         const existing = await this.instance.annotManager.getWidgetById(this.props.widgetToImport.id)
 
 
         // if delete called an
-        if (this.props.widgetToImport.type === 'delete' && existing){
+        if (this.props.widgetToImport?.type === 'delete' && existing){
           console.log('deleting widget');
           await this.instance.annotManager.deleteAnnotation(existing, true);
         } 
-        else if (this.instance.getRunId() === this.props.widgetToImport.runId && existing) {
+        else if (this.instance.getRunId() === this.props.widgetToImport?.runId && existing) {
           console.log('%cwidget created by this browser skipping...', 'font-size:19px;color:red;')
           this.props.onWidgetImported();
         }
         else {
-          const annots = await this.instance.annotManager.importAnnotations(this.props.widgetToImport.xfdf);
-          const toDelete = _.chain(this.instance.annotManager.getAnnotationsList())
-            .filter(el => el instanceof this.instance.Annotations.WidgetAnnotation)
-            .groupBy('CustomData.id')
-            .mapValues((vals) => vals.length > 1 ? _.tail(vals) : [])
-            .values()
-            .flatten()
-            .value()
-          if (toDelete.length > 0){
-            await this.instance.annotManager.deleteAnnotations(toDelete, true);
-          }
+          console.log('%cimporting widget', 'font-size:20px;color:red;')
+          const annots = await this.instance.annotManager.importAnnotations(this.props.widgetToImport?.xfdf);
+          // const toDelete = _.chain(this.instance.annotManager.getAnnotationsList())
+          //   .filter(el => el instanceof this.instance.Annotations.WidgetAnnotation)
+          //   .groupBy('CustomData.id')
+          //   .mapValues((vals) => vals.length > 1 ? _.tail(vals) : [])
+          //   .values()
+          //   .flatten()
+          //   .value()
+          // if (toDelete.length > 0){
+          //   await this.instance.annotManager.deleteAnnotations(toDelete, true);
+          // }
 
 
           await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
@@ -220,7 +229,8 @@ class Webviewer extends Component {
             this.instance.annotManager.deleteAnnotation(toDel, true);
           }
         } else {
-          const annots = await this.instance.annotManager.importAnnotations(this.props.annotToImport.xfdf);
+          // const annots = await this.instance.annotManager.importAnnotations(this.props.annotToImport.xfdf);
+          const annots = await this.instance.annotManager.importAnnotCommand(this.props.annotToImport.xfdf);
           await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
         }
 
@@ -263,6 +273,8 @@ class Webviewer extends Component {
       <>
         <div
           style={{ height: '100%' }}
+          data-testid='webviewer-container'
+          className='webviewer-container'
           ref={this.viewerRef}
         />
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import config from './stories/lib/config';
-import { useGetSetState } from 'react-use';
+import { useGetSetState, useToggle } from 'react-use';
 import Collab from './components/webviewer/collab';
 
 
@@ -15,6 +15,8 @@ function App({
     signers: {},
     selectedSigner: null
   });
+  const [clearAll, toggleClearAll] = useToggle(false);
+
 
   return (
     <>
@@ -36,6 +38,14 @@ function App({
           }
         </select>
       </div>
+      <div>
+        <button
+          type='button'
+          onClick={() => toggleClearAll(true)}
+        >
+          Clear All Widgets/Annots
+        </button>
+      </div>
 
 
 
@@ -49,6 +59,10 @@ function App({
           docs={docs}
           selectedDocId={getState().selectedDocId}
           selectedSigner={getState().selectedSigner}
+
+          clearAll={clearAll}
+          onAllCleared={() => toggleClearAll(false)}
+
           onSignersUpdated={(signers) => setState({
             ...getState(),
             signers: signers,

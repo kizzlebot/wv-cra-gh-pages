@@ -25,6 +25,7 @@
   },
   "scripts": {
     "start": "PORT=3030 react-scripts start",
+    "dev": "PORT=3030 react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
     "test:watch": "jest --watch",

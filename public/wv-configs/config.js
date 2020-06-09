@@ -395,12 +395,14 @@ window.sessionStorage.setItem('runId', runId);
         // if type is annotation then export using exportAnnotCommand
         if (annotType === 'annotation') {
           let parentAuthorId = null;
-          let xfdf = await annotManager.exportAnnotations({
-            annots: [annotation],
-            widgets: false,
-            links: false,
-            fields: false,
-          });
+          let xfdf = await annotManager.exportAnnotCommand();
+          
+          // let xfdf = await annotManager.exportAnnotations({
+          //   annots: [annotation],
+          //   widgets: false,
+          //   links: false,
+          //   fields: false,
+          // });
 
           if (type === 'add') {
             // In case of replies, add extra field for server-side permission to be granted to the

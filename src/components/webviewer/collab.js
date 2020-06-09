@@ -9,6 +9,8 @@ import { useQueue, useGetSetState } from 'react-use';
 
 
 function Collab({
+  clearAll,
+  onAllCleared,
   config,
   userId,
   isAdminUser,
@@ -52,8 +54,25 @@ function Collab({
   }, [signers]);
 
 
+
+  useEffect(() => {
+    const clearAllAnnotsWidgets = async () => {
+      await Promise.all([server.clearAnnotations(), server.clearWidgets()]);
+      return onAllCleared();
+    };
+    
+    if (clearAll === true){
+      console.log('clear all changed')
+      clearAllAnnotsWidgets();
+    }
+
+  }, [clearAll])
+
+
+
   return (
     <Webviewer
+
       onReady={(viewer) => {
         console.log('onReady', viewer);
       }}

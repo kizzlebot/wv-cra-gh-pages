@@ -86,10 +86,13 @@ const onMouseLeftDown = () => async ({ context, instance }) => {
 
 
 const createNotaryCertAnnotation = R.pipeP(
+  // define annot class
   defineAnnotClass({
     className: 'NotaryCertAnnotation',
     baseClassName: 'StampAnnotation',
   }),
+
+  // define tool class that uses annot class
   defineToolClass({
     className: 'NotaryCertTool',
     annotClassName: 'NotaryCertAnnotation',
@@ -97,10 +100,13 @@ const createNotaryCertAnnotation = R.pipeP(
     onMouseLeftDown: onMouseLeftDown(),
     onMouseLeftUp: onMouseLeftUp({ imageUrl: '/imgs/stamp.png' })
   }),
+
+  // register the custom annot class to webviewer
   registerAnnotationType({ 
     elementName: 'stamp', 
     annotClassName: 'NotaryCertAnnotation' 
   }),
+  
   registerTool({
     type: 'toolButton',
     toolName: 'NotaryCertTool',
