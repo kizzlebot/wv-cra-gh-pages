@@ -18,6 +18,7 @@ const callIfDefined = R.when(
 )
 
 
+
 class Webviewer extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +27,7 @@ class Webviewer extends Component {
     this.targetRef = React.createRef();
     this.containerRef = React.createRef();
     this.state = {
-      certModal: { show: false, }
+      certModal: { show: false, },
     }
   }
 
@@ -85,7 +86,8 @@ class Webviewer extends Component {
       instance.docViewer.on('documentUnloaded', callIfDefined(this.props.onDocumentUnloaded));
       instance.docViewer.on('documentLoaded', callIfDefined(this.props.onDocumentLoaded));
       instance.docViewer.on('annotationsLoaded', async () => {
-        await this.props.onAnnotationsLoaded(instance.getDocId())
+        await Promise.delay(1000);
+        return this.props.onAnnotationsLoaded(instance.getDocId())
       });
 
 
@@ -95,6 +97,7 @@ class Webviewer extends Component {
         await this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
           l: this.props.config.l, 
           docId: this.props.selectedDoc,
+          filename: this.props.selectedDoc,
           extension: 'pdf' 
         });
       }
@@ -197,8 +200,11 @@ class Webviewer extends Component {
           this.props.onWidgetImported();
         }
         else {
-          console.log('%cimporting widget', 'font-size:20px;color:red;')
-          const annots = await this.instance.annotManager.importAnnotations(this.props.widgetToImport?.xfdf);
+          console.log('%cimporting widget', 'font-size:20px;color:red;');
+          if (!existing){
+            this.instance.annotManager.trigger('addAnnotation', { ...this.props.widgetToImport })
+          }
+
           // const toDelete = _.chain(this.instance.annotManager.getAnnotationsList())
           //   .filter(el => el instanceof this.instance.Annotations.WidgetAnnotation)
           //   .groupBy('CustomData.id')
@@ -211,7 +217,7 @@ class Webviewer extends Component {
           // }
 
 
-          await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
+          // await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
           this.props.onWidgetImported();
           this.instance.annotManager.trigger('updateAnnotationPermission');
         }
@@ -230,8 +236,9 @@ class Webviewer extends Component {
           }
         } else {
           // const annots = await this.instance.annotManager.importAnnotations(this.props.annotToImport.xfdf);
-          const annots = await this.instance.annotManager.importAnnotCommand(this.props.annotToImport.xfdf);
-          await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
+          // const annots = await this.instance.annotManager.importAnnotCommand(this.props.annotToImport.xfdf);
+          this.instance.annotManager.trigger('addAnnotation', { ...this.props.annotToImport })
+          // await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
         }
 
         this.props.onAnnotImported();
@@ -247,6 +254,12 @@ class Webviewer extends Component {
       }
     }
 
+
+    if (prevProps.annotSize !== this.props.annotSize || prevProps.widgetSize !== this.props.widgetSize) {
+      if ((prevProps.annotSize > 0 || prevProps.widgetSize > 0) || (this.props.annotSize === 0 || this.props.widgetSize === 0)) {
+        this.instance.annotManager.trigger('updateAnnotationPermission');
+      }
+    }
   }
 
 

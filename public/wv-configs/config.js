@@ -415,6 +415,7 @@ window.sessionStorage.setItem('runId', runId);
               authorId,
               parentAuthorId,
               pageNumber: annotation.getPageNumber(),
+              docId: exports.getDocId(),
               type: 'annotation',
               createdBy: authorId,
               xfdf
@@ -429,6 +430,7 @@ window.sessionStorage.setItem('runId', runId);
             annotManager.trigger('annotationUpdated', {
               id: annotation.Id,
               authorId,
+              docId: exports.getDocId(),
               parentAuthorId,
               type: 'annotation',
               xfdf
@@ -439,6 +441,7 @@ window.sessionStorage.setItem('runId', runId);
             annotManager.trigger('annotationDeleted', {
               id: annotation.Id,
               authorId,
+              docId: exports.getDocId(),
               parentAuthorId,
               type: 'annotation',
               xfdf
@@ -495,6 +498,7 @@ window.sessionStorage.setItem('runId', runId);
               id: annotation.CustomData.id,
               authorId,
               runId: exports.getRunId(),
+              docId: exports.getDocId(),
               pageNumber: annotation.getPageNumber(),
               parentAuthorId,
               signerId,
@@ -535,9 +539,10 @@ window.sessionStorage.setItem('runId', runId);
     }
 
     const { id: annotId, xfdf, type } = val;
+    console.log('val', val)
     let annotations;
     if (type === 'annotation') {
-      annotations = await annotManager.importAnnotations(xfdf);
+      annotations = await annotManager.importAnnotCommand(xfdf);
       const [annotation] = annotations;
       if (annotation) {
         await annotation.resourcesLoaded();
@@ -783,9 +788,10 @@ window.sessionStorage.setItem('runId', runId);
       ...instance, 
       getDocId: () => exports.getDocId(),
       getRunId: () => exports.getRunId(),
-      loadDocument: (pdfUrl, config) => {
-        instance.docViewer.trigger('setDocId', config.docId);
-        return loadDocument(pdfUrl, config);
+      loadDocument: async (pdfUrl, config) => {
+        console.log('config.docId', config.docId)
+        instance.docViewer.one('documentLoaded', () => instance.docViewer.trigger('setDocId', config.docId));
+        await loadDocument(pdfUrl, config);
       },
       Annotations, 
     });

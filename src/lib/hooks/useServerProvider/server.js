@@ -173,6 +173,11 @@ export default async (firebase, serverOpts) => {
             .on('value', callbackFunction);
         case 'onAnnotation':
           return this.annotationsRef.on('value', callbackFunction);
+
+
+
+
+
         case 'onAnnotationCreated':
           return this.annotationsRef
             .orderByChild('docId')
@@ -294,6 +299,7 @@ export default async (firebase, serverOpts) => {
     setSelectedSigner = signerId => this.selectedSignerRef.set(signerId);
 
     clearAnnotations = () => this.annotationsRef.set({});
+    clearWidgets = () => this.widgetRef.set({});
 
     createWidget = (widgetId, widgetData) => this.widgetRef.child(widgetId).set(widgetData); 
 
