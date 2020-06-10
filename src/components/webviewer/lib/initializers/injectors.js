@@ -22,7 +22,7 @@ export const toHeaderGroup = (groupName) => async ({ instance, header, headers, 
       .map((h) => {
         return (h.onClick) ? ({
           ...h,
-          onClick: h.onClick(instance),
+          onClick: h.onClick({ instance, header, headers, ...rest }),
         }) : h
       })
       .value()
@@ -34,7 +34,7 @@ export const injectHeaderItem = (conf) => async ({ instance, headerItems, ...res
   instance,
   headerItems: [...headerItems, (conf.onClick) ? {
     ...conf,
-    onClick: conf.onClick(instance)
+    onClick: conf.onClick({ instance, headerItems, ...rest })
   } : conf],
 });
 

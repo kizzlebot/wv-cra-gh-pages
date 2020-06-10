@@ -8,7 +8,7 @@ export default {
   // ui: 'beta',
   // config: config ? `${process.env.PUBLIC_URL}${config}` : undefined,
   config: '/wv-configs/config.js',
-
+  pdftronServer: 'https://demo.pdftron.com/',
   custom: {
     // fitMode: 'FitPage',
     layoutMode: 'Single',

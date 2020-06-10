@@ -14,7 +14,7 @@ const defineToolClass = ({
   
   const C = class extends BaseClass {
     constructor(docViewer) {
-      super(docViewer, annotClasses[annotClassName]);
+      super(docViewer, annotClasses[annotClassName] || instance.Tools[annotClassName]);
       this.defaults = this.defaults || {};
       this.defaults.FillColor = new instance.Annotations.Color(255, 141, 0, 0.5);
       this.on('annotationAdded', onAnnotationAdded({ instance, tools, annotClasses, ...rest }));
