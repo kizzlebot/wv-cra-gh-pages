@@ -62,7 +62,6 @@ function Collab({
     };
     
     if (clearAll === true){
-      console.log('clear all changed')
       clearAllAnnotsWidgets();
     }
 
@@ -74,7 +73,7 @@ function Collab({
     <Webviewer
 
       onReady={(viewer) => {
-        console.log('onReady', viewer);
+        // console.log('onReady', viewer);
       }}
 
       onAnnotationAdded={(args) => {

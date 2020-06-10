@@ -9,7 +9,6 @@ const initWv = async (config, domElement) => {
     docViewer: {
       one(evtName, callback){
 
-        console.log('CoreControls', window.Annotations);
         // if (evtName === 'ready'){
         //   callback(instance)
         // }

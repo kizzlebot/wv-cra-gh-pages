@@ -58,7 +58,6 @@ window.sessionStorage.setItem('runId', runId);
   exports.getDocId = () => docId;
 
   exports.setSigners = (s) => {
-    // console.log('setSigners called', s);
     signers = _.map(s, (signer, i) => {
       return {
         ...signer,
@@ -453,7 +452,6 @@ window.sessionStorage.setItem('runId', runId);
         else {
 
           if (!annotation.getField) {
-            // console.log('!annotation.getField. was page deleted?');
             return;
           }
           const fieldName = annotation.getField().name;
@@ -491,7 +489,6 @@ window.sessionStorage.setItem('runId', runId);
             }
             const finalXfdf = xmlDoc.documentElement.outerHTML;
 
-            // console.log('server.createAnnotation called with', xfdf);
             const parentAuthorId = author || 'default';
 
             const payload = {
@@ -539,7 +536,6 @@ window.sessionStorage.setItem('runId', runId);
     }
 
     const { id: annotId, xfdf, type } = val;
-    console.log('val', val)
     let annotations;
     if (type === 'annotation') {
       annotations = await annotManager.importAnnotCommand(xfdf);
@@ -559,7 +555,6 @@ window.sessionStorage.setItem('runId', runId);
         .value();
 
       if (existingAnnot) {
-        console.log('%cSkipping reimport of widget', 'color: red;font-size:20px')
         return;
       }
 
@@ -571,7 +566,6 @@ window.sessionStorage.setItem('runId', runId);
         .values()
         .flatten()
         .value()
-      console.log('groupoing', toDelete);
       annotManager.deleteAnnotations(toDelete, true);
     }
 
@@ -622,7 +616,6 @@ window.sessionStorage.setItem('runId', runId);
     const { Annotations, Tools, PDFNet } = exports;
     const annotManager = docViewer.getAnnotationManager();
 
-    // console.log('custom file loaded', { PDFNet, Tools, annotManager, readerControl: exports.readerControl, Annotations, version: exports })
     annotManager.getWidgetById = (widgetId) => {
       const allAnnots = annotManager.getAnnotationsList();
       const widget = _.find(allAnnots, (annot) => _.isEqual(_.get(annot, 'CustomData.id'), widgetId));
@@ -631,6 +624,7 @@ window.sessionStorage.setItem('runId', runId);
     
     const instance = { 
       ...exports.readerControl, 
+      CoreControls: exports.CoreControls,
       Annotations, 
       Tools, 
       PDFNet, 
@@ -647,7 +641,6 @@ window.sessionStorage.setItem('runId', runId);
 
     await extendAnnotations({ ...instance });
     const custom = JSON.parse(exports.readerControl.getCustomData()) || {};
-    // console.log('finished config', custom)
     await configureFeatures(instance, custom)
 
 
@@ -657,22 +650,18 @@ window.sessionStorage.setItem('runId', runId);
 
 
     annotManager.setAnnotationDisplayAuthorMap((annot) => {
-      // console.log('setAnnotationDisplayAuthorMap called');
       const signers = exports.getSigners();;
       const signer = exports.getSigner();;
 
-      console.log('setAnnotationDisplayAuthormap called', annot);
       if (annot instanceof Annotations.WidgetAnnotation) {
         const signerId = _.get(annot, 'CustomData.signerId', annot.Author);
         const signer = exports.getSignerById(signerId);
         const rtn = parseName(signer);
-        console.log('returning', rtn);
         return rtn;
 
       }
 
       if (_.get(annot, 'Author')) {
-        // console.log('annot.Author', annot.Author);
         const user = _.find(signers, { id: annot.Author });
 
         if (user) {
@@ -713,7 +702,6 @@ window.sessionStorage.setItem('runId', runId);
 
 
     annotManager.on('updateAnnotationPermission', async annotation => {
-      console.log('updateAnnotationPermission called');
       const allAnnots = annotManager.getAnnotationsList();
 
 
@@ -731,7 +719,6 @@ window.sessionStorage.setItem('runId', runId);
           }
 
           if (signerId !== currUserId || locked) {
-            // console.log('isReadOnly', signerId, currUserId);
             annot.fieldFlags.set('ReadOnly', true);
           } else {
             annot.fieldFlags.set('ReadOnly', false);
@@ -784,12 +771,12 @@ window.sessionStorage.setItem('runId', runId);
 
 
     const { loadDocument } = instance;
+    exports.CoreControls.disableLogs(true);
     return docViewer.trigger('ready', { 
       ...instance, 
       getDocId: () => exports.getDocId(),
       getRunId: () => exports.getRunId(),
       loadDocument: async (pdfUrl, config) => {
-        console.log('config.docId', config.docId)
         instance.docViewer.one('documentLoaded', () => instance.docViewer.trigger('setDocId', config.docId));
         await loadDocument(pdfUrl, config);
       },

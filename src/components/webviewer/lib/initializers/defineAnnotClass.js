@@ -5,7 +5,6 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
     constructor(...args) {
       super(...args);
       this.Subject = className;
-      console.log('customData', customData);
       this.CustomData = { ...customData }
     }
     draw(ctx, pageMatrix) {

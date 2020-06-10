@@ -41,6 +41,7 @@ class Webviewer extends Component {
       // pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
+    console.log({ instance });
 
     // when ready is fired from public/wv-configs/config.js
     instance.docViewer.one('ready', async (instance) => {
@@ -118,7 +119,6 @@ class Webviewer extends Component {
 
         // Set the currentUser
         instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
-        return this.loadAnnotations()
       });
 
 
@@ -192,30 +192,15 @@ class Webviewer extends Component {
 
         // if delete called an
         if (this.props.widgetToImport?.type === 'delete' && existing){
-          console.log('deleting widget');
           await this.instance.annotManager.deleteAnnotation(existing, true);
         } 
         else if (this.instance.getRunId() === this.props.widgetToImport?.runId && existing) {
-          console.log('%cwidget created by this browser skipping...', 'font-size:19px;color:red;')
           this.props.onWidgetImported();
         }
         else {
-          console.log('%cimporting widget', 'font-size:20px;color:red;');
           if (!existing){
             this.instance.annotManager.trigger('addAnnotation', { ...this.props.widgetToImport })
           }
-
-          // const toDelete = _.chain(this.instance.annotManager.getAnnotationsList())
-          //   .filter(el => el instanceof this.instance.Annotations.WidgetAnnotation)
-          //   .groupBy('CustomData.id')
-          //   .mapValues((vals) => vals.length > 1 ? _.tail(vals) : [])
-          //   .values()
-          //   .flatten()
-          //   .value()
-          // if (toDelete.length > 0){
-          //   await this.instance.annotManager.deleteAnnotations(toDelete, true);
-          // }
-
 
           // await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
           this.props.onWidgetImported();
@@ -226,7 +211,6 @@ class Webviewer extends Component {
 
     // annotsToImport will be a xfdf containing single annotation
     if (prevProps.annotToImport !== this.props.annotToImport) {
-      console.log('%cannotations changed', 'font-size:20px;color:red;')
 
       if (this.props.annotToImport) {
         if (this.props.annotToImport.type === 'delete'){
@@ -243,7 +227,6 @@ class Webviewer extends Component {
 
         this.props.onAnnotImported();
       }
-      // await this.loadAnnotations();
     }
 
 
@@ -260,25 +243,6 @@ class Webviewer extends Component {
         this.instance.annotManager.trigger('updateAnnotationPermission');
       }
     }
-  }
-
-
-
-  // load annotations passed as props
-  loadAnnotations = async () => {
-    const annotations = _.chain(this.props.annotations)
-      .toPairs()
-      .filter(([key, val]) => val.docId === this.props.selectedDoc)
-      .value();
-
-
-    await Promise.map(annotations, ([key, value]) => {
-      return this.instance.annotManager.trigger('addAnnotation', {
-        ...value,
-        xfdf: unescape(value.xfdf)
-      })
-    });
-
   }
 
   render() {

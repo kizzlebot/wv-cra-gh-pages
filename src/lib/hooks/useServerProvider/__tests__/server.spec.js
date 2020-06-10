@@ -28,18 +28,10 @@ const firebase = {
 describe('server', () => {
 
   it('hsould initialize firebase', async () => {
-    // console.log(firebase.database);
-    console.log(firebase.auth());
-    console.log(firebase.database());
-
     const server = await initServer(firebase, { rtdbNamespace: 'orgid', userId: 'userId', nsId: 'nsId' });
   }, 10000);
 
   it('hsould initialize firebase', async () => {
-    // console.log(firebase.database);
-    console.log(firebase.auth());
-    console.log(firebase.database());
-
     const server = await initServer(firebase, { 
       rtdbNamespace: 'orgid', 
       userId: 'userId', 
