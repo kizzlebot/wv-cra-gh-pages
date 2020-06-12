@@ -29,13 +29,24 @@ export const toHeaderGroup = (groupName) => async ({ instance, header, headers, 
   }
 })
 
-export const injectHeaderItem = (conf) => async ({ instance, headerItems, ...rest }) => ({
+export const injectHeaderItem = (confs) => async ({ instance, headerItems, ...rest }) => ({
   ...rest,
   instance,
-  headerItems: [...headerItems, (conf.onClick) ? {
-    ...conf,
-    onClick: conf.onClick({ instance, headerItems, ...rest })
-  } : conf],
+  headerItems: await Promise.all([
+    ...headerItems, 
+    ..._.chain(confs)
+      .castArray()
+      .map((conf) => {
+        if (_.isFunction(conf)){
+          return conf({ instance, headerItems, ...rest })
+        }
+        return (conf.onClick) ? {
+          ...conf,
+          onClick: conf.onClick({ instance, headerItems, ...rest })
+        } : conf
+      })
+      .value()
+  ]),
 });
 
 
@@ -55,12 +66,6 @@ export const setHeaderItems = ({ insertBefore }) => async ({ headerItems, instan
 
 
 export const registerHeaderGroup = ({ groupName }) => async ({ instance, headers, ...rest }) => {
-  // instance.registerHeaderGroup(groupName, [
-  //   { type: 'spacer' },
-  //   { type: 'divider' },
-  //   ...headers[groupName],
-  // ]);
-
   instance.setHeaderItems((obj) => {
     obj.headers[groupName] = [
       { type: 'spacer' },

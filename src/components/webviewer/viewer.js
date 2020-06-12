@@ -39,13 +39,11 @@ class Webviewer extends Component {
       path: '/lib',
       ...this.props.config,
       // pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
+      pdftronServer: 'https://demo.pdftron.com/',
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
-    console.log({ instance });
-
     // when ready is fired from public/wv-configs/config.js
-    instance.docViewer.one('ready', async (instance) => {
-
+    return instance.docViewer.one('ready', async (instance) => {
       this.instance = instance;
       window.instance = instance;
 
@@ -84,12 +82,15 @@ class Webviewer extends Component {
       instance.annotManager.on('annotationDeleted', callIfDefined(this.props.onAnnotationDeleted));
       instance.annotManager.on('annotationUpdated', callIfDefined(this.props.onAnnotationUpdated));
       instance.annotManager.on('fieldUpdated', callIfDefined(this.props.onFieldUpdated));
+
       instance.docViewer.on('documentUnloaded', callIfDefined(this.props.onDocumentUnloaded));
       instance.docViewer.on('documentLoaded', callIfDefined(this.props.onDocumentLoaded));
       instance.docViewer.on('annotationsLoaded', async () => {
         await Promise.delay(1000);
         return this.props.onAnnotationsLoaded(instance.getDocId())
       });
+      instance.docViewer.on('blankPageAdded', callIfDefined(this.props.onBlankPageAdded));
+      instance.docViewer.on('blankPageRemoved', callIfDefined(this.props.onBlankPageRemoved));
 
 
       instance.annotManager.setIsAdminUser(this.props.isAdminUser);
@@ -128,7 +129,6 @@ class Webviewer extends Component {
 
       // when cert modal clicked
       instance.docViewer.on('certModal', ({ type }) => {
-        console.debug('cert type', type)
         return this.setState({ certModal: { show: true } })
       });
   

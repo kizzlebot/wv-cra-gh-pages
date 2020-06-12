@@ -8,7 +8,6 @@ const addressTemplateToolIcon = `<svg aria-hidden="true" focusable="false" data-
 
 const { Promise, R, _ } = window.getExternalLibs()
 const tapP = (fn) => (args) => Promise.resolve(fn(args)).then(R.always(args));
-const debugTap = tapP((resp) => console.log('debugtap', resp));
 
 const parseName = (user) => {
   const fName = _.get(user, 'firstName', _.get(user, 'user.firstName'));
@@ -33,6 +32,7 @@ window.sessionStorage.setItem('runId', runId);
   let notary = null;
   let signers = [];
   let selectedSigner = null;
+  let pageCount = 0;
   const signerSigInits = {};
   let locked = false;
   const { Annotations, Tools, PDFNet } = exports;
@@ -50,6 +50,8 @@ window.sessionStorage.setItem('runId', runId);
   ];
 
 
+  exports.getPageCount = () => pageCount;
+  exports.setPageCount = (num) => pageCount = num;
   exports.getRunId = () => runId;
   exports.setDocId = (id) => {
     docId = id;
@@ -396,12 +398,6 @@ window.sessionStorage.setItem('runId', runId);
           let parentAuthorId = null;
           let xfdf = await annotManager.exportAnnotCommand();
           
-          // let xfdf = await annotManager.exportAnnotations({
-          //   annots: [annotation],
-          //   widgets: false,
-          //   links: false,
-          //   fields: false,
-          // });
 
           if (type === 'add') {
             // In case of replies, add extra field for server-side permission to be granted to the
@@ -528,6 +524,10 @@ window.sessionStorage.setItem('runId', runId);
 
 
 
+  /**
+   * Handle adding annotation/widget
+   * @param {WebViewerInstance} instance 
+   */
   const handleAddAnnotation = (instance) => async (val) => {
     const { Annotations, annotManager } = instance;
 
@@ -578,6 +578,10 @@ window.sessionStorage.setItem('runId', runId);
 
 
 
+  /**
+   * 
+   * @param {WebViewerInstance} instance 
+   */
   const handleUpdateAnnotation = (instance) => async (val) => {
     const { annotManager } = instance;
     const { xfdf, type, authorId } = val;
@@ -588,7 +592,7 @@ window.sessionStorage.setItem('runId', runId);
     // Import the annotation based on xfdf command
     if (type === 'annotation') {
       try {
-        const annotations = await annotManager.importAnnotations(xfdf);
+        const annotations = await annotManager.importAnnotCommand(xfdf);
         const annotation = annotations[0];
 
         const locked = exports.getLock();
@@ -622,6 +626,7 @@ window.sessionStorage.setItem('runId', runId);
       return widget;
     };
     
+    // extend webviewer instance w/ more functions and pass to react via `docViewer.on('ready', instance);`
     const instance = { 
       ...exports.readerControl, 
       CoreControls: exports.CoreControls,
@@ -635,7 +640,10 @@ window.sessionStorage.setItem('runId', runId);
       getSigners: exports.getSigners,
       getSigner: exports.getSigner,
       getSignerById: exports.getSignerById,
-      setSigners: exports.setSigners,
+      setSigners: (signers) => {
+        exports.setSigners(signers);
+        annotManager.trigger('signersChanged', signers);
+      },
     }
 
 
@@ -679,7 +687,57 @@ window.sessionStorage.setItem('runId', runId);
 
 
 
+    /* 
+     * When addBlankPage is triggered. then add a page
+     */
+    docViewer.on('addBlankPage', async (numPages) => {
+      await PDFNet.initialize();
+      const doc = instance.docViewer.getDocument();
+      if (!doc) {
+        return;
+      }
+
+      const pdfDoc = await doc.getPDFDoc();
+      await PDFNet.startDeallocateStack();
+      const pageCount = await pdfDoc.getPageCount();
+      const pageInfo = doc.getPageInfo(pageCount - 1);
+
+      await doc.insertBlankPages(_.range(pageCount - 1, pageCount));
+      await instance.docViewer.refreshAll();
+      await instance.docViewer.updateView();
+      await instance.docViewer.getDocument().refreshTextData();
+      await PDFNet.endDeallocateStack();
+
+      return instance.docViewer.trigger('blankPageAdded');
+    });
+
+    /* 
+     * When removeBlankPage is triggered. then remove a page
+     */
+    docViewer.on('removeBlankPage', async (numPages) => {
+      await PDFNet.initialize();
+      const doc = instance.docViewer.getDocument();
+      if (!doc) {
+        return;
+      }
+
+      await instance.PDFNet.startDeallocateStack();
+
+      const currPageCount = instance.docViewer.getPageCount()
+      await doc.removePages([currPageCount]);
+      await instance.docViewer.refreshAll();
+      await instance.docViewer.updateView();
+      await instance.docViewer.getDocument().refreshTextData();
+      await instance.PDFNet.endDeallocateStack();
+
+      return instance.docViewer.trigger('blankPageRemoved');
+    });
+
+
+
+
     // register events to trigger on annotManager. subscribed by parent component
+    // built-in event 
     annotManager.on('annotationChanged', onAnnotationChanged(instance))
     annotManager.on('fieldChanged', onFieldChanged(instance))
 
@@ -701,6 +759,7 @@ window.sessionStorage.setItem('runId', runId);
 
 
 
+    // built-in event 
     annotManager.on('updateAnnotationPermission', async annotation => {
       const allAnnots = annotManager.getAnnotationsList();
 
@@ -729,7 +788,8 @@ window.sessionStorage.setItem('runId', runId);
 
 
     annotManager.on('setSelectedSigner', (signerId) => {
-      exports.setSelectedSigner(signerId)
+      exports.setSelectedSigner(signerId);
+      annotManager.trigger('selectedSignerChanged', signerId);
     });
 
     annotManager.on('setCurrentUser', (currentUser) => {
@@ -740,7 +800,10 @@ window.sessionStorage.setItem('runId', runId);
 
 
     annotManager.on('addSigner', async (args) => exports.addSigner(args));
-    annotManager.on('setSigners', async (...args) => exports.setSigners(args));
+    annotManager.on('setSigners', async (...args) => {
+      exports.setSigners(args)
+      annotManager.trigger('signersChanged', args);
+    });
 
 
     docViewer.on('updateFeatures', configureFeatures(instance));
@@ -751,34 +814,44 @@ window.sessionStorage.setItem('runId', runId);
     readerControl.setColorPalette(['#4B92DB', '#000000']);
 
 
+    // built-in event 
     readerControl.docViewer.on('documentLoaded', () => {
       return configureFeatures(instance, custom)
     });
    
 
     // disables hotkeys when document loads
+    // built-in event 
     readerControl.docViewer.on('annotationsLoaded', () => {
       readerControl.hotkeys.off();
       readerControl.hotkeys.on('AnnotationEdit');
     });
 
     // disables hotkeys when annotManager.setCurrentUser() is called
+    // built-in event 
     annotManager.on('updateAnnotationPermission', () => {
       readerControl.hotkeys.off();
       readerControl.hotkeys.on('AnnotationEdit');
     });
 
 
+    exports.CoreControls.disableLogs(true);
 
     const { loadDocument } = instance;
-    exports.CoreControls.disableLogs(true);
     return docViewer.trigger('ready', { 
       ...instance, 
       getDocId: () => exports.getDocId(),
       getRunId: () => exports.getRunId(),
-      loadDocument: async (pdfUrl, config) => {
-        instance.docViewer.one('documentLoaded', () => instance.docViewer.trigger('setDocId', config.docId));
-        await loadDocument(pdfUrl, config);
+      getPageCount: () => exports.getPageCount(),
+      setPageCount: (arg) => exports.setPageCount(arg),
+      setSelectedSigner: (arg) => exports.setSelectedSigner(arg),
+      loadDocument: (pdfUrl, config) => {
+        instance.docViewer.one('documentLoaded', async () => {
+          instance.docViewer.trigger('setDocId', config.docId);
+          const pageCount = instance.docViewer.getPageCount()
+          exports.setPageCount(pageCount);
+        });
+        return loadDocument(pdfUrl, config);
       },
       Annotations, 
     });

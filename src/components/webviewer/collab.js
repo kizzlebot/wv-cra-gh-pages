@@ -45,7 +45,11 @@ function Collab({
         selectedDocId: val,
       });
     });
-  }, [getState, server, setState])
+  }, [getState, server, setState]);
+
+
+
+
 
   const { signers } = getState()
 
@@ -126,6 +130,12 @@ function Collab({
         }
         server.unbindAll();
       }}
+
+      
+      // TODO: update firebase rtdb with the number of blank pages added so it syncs b/t other users
+      onBlankPageAdded={() => console.log('blank page has been added')}
+      // TODO: update firebase rtdb with the number of blank pages added so it syncs b/t other users
+      onBlankPageRemoved={() => console.log('blank page has been removed')}
 
 
       pageNumber={getPageState()[getState().selectedDocId]}
