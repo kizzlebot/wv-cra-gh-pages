@@ -36,12 +36,14 @@ class Webviewer extends Component {
     // const { default: initWv } = await import('@pdftron/webviewer');
 
     const instance = await initWv({
-      path: '/lib',
+      path: `${process.env.PUBLIC_URL}/lib`,
       ...this.props.config,
       // pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
       pdftronServer: 'https://demo.pdftron.com/',
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
+
+    
     // when ready is fired from public/wv-configs/config.js
     return instance.docViewer.one('ready', async (instance) => {
       this.instance = instance;
