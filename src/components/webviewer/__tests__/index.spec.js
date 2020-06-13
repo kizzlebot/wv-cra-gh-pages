@@ -1,18 +1,13 @@
 import React from 'react';
-import { render, waitForElement } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
-import { rest } from 'msw'
-import { setupServer } from 'msw/node'
-import { shallow, mount } from 'enzyme';
-import fs from 'fs';
-import path from 'path';
 import Webviewer from '../viewer'
 
 
 
 it.only('renders without crashing', async () => {
   const mockOnReady = jest.fn((x) => console.log('onReady', x));
-  const { debug, findByTestId } = render(
+  const { findByTestId } = render(
     <Webviewer 
       onReady={mockOnReady}
     />
