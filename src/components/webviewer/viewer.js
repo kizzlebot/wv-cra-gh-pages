@@ -35,7 +35,7 @@ class Webviewer extends Component {
   componentDidMount = async () => {
     // const { default: initWv } = await import('@pdftron/webviewer');
 
-    const instance = await initWv({
+    const instance = window.origInstance = await initWv({
       path: `${process.env.PUBLIC_URL}/lib`,
       ...this.props.config,
       // pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
@@ -43,7 +43,8 @@ class Webviewer extends Component {
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
 
-    
+
+
     // when ready is fired from public/wv-configs/config.js
     return instance.docViewer.one('ready', async (instance) => {
       this.instance = instance;
@@ -245,6 +246,7 @@ class Webviewer extends Component {
         this.instance.annotManager.trigger('updateAnnotationPermission');
       }
     }
+
   }
 
   render() {

@@ -1,12 +1,29 @@
-// @ts-nocheck
+// eslint-disable-next-line no-unused-vars
+function tracePropAccess(obj, propKeys) {
+  return new Proxy(obj, {
+    construct(...args){
+      console.log('constructed');
+      return Reflect.construct(...args);
+    },
+    get(target, propKey, receiver) {
+      console.log('GET ' + propKey);
+      return Reflect.get(target, propKey, receiver);
+    },
+    set(target, propKey, value, receiver) {
+      console.log(`SET: ${propKey}=`, value);
+      return Reflect.set(target, propKey, value, receiver);
+    },
+  });
+}
 
 
 
-const sigTemplateToolIcon = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="signature" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-signature fa-w-20 fa-xs"><path fill="currentColor" d="M623.2 192c-51.8 3.5-125.7 54.7-163.1 71.5-29.1 13.1-54.2 24.4-76.1 24.4-22.6 0-26-16.2-21.3-51.9 1.1-8 11.7-79.2-42.7-76.1-25.1 1.5-64.3 24.8-169.5 126L192 182.2c30.4-75.9-53.2-151.5-129.7-102.8L7.4 116.3C0 121-2.2 130.9 2.5 138.4l17.2 27c4.7 7.5 14.6 9.7 22.1 4.9l58-38.9c18.4-11.7 40.7 7.2 32.7 27.1L34.3 404.1C27.5 421 37 448 64 448c8.3 0 16.5-3.2 22.6-9.4 42.2-42.2 154.7-150.7 211.2-195.8-2.2 28.5-2.1 58.9 20.6 83.8 15.3 16.8 37.3 25.3 65.5 25.3 35.6 0 68-14.6 102.3-30 33-14.8 99-62.6 138.4-65.8 8.5-.7 15.2-7.3 15.2-15.8v-32.1c.2-9.1-7.5-16.8-16.6-16.2z" class=""></path></svg>';
-const initialsTemplateToolIcon = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="signature" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-signature fa-w-20 fa-xs"><path fill="currentColor" d="M623.2 192c-51.8 3.5-125.7 54.7-163.1 71.5-29.1 13.1-54.2 24.4-76.1 24.4-22.6 0-26-16.2-21.3-51.9 1.1-8 11.7-79.2-42.7-76.1-25.1 1.5-64.3 24.8-169.5 126L192 182.2c30.4-75.9-53.2-151.5-129.7-102.8L7.4 116.3C0 121-2.2 130.9 2.5 138.4l17.2 27c4.7 7.5 14.6 9.7 22.1 4.9l58-38.9c18.4-11.7 40.7 7.2 32.7 27.1L34.3 404.1C27.5 421 37 448 64 448c8.3 0 16.5-3.2 22.6-9.4 42.2-42.2 154.7-150.7 211.2-195.8-2.2 28.5-2.1 58.9 20.6 83.8 15.3 16.8 37.3 25.3 65.5 25.3 35.6 0 68-14.6 102.3-30 33-14.8 99-62.6 138.4-65.8 8.5-.7 15.2-7.3 15.2-15.8v-32.1c.2-9.1-7.5-16.8-16.6-16.2z" class=""></path></svg>';
-const addressTemplateToolIcon = `<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="address-card" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-address-card fa-w-18 fa-3x"><path fill="currentColor" d="M528 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-352 96c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm112 236.8c0 10.6-10 19.2-22.4 19.2H86.4C74 384 64 375.4 64 364.8v-19.2c0-31.8 30.1-57.6 67.2-57.6h5c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h5c37.1 0 67.2 25.8 67.2 57.6v19.2zM512 312c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-64c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-64c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16z" class=""></path></svg>`;
+
+
+
 
 const { Promise, R, _ } = window.getExternalLibs()
+// eslint-disable-next-line no-unused-vars
 const tapP = (fn) => (args) => Promise.resolve(fn(args)).then(R.always(args));
 
 const parseName = (user) => {
@@ -27,15 +44,14 @@ window.sessionStorage.setItem('runId', runId);
   
 
   // #region get/set signers
-  let signer = null;
   let docId = null;
   let notary = null;
   let signers = [];
   let selectedSigner = null;
-  let pageCount = 0;
+  let pageCount = {};
   const signerSigInits = {};
   let locked = false;
-  const { Annotations, Tools, PDFNet } = exports;
+  const { Annotations } = exports;
 
   const colors = [
     new Annotations.Color(153, 215, 114, 0.5),
@@ -50,8 +66,13 @@ window.sessionStorage.setItem('runId', runId);
   ];
 
 
-  exports.getPageCount = () => pageCount;
-  exports.setPageCount = (num) => pageCount = num;
+  // store origin page count
+  exports.setPageCount = (docId, num) => {
+    pageCount = { ...pageCount, [docId]: num }
+    return pageCount;
+  };
+  exports.getPageCount = () => pageCount[docId]
+
   exports.getRunId = () => runId;
   exports.setDocId = (id) => {
     docId = id;
@@ -134,7 +155,7 @@ window.sessionStorage.setItem('runId', runId);
   const extendAnnotations = (instance) => {
     const { docViewer, Annotations, Tools } = instance;
     const annotManager = docViewer.getAnnotationManager();
-    const { createSignHereElement, serialize, deserialize, draw } = Annotations.SignatureWidgetAnnotation.prototype;
+    const { createSignHereElement, serialize, deserialize } = Annotations.SignatureWidgetAnnotation.prototype;
 
     docViewer
       .getTool('AnnotationCreateFreeText')
@@ -161,6 +182,9 @@ window.sessionStorage.setItem('runId', runId);
         name
       };
     };
+
+    // Annotations.Forms.Field.prototype = tracePropAccess(Annotations.Forms.Field.prototype);
+    
 
     Annotations.WidgetAnnotation.prototype.updateCustomData = async function (currentUser) {
       if (!this.getField) {
@@ -216,6 +240,7 @@ window.sessionStorage.setItem('runId', runId);
     };
 
 
+    // eslint-disable-next-line no-unused-vars
     const { addSignature, saveSignatures, importSignatures, exportSignatures } = Tools.SignatureCreateTool.prototype;
     Tools.SignatureCreateTool.prototype.importSignatures = function (args) {
       return importSignatures.apply(this, arguments);
@@ -239,6 +264,7 @@ window.sessionStorage.setItem('runId', runId);
 
         const signHereElement = super.createSignHereElement(...args);
 
+        // eslint-disable-next-line no-unused-vars
         const { type, runId, id, author, signerId, name } = this.getMetadata();
         this.Author = signerId;
 
@@ -274,6 +300,7 @@ window.sessionStorage.setItem('runId', runId);
       // signHereElement is the default one with dark blue background
       const signHereElement = createSignHereElement.apply(this, arguments);
 
+      // eslint-disable-next-line no-unused-vars
       const { type, runId, id, author, signerId, name } = this.getMetadata();
       this.Author = signerId;
 
@@ -617,7 +644,7 @@ window.sessionStorage.setItem('runId', runId);
     const { readerControl } = exports;
     const { docViewer } = exports.readerControl;
 
-    const { Annotations, Tools, PDFNet } = exports;
+    const { Actions, Annotations, CoreControls, PartRetrievers, PDFNet, Tools, utils } = exports;
     const annotManager = docViewer.getAnnotationManager();
 
     annotManager.getWidgetById = (widgetId) => {
@@ -629,12 +656,19 @@ window.sessionStorage.setItem('runId', runId);
     // extend webviewer instance w/ more functions and pass to react via `docViewer.on('ready', instance);`
     const instance = { 
       ...exports.readerControl, 
-      CoreControls: exports.CoreControls,
+      Actions,
       Annotations, 
+      CoreControls,
       Tools, 
+      PartRetrievers,
       PDFNet, 
+      utils,
       annotManager,
-      getRunId: exports.getRunId,
+      getDocId: () => exports.getDocId(),
+      getRunId: () => exports.getRunId(),
+      setSelectedSigner: (arg) => exports.setSelectedSigner(arg),
+      getPageCount: () => exports.getPageCount(),
+      setPageCount: (arg) => exports.setPageCount(arg),
       setNotary: exports.setNotary,
       getNotary: exports.getNotary,
       getSigners: exports.getSigners,
@@ -840,16 +874,11 @@ window.sessionStorage.setItem('runId', runId);
     const { loadDocument } = instance;
     return docViewer.trigger('ready', { 
       ...instance, 
-      getDocId: () => exports.getDocId(),
-      getRunId: () => exports.getRunId(),
-      getPageCount: () => exports.getPageCount(),
-      setPageCount: (arg) => exports.setPageCount(arg),
-      setSelectedSigner: (arg) => exports.setSelectedSigner(arg),
       loadDocument: (pdfUrl, config) => {
         instance.docViewer.one('documentLoaded', async () => {
           instance.docViewer.trigger('setDocId', config.docId);
           const pageCount = instance.docViewer.getPageCount()
-          exports.setPageCount(pageCount);
+          exports.setPageCount(config.docId, pageCount);
         });
         return loadDocument(pdfUrl, config);
       },

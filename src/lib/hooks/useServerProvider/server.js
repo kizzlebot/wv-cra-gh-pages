@@ -17,8 +17,6 @@ export default async (firebase, serverOpts) => {
       // Initialize Firebase
       this.firebase = firebase;
       this.token = token;
-
-      // this.init();
     }
 
     bindings = { annotations: {} };
@@ -213,6 +211,18 @@ export default async (firebase, serverOpts) => {
 
         case 'onSelectedSignerChange':
           return this.selectedSignerRef.on('value', callbackFunction);
+          
+        case 'onBlankPagesAdded':
+          return this.blankPagesRef
+            .orderByKey()
+            .equalTo(docId)
+            .on('child_added', callbackFunction);
+        case 'onBlankPagesChanged':
+          return this.blankPagesRef
+            .orderByKey()
+            .equalTo(docId)
+            .on('child_changed', callbackFunction);
+
         case 'onBlankPageAdded':
           return this.blankPagesRef.on('child_changed', callbackFunction);
         case 'onLockChanged':
@@ -248,8 +258,6 @@ export default async (firebase, serverOpts) => {
       .set(authorName);
 
     checkAuthor = (authorId, openReturningAuthorPopup, openNewAuthorPopup) => {
-      console.debug('checking author');
-
       this.authorsRef.once('value', authors => {
         if (authors.hasChild(authorId)) {
           this.authorsRef.child(authorId).once('value', author => {
@@ -283,9 +291,9 @@ export default async (firebase, serverOpts) => {
     }
 
     signInWithToken = async (token) => {
-      // await firebase
-      //   .auth()
-      //   .setPersistence(firebase.auth.Auth.Persistence.SESSION);
+      await firebase
+        .auth()
+        .setPersistence(firebase.auth.Auth.Persistence.SESSION);
       return firebase.auth().signInWithCustomToken(token);
     };
 
@@ -302,27 +310,22 @@ export default async (firebase, serverOpts) => {
     clearWidgets = () => this.widgetRef.set({});
 
     createWidget = (widgetId, widgetData) => this.widgetRef.child(widgetId).set(widgetData); 
+    updateWidget = (widgetId, widgetData) => this.widgetRef.child(widgetId).update(widgetData);
+    deleteWidget = (widgetId) => this.widgetRef.child(widgetId).remove();
 
-    createAnnotation = (annotationId, annotationData) =>
-      this.annotationsRef.child(annotationId).set(annotationData);
-
-    updateAnnotation = (annotationId, annotationData) =>
-      this.annotationsRef.child(annotationId).update(annotationData);
+    createAnnotation = (annotationId, annotationData) => this.annotationsRef.child(annotationId).set(annotationData);
+    updateAnnotation = (annotationId, annotationData) => this.annotationsRef.child(annotationId).update(annotationData);
+    deleteAnnotation = (annotationId) => this.annotationsRef.child(annotationId).remove();
 
     getAnnotation = annotationId => this.annotationsRef.child(annotationId).once('value');
-    getAnnotations = annotationId => this.annotationsRef.once('value').then(
-      R.pipe(R.invoker(0, 'val'), R.defaultTo({}))
-    )
+    getAnnotations = annotationId => this.annotationsRef.once('value').then(R.pipe(R.invoker(0, 'val'), R.defaultTo({})))
 
-    setLock = val => this.lockRef.set(val);
+    setLock = (val) => this.lockRef.set(val);
 
-    getLock = val => this.lockRef.once('value').then(data => data.val());
+    getLock = () => this.lockRef.once('value').then(data => data.val());
 
-    deleteAnnotation = annotationId =>
-      this.annotationsRef.child(annotationId).remove();
 
-    updateAuthor = (authorId, authorData) =>
-      this.authorsRef.child(authorId).set(authorData);
+    updateAuthor = (authorId, authorData) => this.authorsRef.child(authorId).set(authorData);
 
     getInitialAnnotations = async (docId) => {
       const annotsSnapshot = await this.annotationsRef.once('value');
@@ -342,19 +345,16 @@ export default async (firebase, serverOpts) => {
     showCompleting = (val) => this.completingRef.set(val);
 
     setSelectedDocId = (docId) => this.selectedDocIdRef.set(docId);
-    getSelectedDocId = val => this.selectedDocIdRef.once('value')
-      .then(R.invoker(0, 'val'))
+    getSelectedDocId = () => this.selectedDocIdRef.once('value').then(R.invoker(0, 'val'))
 
-    getSelectedDocTitle = val => this.selectedDocTitleRef.once('value')
-      .then(R.invoker(0, 'val'))
+    getSelectedDocTitle = () => this.selectedDocTitleRef.once('value').then(R.invoker(0, 'val'))
     setSelectedDocTitle = (title) => this.selectedDocTitleRef.set(title);
 
     createSignatures = (signerId, data) => this.consumerSignatures.child(signerId).update(data);
     getSignatures = (signerId) => this.consumerSignatures.child(signerId).once('value')
       .then(R.invoker(0, 'val'))
 
-    deleteSignature = (signerId, type) =>
-      this.consumerSignatures.child(signerId).child(type).remove();
+    deleteSignature = (signerId, type) => this.consumerSignatures.child(signerId).child(type).remove();
 
     addPresence = async (user) => {
       await this.participantsRef

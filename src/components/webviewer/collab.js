@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import _ from 'lodash';
 import * as R from 'ramda';
 import Webviewer from "./viewer";
 import { useServer } from '../../lib/hooks/useServerProvider';
-import { useQueue, useGetSetState } from 'react-use';
+import { useQueue, useGetSetState, useMap, useEffectOnce } from 'react-use';
 
 
 
@@ -26,7 +26,7 @@ function Collab({
   const [getState, setState] = useGetSetState({ pageNumber: {}, signers: {} });
   const [getPageState, setPageState] = useGetSetState({ });
 
-
+  
   // when current document toggled. update fbase
   useEffect(() => {
     server.setSelectedDocId(selectedDocId);
@@ -81,14 +81,18 @@ function Collab({
       }}
 
       onAnnotationAdded={(args) => {
-        server.createAnnotation(args.id, { ...args, docId: selectedDocId })
+        server.createAnnotation(args.id, args)
         server.setPageNumber(selectedDocId, args.pageNumber)
       }}
-      onAnnotationUpdated={(args) => server.updateAnnotation(args.id, { ...args, docId: selectedDocId })}
-      onAnnotationDeleted={(args) => server.deleteAnnotation(args.id, { ...args, docId: selectedDocId })}
+      onAnnotationUpdated={(args) => server.updateAnnotation(args.id, args)}
+      onAnnotationDeleted={(args) => server.deleteAnnotation(args.id, args)}
       onWidgetAdded={(args) => {
-        server.createWidget(args.id, { ...args, docId: selectedDocId })
-        server.setPageNumber(selectedDocId, args.pageNumber)
+        server.createWidget(args.id, args)
+        server.setPageNumber(args.docId, args.pageNumber)
+      }}
+      onWidgetDeleted={(args) => {
+        server.createWidget(args.id, args)
+        server.setPageNumber(args.docId, args.pageNumber)
       }}
 
       // TODO: implement on field changed
@@ -119,6 +123,7 @@ function Collab({
           server.bind('onAnnotationDeleted', docId, ({ val, key }) => addAnnot({ ...val, type: 'delete' }))
         ])
       }}
+      
       
       // When document is unloaded (`selectedDoc` changed). Clear queue and unbind from firebase
       onDocumentUnloaded={() => {
