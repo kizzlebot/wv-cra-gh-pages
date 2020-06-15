@@ -8,33 +8,33 @@ const defineToolClass = ({
   switchIn = R.always(R.identity),
   onMouseLeftDown,
   onMouseLeftUp,
-}) => async ({ instance, tools, annotClasses, ...rest }) => {
+}) => async ({ instance, toolClasses, annotClasses, ...rest }) => {
 
   const BaseClass = instance.Tools[baseClassName];
   
   const C = class extends BaseClass {
     constructor(docViewer) {
-      super(docViewer, annotClasses[annotClassName] || instance.Tools[annotClassName]);
+      super(docViewer, annotClasses[annotClassName] || instance.Annotations[annotClassName]);
       this.defaults = this.defaults || {};
       this.defaults.FillColor = new instance.Annotations.Color(255, 141, 0, 0.5);
-      this.on('annotationAdded', onAnnotationAdded({ instance, tools, annotClasses, ...rest }));
+      this.on('annotationAdded', onAnnotationAdded({ instance, toolClasses, annotClasses, ...rest }));
     }
 
     switchIn(...args){
       super.switchIn(...args);
-      return switchIn({ context: { tool: this, args }, instance, tools, annotClasses, ...rest });
+      return switchIn({ context: { tool: this, args }, instance, toolClasses, annotClasses, ...rest });
     }
 
     mouseLeftDown(...args){
       if (onMouseLeftDown){
-        return onMouseLeftDown({ context: { tool: this, args }, instance, tools, annotClasses, ...rest })
+        return onMouseLeftDown({ context: { tool: this, args }, instance, toolClasses, annotClasses, ...rest })
       }
       // super.mouseLeftDown(...args);
     }
 
     mouseLeftUp(...args){
       if (onMouseLeftUp){
-        return onMouseLeftUp({ context: { tool: this, args }, instance, tools, annotClasses, ...rest })
+        return onMouseLeftUp({ context: { tool: this, args }, instance, toolClasses, annotClasses, ...rest })
       }
       // super.mouseLeftDown(...args);
     }
@@ -50,8 +50,8 @@ const defineToolClass = ({
 
   return {
     ...rest,
-    tools: {
-      ...tools,
+    toolClasses: {
+      ...toolClasses,
       [className]: C,
     },
     annotClasses,

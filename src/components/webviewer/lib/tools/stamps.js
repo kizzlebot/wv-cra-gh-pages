@@ -85,7 +85,7 @@ const onMouseLeftDown = () => async ({ context, instance }) => {
 
 
 
-const createNotaryCertAnnotation = R.pipeP(
+export const createNotaryCertAnnotation = R.pipeP(
   // define annot class
   defineAnnotClass({
     className: 'NotaryCertAnnotation',
@@ -117,10 +117,11 @@ const createNotaryCertAnnotation = R.pipeP(
   }),
 )
 
+export const defineAnnotTools = R.pipeP(createNotaryCertAnnotation);
 
 
 const createStampAnnotTool = R.pipeP(
-  createNotaryCertAnnotation,
+  defineAnnotTools,
   injectHeaderItem({
     type: 'toolGroupButton',
     toolGroup: 'stampTools',

@@ -60,12 +60,17 @@ const createApplySigFieldTool = R.pipeP(
 )
 
 
-const registerFormFieldTools = R.pipeP(
+export const defineAnnotTools = R.pipeP(
   createFormFieldTool('Signature', sigToolImg),
   createFormFieldTool('Initials', initialsToolImg),
   createFormFieldTool('Text', textToolImg),
   createFormFieldTool('Check', checkboxToolImg),
   createApplySigFieldTool,
+);
+
+
+const registerFormFieldTools = R.pipeP(
+  defineAnnotTools,
   toHeaderGroup('formFieldGroup'),
   injectHeaderItem({
     type: 'actionButton',

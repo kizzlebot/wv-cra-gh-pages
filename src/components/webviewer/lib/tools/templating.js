@@ -42,6 +42,12 @@ const createAddressTemplateTool = createTemplateTool('Address', addressTemplateT
 const createDateTemplateTool = createTemplateTool('Date', dateTemplateToolIcon);
 
 
+export const defineAnnotTools = R.pipeP(
+  createSigTemplateTool,
+  createInitialsTemplateTool,
+  createAddressTemplateTool,
+  createDateTemplateTool,
+)
 
 
 
@@ -49,10 +55,7 @@ const createDateTemplateTool = createTemplateTool('Date', dateTemplateToolIcon);
 
 
 const registerTemplateTools = R.pipeP(
-  createSigTemplateTool,
-  createInitialsTemplateTool,
-  createAddressTemplateTool,
-  createDateTemplateTool,
+  defineAnnotTools,
   toHeaderGroup('templateToolsGroup'),
   injectHeaderItem({
     type: 'actionButton',

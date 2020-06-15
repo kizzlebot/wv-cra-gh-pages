@@ -6,11 +6,11 @@ const registerTool = ({
   buttonImage,
   buttonName,
   tooltip
-}, opts = {}) => async ({ instance, tools, header, annotClasses, ...rest }) => {
+}, opts = {}) => async ({ instance, tools, toolClasses, header, annotClasses, ...rest }) => {
 
 
   // register the tool
-  const toolObject = new tools[toolName](instance.docViewer);
+  const toolObject = new toolClasses[toolName](instance.docViewer);
   if (opts.clearOnDraw){
     toolObject.on('annotationAdded', () => {
       return instance.setActiveHeaderGroup('default');
@@ -29,8 +29,17 @@ const registerTool = ({
   return {
     ...rest,
     instance,
-    tools,
+    toolClasses,
     annotClasses,
+    tools: {
+      ...tools,
+      [toolName]: {
+        type: 'toolButton',
+        toolName,
+        dataElement: _.lowerFirst(toolName),
+        hidden: ['tablet', 'mobile'],
+      }
+    },
     header: [...header, {
       type: 'toolButton',
       toolName,

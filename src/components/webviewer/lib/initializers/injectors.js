@@ -5,6 +5,8 @@ export const injectToolArr = async (instance) => ({
   header: [],
   annotClasses: {},
   tools: {},
+  toolClasses: {},
+
   headers: {},
   headerItems: [],
 });
