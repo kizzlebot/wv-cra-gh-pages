@@ -22,24 +22,23 @@ function tracePropAccess(obj, propKeys) {
 
 
 
-const { Promise, R, _ } = window.getExternalLibs()
-// eslint-disable-next-line no-unused-vars
-const tapP = (fn) => (args) => Promise.resolve(fn(args)).then(R.always(args));
-
-const parseName = (user) => {
-  const fName = _.get(user, 'firstName', _.get(user, 'user.firstName'));
-  const lName = _.get(user, 'lastName', _.get(user, 'user.lastName'));
-  return `${_.upperFirst(fName)} ${_.upperFirst(lName)}`;
-}
-
-const runId = !!window.sessionStorage.getItem('runId') ? window.sessionStorage.getItem('runId') : `${Math.floor(Math.random() * 10000)}`;
-window.sessionStorage.setItem('runId', runId);
-
 
 
 ((exports) => {
 
-  // const { Promise, R, _ } = exports.getExternalLibs()
+  const { Promise, R, _ } = window.getExternalLibs()
+  // eslint-disable-next-line no-unused-vars
+  const tapP = (fn) => (args) => Promise.resolve(fn(args)).then(R.always(args));
+
+  const parseName = (user) => {
+    const fName = _.get(user, 'firstName', _.get(user, 'user.firstName'));
+    const lName = _.get(user, 'lastName', _.get(user, 'user.lastName'));
+    return `${_.upperFirst(fName)} ${_.upperFirst(lName)}`;
+  }
+
+  const runId = !!window.sessionStorage.getItem('runId') ? window.sessionStorage.getItem('runId') : `${Math.floor(Math.random() * 10000)}`;
+  window.sessionStorage.setItem('runId', runId);
+
   
   
 
