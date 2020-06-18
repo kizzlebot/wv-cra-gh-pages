@@ -24,9 +24,9 @@ describe('defineToolClass({ className, baseClassName, annotClassName, onAnnotati
       expect(docViewer).toBeInstanceOf(window.CoreControls.DocumentViewer);
     }
 
-    const mockSwitchIn = jest.fn((x) => console.log('onReady', x));
-    const mouseLeftDown = jest.fn((x) => console.log('onReady', x));
-    const mouseLeftUp = jest.fn((x) => console.log('onReady', x));
+    const mockSwitchIn = jest.fn();
+    const mouseLeftDown = jest.fn();
+    const mouseLeftUp = jest.fn();
     DummyTool.prototype.switchIn = function() {
       mockSwitchIn(...arguments);
     }
@@ -81,9 +81,9 @@ describe('defineToolClass({ className, baseClassName, annotClassName, onAnnotati
       expect(docViewer).toBeInstanceOf(window.CoreControls.DocumentViewer);
     }
 
-    const mockSwitchIn = jest.fn((x) => console.log('onReady', x));
-    const mouseLeftDown = jest.fn((x) => console.log('onReady', x));
-    const mouseLeftUp = jest.fn((x) => console.log('onReady', x));
+    const mockSwitchIn = jest.fn();
+    const mouseLeftDown = jest.fn();
+    const mouseLeftUp = jest.fn();
     DummyTool.prototype.switchIn = function() {
       mockSwitchIn(...arguments);
     }
@@ -128,8 +128,8 @@ describe('defineToolClass({ className, baseClassName, annotClassName, onAnnotati
   it('overrides switchIn if passed', async () => {
     expect(window.Tools).toBeDefined();
     const onAnnotationAdded = jest.fn(() => () => {});
-    const onMouseLeftDown = jest.fn((x) => console.log('onMouseLeftDown'))
-    const onMouseLeftUp = jest.fn((x) => console.log('onMouseLeftUp'))
+    const onMouseLeftDown = jest.fn()
+    const onMouseLeftUp = jest.fn();
     const createToolClass = defineToolClass({
       className: 'CustomTool',
       baseClassName: 'DummyTool',
@@ -146,9 +146,9 @@ describe('defineToolClass({ className, baseClassName, annotClassName, onAnnotati
       expect(docViewer).toBeInstanceOf(window.CoreControls.DocumentViewer);
     }
 
-    const mockSwitchIn = jest.fn((x) => console.log('onReady', x));
-    const mouseLeftDown = jest.fn((x) => console.log('onReady', x));
-    const mouseLeftUp = jest.fn((x) => console.log('onReady', x));
+    const mockSwitchIn = jest.fn();
+    const mouseLeftDown = jest.fn()
+    const mouseLeftUp = jest.fn();
     DummyTool.prototype.switchIn = function() {
       mockSwitchIn(...arguments);
     }

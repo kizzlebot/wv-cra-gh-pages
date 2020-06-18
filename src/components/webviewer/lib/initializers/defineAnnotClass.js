@@ -8,6 +8,7 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
       this.CustomData = { ...customData }
     }
     draw(ctx, pageMatrix) {
+      console.log('draw')
       super.draw(ctx, pageMatrix);
     }
     setSigner(id) {
@@ -36,7 +37,6 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
     }
 
     setIsRequired(isRequired){
-      this.CustomData = this.CustomData || {};
       this.CustomData.flags = this.CustomData.flags || {};
       this.CustomData.flags.required = isRequired;
       this.setCustomData({

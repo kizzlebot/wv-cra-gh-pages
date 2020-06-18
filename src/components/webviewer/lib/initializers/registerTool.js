@@ -6,7 +6,7 @@ const registerTool = ({
   buttonImage,
   buttonName,
   tooltip
-}, opts = {}) => async ({ instance, tools, toolClasses, header, annotClasses, ...rest }) => {
+}, opts = {}) => async ({ instance, tools, toolClasses, annotClasses, ...rest }) => {
 
 
   // register the tool
@@ -40,12 +40,6 @@ const registerTool = ({
         hidden: ['tablet', 'mobile'],
       }
     },
-    header: [...header, {
-      type: 'toolButton',
-      toolName,
-      dataElement: _.lowerFirst(toolName),
-      hidden: ['tablet', 'mobile'],
-    }]
   };
 }
 

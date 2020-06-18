@@ -13,7 +13,7 @@ describe('defineAnnotClass({ className, baseClassName, customData })', () => {
       }
     });
 
-    const mockRedrawAnnots = jest.fn((x) => console.log('onReady', x));
+    const mockRedrawAnnots = jest.fn();
 
     const pipeConfig = await createAnnotClass({
       instance: { 
@@ -42,7 +42,7 @@ describe('defineAnnotClass({ className, baseClassName, customData })', () => {
 
     const createAnnotClass = defineAnnotClass({
       className: 'CustomAnnotClass',
-      baseClassName: 'FreeTextAnnotation',
+      baseClassName: 'DummyClass',
       customData: {
         label: 'test me out'
       }
@@ -56,9 +56,16 @@ describe('defineAnnotClass({ className, baseClassName, customData })', () => {
       lastName: 'Choi'
     }))
 
+    const draw = jest.fn();
+    class DummyClass extends window.Annotations.FreeTextAnnotation{
+      draw(){
+        return draw();
+      }
+    }
+
     const pipeConfig = await createAnnotClass({
       instance: { 
-        Annotations: window.Annotations, 
+        Annotations: { ...window.Annotations, DummyClass }, 
         getSignerById,
         annotManager: { 
           redrawAnnotation: mockRedrawAnnots,
@@ -76,9 +83,13 @@ describe('defineAnnotClass({ className, baseClassName, customData })', () => {
     expect(getSignerById).toHaveBeenCalledWith('1');
     inst.setIsRequired(true);
     expect(inst.CustomData.flags.required).toEqual(true);
-    inst.CustomData = {};
+    inst.CustomData = { flags: {} };
     inst.setIsRequired(false);
     expect(inst.CustomData.flags.required).toEqual(false);
+
+
+    inst.draw();
+    expect(draw).toHaveBeenCalled();
 
 
   });
