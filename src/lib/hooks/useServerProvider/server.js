@@ -219,9 +219,7 @@ export default async (firebase, serverOpts) => {
             .on('child_added', callbackFunction);
         case 'onBlankPagesChanged':
           return this.blankPagesRef
-            .orderByKey()
-            .equalTo(docId)
-            .on('child_changed', callbackFunction);
+            .on('value', callbackFunction);
 
         case 'onBlankPageAdded':
           return this.blankPagesRef.on('child_changed', callbackFunction);

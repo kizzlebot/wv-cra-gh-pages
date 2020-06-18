@@ -1,3 +1,9 @@
 html, body, body > div, .App {
   height: 100% !important;
 }
+.webviewer.cert {
+  height: 100% !important;
+}
+.webviewer.cert > iframe {
+  min-height: 70vh !important;
+}

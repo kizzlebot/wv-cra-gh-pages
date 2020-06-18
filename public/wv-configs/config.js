@@ -44,6 +44,7 @@ function tracePropAccess(obj, propKeys) {
 
   // #region get/set signers
   let docId = null;
+  let certPdfUrl = null;
   let notary = null;
   let signers = [];
   let selectedSigner = null;
@@ -71,6 +72,10 @@ function tracePropAccess(obj, propKeys) {
     return pageCount;
   };
   exports.getPageCount = () => pageCount[docId]
+  exports.setCertPdf = (url) => certPdfUrl = url;
+  exports.getCertPdf = () => certPdfUrl;
+
+  exports.getOriginalPageCount = () => pageCount[docId]
 
   exports.getRunId = () => runId;
   exports.setDocId = (id) => {
@@ -638,6 +643,43 @@ function tracePropAccess(obj, propKeys) {
   }
 
 
+  const handleAddBlankPage = (instance) => {
+    const { PDFNet } = instance;
+
+    const addBlankPage = async (numPages) => {
+      await PDFNet.initialize();
+      const doc = instance.docViewer.getDocument();
+      if (!doc) {
+        return;
+      }
+      console.log('numPages', numPages);
+
+      const pdfDoc = await doc.getPDFDoc();
+      await PDFNet.startDeallocateStack();
+      const pageCount = await pdfDoc.getPageCount();
+      const originalPageCount = await instance.getOriginalPageCount();
+      const pagesToAdded = numPages - (pageCount - originalPageCount);
+      // const pageInfo = doc.getPageInfo(pageCount - 1);
+
+      if (pagesToAdded > 0){
+        await doc.insertBlankPages(_.range(pageCount + 1, pageCount + pagesToAdded + 1));
+      }
+      if (pagesToAdded < 0){
+        doc.removePages(
+          _.range(pageCount + pagesToAdded + 1, pageCount + 1)
+        );
+      }
+
+      await instance.docViewer.refreshAll();
+      await instance.docViewer.updateView();
+      await instance.docViewer.getDocument().refreshTextData();
+      await PDFNet.endDeallocateStack();
+      // return instance.docViewer.trigger('blankPageAdded');
+    }
+
+    return _.throttle(addBlankPage, 1000, { trailing: true });
+  }
+
   // window.addEventListener('viewerLoaded', async () => {
   window.addEventListener('viewerLoaded', async () => {
     const { readerControl } = exports;
@@ -666,8 +708,11 @@ function tracePropAccess(obj, propKeys) {
       getDocId: () => exports.getDocId(),
       getRunId: () => exports.getRunId(),
       setSelectedSigner: (arg) => exports.setSelectedSigner(arg),
+      getOriginalPageCount: () => exports.getOriginalPageCount(),
       getPageCount: () => exports.getPageCount(),
       setPageCount: (arg) => exports.setPageCount(arg),
+      setCertPdf: exports.setCertPdf,
+      getCertPdf: exports.getCertPdf,
       setNotary: exports.setNotary,
       getNotary: exports.getNotary,
       getSigners: exports.getSigners,
@@ -723,26 +768,7 @@ function tracePropAccess(obj, propKeys) {
     /* 
      * When addBlankPage is triggered. then add a page
      */
-    docViewer.on('addBlankPage', async (numPages) => {
-      await PDFNet.initialize();
-      const doc = instance.docViewer.getDocument();
-      if (!doc) {
-        return;
-      }
-
-      const pdfDoc = await doc.getPDFDoc();
-      await PDFNet.startDeallocateStack();
-      const pageCount = await pdfDoc.getPageCount();
-      const pageInfo = doc.getPageInfo(pageCount - 1);
-
-      await doc.insertBlankPages(_.range(pageCount - 1, pageCount));
-      await instance.docViewer.refreshAll();
-      await instance.docViewer.updateView();
-      await instance.docViewer.getDocument().refreshTextData();
-      await PDFNet.endDeallocateStack();
-
-      return instance.docViewer.trigger('blankPageAdded');
-    });
+    docViewer.on('setBlankPages', handleAddBlankPage(instance));
 
     /* 
      * When removeBlankPage is triggered. then remove a page
@@ -756,6 +782,7 @@ function tracePropAccess(obj, propKeys) {
 
       await instance.PDFNet.startDeallocateStack();
 
+      await instance.docViewer.getAnnotationsLoadedPromise();
       const currPageCount = instance.docViewer.getPageCount()
       await doc.removePages([currPageCount]);
       await instance.docViewer.refreshAll();

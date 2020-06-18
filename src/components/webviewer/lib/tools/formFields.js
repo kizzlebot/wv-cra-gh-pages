@@ -81,8 +81,8 @@ const registerFormFieldTools = R.pipeP(
   registerHeaderGroup({ 
     groupName: 'formFieldToolsGroup', 
     toolNames: [
-      'InitialsFieldTool',
       'SignatureFieldTool',
+      'InitialsFieldTool',
       'CheckFieldTool',
       'TextFieldTool',
       'ApplySigFieldTool'

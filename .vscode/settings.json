@@ -3,7 +3,6 @@
     ".git": true,
     ".gitignore": true,
     "yarn.lock": true,
-    "src/style.css": true,
     "src/components/PdfDropzone": true,
     ".env": true,
     "yarn-error.log": true,

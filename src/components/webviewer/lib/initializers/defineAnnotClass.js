@@ -7,10 +7,6 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
       this.Subject = className;
       this.CustomData = { ...customData }
     }
-    draw(ctx, pageMatrix) {
-      console.log('draw')
-      super.draw(ctx, pageMatrix);
-    }
     setSigner(id) {
       const signer = instance.getSignerById(id);
       const fullName = parseName(signer);

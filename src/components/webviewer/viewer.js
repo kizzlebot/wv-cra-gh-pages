@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import _ from 'lodash';
 import * as R from 'ramda';
 import Promise from 'bluebird';
 import SelectSigner from './components/SelectSigner';
 import RequiredCheckbox from './components/RequiredCheckbox';
 import registerTools from './lib/tools';
-import { Modal } from 'react-bootstrap';
 import initWv from '@pdftron/webviewer';
+import CertPdfModal from './components/CertPdfModal';
 
 
 const callIfDefined = R.when(
@@ -16,6 +16,9 @@ const callIfDefined = R.when(
     R.identity
   )
 )
+
+
+
 
 
 
@@ -35,6 +38,7 @@ class Webviewer extends Component {
   componentDidMount = async () => {
     // const { default: initWv } = await import('@pdftron/webviewer');
 
+    
     const instance = window.origInstance = await initWv({
       path: `${process.env.PUBLIC_URL}/lib`,
       ...this.props.config,
@@ -47,9 +51,11 @@ class Webviewer extends Component {
 
     // when ready is fired from public/wv-configs/config.js
     instance.docViewer.one('ready', async (instance) => {
+      // if already initialized, then return;
       if (this.instance){
         return;
       }
+
       this.instance = instance;
       window.instance = instance;
 
@@ -89,44 +95,37 @@ class Webviewer extends Component {
       instance.annotManager.on('annotationUpdated', callIfDefined(this.props.onAnnotationUpdated));
       instance.annotManager.on('fieldUpdated', callIfDefined(this.props.onFieldUpdated));
 
-      instance.docViewer.on('documentUnloaded', callIfDefined(this.props.onDocumentUnloaded));
       instance.docViewer.on('documentLoaded', callIfDefined(this.props.onDocumentLoaded));
-      instance.docViewer.on('annotationsLoaded', async () => {
-        await Promise.delay(1000);
-        return this.props.onAnnotationsLoaded(instance.getDocId())
-      });
-      instance.docViewer.on('blankPageAdded', callIfDefined(this.props.onBlankPageAdded));
-      instance.docViewer.on('blankPageRemoved', callIfDefined(this.props.onBlankPageRemoved));
+
+      instance.docViewer.on('documentUnloaded', R.pipeP(
+        R.pipe(callIfDefined(this.props.onDocumentUnloaded), R.bind(Promise.resolve, Promise)),
+        async () => instance.disableElements(['header'])
+      ));
+      instance.docViewer.on('annotationsLoaded', R.pipeP(
+        () => Promise.delay(1000),
+        async () => this.props.onAnnotationsLoaded(instance.getDocId()),
+        async () => instance.enableElements(['header'])
+      ));
+      instance.docViewer.on('blankPagesAdded', callIfDefined(this.props.onBlankPagesAdded));
+      instance.docViewer.on('blankPagesRemoved', callIfDefined(this.props.onBlankPagesRemoved));
       instance.docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
 
 
       instance.annotManager.setIsAdminUser(this.props.isAdminUser);
 
-      if (this.props.docs[this.props.selectedDoc]) {
-        await this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
-          l: this.props.config.l, 
-          docId: this.props.selectedDoc,
-          filename: this.props.selectedDoc,
-          extension: 'pdf' 
-        });
-      }
-
       // Set the list of signers to assign template fields for.
       instance.annotManager.trigger('setSigners', this.props.signers);
-
-      // Set the selected signer
-      instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
-
-      // Set the currentUser
-      instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
-
-      
       instance.docViewer.on('annotationsLoaded', async () => {
         // Set the selected signer
         instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
 
         // Set the currentUser
         instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
+
+
+        if (_.isNumber(this.props.blankPages)){
+          instance.docViewer.trigger('setBlankPages', [this.props.blankPages]);
+        }
       });
 
 
@@ -151,13 +150,43 @@ class Webviewer extends Component {
         }
       });
       
+
+      const sigTool = instance.docViewer.getTool('AnnotationCreateSignature');
+      sigTool.on('signatureSaved', R.pipe(
+        ([annot]) => {
+          if (annot instanceof instance.Annotations.FreeHandAnnotation){
+            return ({
+              annotClass: 'FreeHandAnnotation',
+              type: annot.CustomData.type,
+              data: annot.getPaths(),
+              authorId: annot.Author,
+            })
+          } else {
+            return {
+              annotClass: 'StampAnnotation',
+              type: annot.CustomData.type,
+              data: annot.ImageData,
+              authorId: annot.Author
+            };
+          }
+        },
+        callIfDefined(this.props.onSignatureSaved)
+      ));
+
       // when cert modal clicked
-      instance.docViewer.on('certModal', ({ type }) => {
-        return this.setState({ certModal: { show: true } })
-      });
+      instance.docViewer.on('certModal', ({ type, pdf }) => this.setState({ certModal: { show: true, pdf } }));
   
 
 
+
+      if (this.props.docs[this.props.selectedDoc]) {
+        this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
+          l: this.props.config.l, 
+          docId: this.props.selectedDoc,
+          filename: this.props.selectedDoc,
+          extension: 'pdf' 
+        });
+      }
 
 
 
@@ -166,7 +195,7 @@ class Webviewer extends Component {
       }
     });
 
-    instance.docViewer.trigger('initReady');
+    return instance.docViewer.trigger('initReady');
   }
 
 
@@ -208,6 +237,12 @@ class Webviewer extends Component {
       }
     }
 
+    // await this.instance.docViewer.getAnnotationsLoadedPromise();
+    if (prevProps.blankPages !== this.props.blankPages){
+      if (_.isNumber(this.props.blankPages)){
+        this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages]);
+      }
+    }
 
     // import widgets if it changes
     if (prevProps.widgetToImport !== this.props.widgetToImport) {
@@ -282,17 +317,19 @@ class Webviewer extends Component {
           ref={this.viewerRef}
         />
 
-        <Modal 
+
+        <CertPdfModal 
           show={this.state.certModal.show}
+          pdf={this.state.certModal.pdf}
+          onSubmit={({ img, dataUrl }) => {
+            this.instance.setCertPdf({ img, dataUrl });
+
+            this.instance.setToolMode('NotaryCertTool');
+            this.setState({ certModal: { show: false } });
+          }}
+          
           onHide={() => this.setState({ certModal: { show: false } })}
-        >
-          <Modal.Header closeButton>
-            Hello
-          </Modal.Header>
-          <Modal.Body>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis possimus quasi hic, tenetur recusandae laudantium quod labore aut doloremque, cum deserunt amet architecto perspiciatis voluptatibus qui deleniti sapiente itaque odit.
-          </Modal.Body>
-        </Modal>
+        />
       </>
     );
   }

@@ -8,6 +8,11 @@ import { useServer } from '../../lib/hooks/useServerProvider';
 import { useQueue, useGetSetState } from 'react-use';
 
 
+const saveSignatureToLocalStorage = (conf) => {
+  localStorage.setItem(`${conf.type}_${conf.authorId}`, JSON.stringify(conf));
+}
+
+
 function Collab({
   clearAll,
   onAllCleared,
@@ -25,6 +30,7 @@ function Collab({
   const { add: addWidget, remove: removeWidget, first: firstWidget, size: widgetSize } = useQueue();
   const [getState, setState] = useGetSetState({ pageNumber: {}, signers: {} });
   const [getPageState, setPageState] = useGetSetState({ });
+  const [getBlankPageState, setBlankPageState] = useGetSetState({ });
 
   
   // when current document toggled. update fbase
@@ -33,6 +39,13 @@ function Collab({
   }, [selectedDocId])
 
   useEffect(() => {
+    server.bind('onBlankPagesChanged', ({ val }) => {
+      console.log('blankPagesChanged', val)
+      setBlankPageState({
+        ...val,
+      })
+    })
+
     server.bind('onAuthorsChanged', ({ val }) => {
       setState({ 
         ...getState(), 
@@ -73,6 +86,13 @@ function Collab({
 
 
 
+
+  useEffect(() => {
+  }, [userId])
+
+
+
+
   return (
     <Webviewer
 
@@ -105,6 +125,11 @@ function Collab({
       widgetSize={widgetSize}
       onWidgetImported={() => removeWidget()}
 
+
+
+      onSignatureSaved={(args) => saveSignatureToLocalStorage(args)}
+
+
       // when document + annotations have loaded. Start listening on firebase
       onAnnotationsLoaded={async (docId) => {
         await Promise.all([
@@ -135,9 +160,9 @@ function Collab({
 
       
       // TODO: update firebase rtdb with the number of blank pages added so it syncs b/t other users
-      onBlankPageAdded={() => console.log('blank page has been added')}
+      onBlankPagesAdded={(docId, currBlankPages) => server.setBlankPages(docId, currBlankPages + 1)}
       // TODO: update firebase rtdb with the number of blank pages added so it syncs b/t other users
-      onBlankPageRemoved={() => console.log('blank page has been removed')}
+      onBlankPagesRemoved={(docId, currBlankPages) => server.setBlankPages(docId, Math.max(currBlankPages - 1, 0))}
 
 
       onRemoveFormFields={async () => {
@@ -153,6 +178,9 @@ function Collab({
       selectedSigner={selectedSigner}
       currentUser={userId}
       selectedDoc={getState().selectedDocId}
+
+      blankPages={getBlankPageState()[getState().selectedDocId]}
+
       isAdminUser={isAdminUser}
       docs={docs}
       config={config}

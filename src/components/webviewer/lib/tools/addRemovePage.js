@@ -8,7 +8,13 @@ const addBlankPage = {
   title: 'Add Blank Page',
   dataElement: 'addPage',
   // TODO: add a handler for docViewer.on('addBlankPage', () =>{})
-  onClick: ({ instance }) => async () => instance.docViewer.trigger('addBlankPage'),
+  onClick: ({ instance }) => async () => {
+    const currPageCount = instance.docViewer.getPageCount()
+    const originalPageCount = instance.getOriginalPageCount();
+    const currDocId = instance.getDocId();
+    const currBlankPages = currPageCount - originalPageCount
+    return instance.docViewer.trigger('blankPagesAdded', [currDocId, currBlankPages]);
+  },
 };
 
 
@@ -20,14 +26,11 @@ const removeBlankPage = {
   dataElement: 'removePage',
   // TODO: add a handler for docViewer.on('removeBlankPage', () =>{})
   onClick: ({ instance }) => async () => {
-    const originalPageCount = instance.getPageCount();
     const currPageCount = instance.docViewer.getPageCount()
-    // Disable removing original pages
-    if ((currPageCount - 1) <= originalPageCount){
-      return;
-    }
-
-    instance.docViewer.trigger('removeBlankPage')
+    const originalPageCount = instance.getOriginalPageCount();
+    const currDocId = instance.getDocId();
+    const currBlankPages = currPageCount - originalPageCount
+    return instance.docViewer.trigger('blankPagesRemoved', [currDocId, currBlankPages]);
   },
 };
 
