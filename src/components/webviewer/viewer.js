@@ -127,9 +127,26 @@ class Webviewer extends Component {
 
 
       // initialize custom annotation tools
-      await registerTools(instance);
-
-
+      await registerTools({ 
+        instance, 
+        config: { 
+          toolNames: [
+            'SelectSigner',
+            'Divider',
+            'AddBlankPage',
+            'RemoveBlankPage',
+            'Divider',
+            'RemoveFormFields',
+            'Divider',
+            'FormFieldTools',
+            'TemplateTools',
+            'Divider',
+            'StampTools',
+            'CertTool'
+          ]
+        }
+      });
+      
       // when cert modal clicked
       instance.docViewer.on('certModal', ({ type }) => {
         return this.setState({ certModal: { show: true } })

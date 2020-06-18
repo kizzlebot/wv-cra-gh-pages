@@ -1,7 +1,6 @@
 import * as R from 'ramda';
-import _ from 'lodash';
 
-import { setHeaderItems, toHeaderGroup, injectHeaderItem, registerHeaderGroup } from "../initializers/injectors";
+import { injectTool } from "../initializers/injectors";
 
 const addBlankPage = {
   type: 'actionButton',
@@ -34,11 +33,8 @@ const removeBlankPage = {
 
 
 const createStampAnnotTool = R.pipeP(
-  injectHeaderItem([
-    addBlankPage,
-    removeBlankPage,
-  ]),
-  setHeaderItems({ insertBefore: 'eraserToolButton' }),
+  injectTool('AddBlankPage', addBlankPage),
+  injectTool('RemoveBlankPage', removeBlankPage),
 );
 
 export default createStampAnnotTool;

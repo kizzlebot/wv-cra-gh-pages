@@ -4,7 +4,7 @@ import _ from 'lodash';
 import * as R from 'ramda';
 import Webviewer from "./viewer";
 import { useServer } from '../../lib/hooks/useServerProvider';
-import { useQueue, useGetSetState, useMap, useEffectOnce } from 'react-use';
+import { useQueue, useGetSetState } from 'react-use';
 
 
 function Collab({
@@ -89,10 +89,7 @@ function Collab({
         server.createWidget(args.id, args)
         server.setPageNumber(args.docId, args.pageNumber)
       }}
-      onWidgetDeleted={(args) => {
-        server.createWidget(args.id, args)
-        server.setPageNumber(args.docId, args.pageNumber)
-      }}
+      onWidgetDeleted={(id) => server.deleteWidget(id)}
 
       // TODO: implement on field changed
       onFieldUpdated={(args) => console.log('field changed', args)}

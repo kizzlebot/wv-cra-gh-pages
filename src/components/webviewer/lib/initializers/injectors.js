@@ -1,84 +1,51 @@
 import _ from 'lodash';
 
-export const injectToolArr = async (instance) => ({
+export const injectToolArr = async ({ instance, config }) => ({
   instance,
+  config,
   header: [],
   annotClasses: {},
-  tools: {},
+  tools: {
+    Spacer: { type: 'spacer' },
+    Divider: { type: 'divider' },
+  },
   toolClasses: {},
 
   headers: {},
   headerItems: [],
 });
 
-
-
-export const toHeaderGroup = (groupName) => async ({ instance, header, headers, ...rest }) => ({
-  ...rest,
-  header: [],
-  instance,
-  headers: {
-    ...headers,
-    [groupName]: _.chain(header)
-      .castArray()
-      .map((h) => {
-        return (h.onClick) ? ({
-          ...h,
-          onClick: h.onClick({ instance, header, headers, ...rest }),
-        }) : h
-      })
-      .value()
-  }
-})
-
-export const injectHeaderItem = (confs) => async ({ instance, headerItems, ...rest }) => ({
-  ...rest,
-  instance,
-  headerItems: await Promise.all([
-    ...headerItems, 
-    ..._.chain(confs)
-      .castArray()
-      .map((conf) => {
-        if (_.isFunction(conf)){
-          return conf({ instance, headerItems, ...rest })
-        }
-        return (conf.onClick) ? {
-          ...conf,
-          onClick: conf.onClick({ instance, headerItems, ...rest })
-        } : conf
-      })
-      .value()
-  ]),
-});
-
-
-export const setHeaderItems = ({ insertBefore }) => async ({ headerItems, instance, ...rest }) => {
-  instance.setHeaderItems((header) => {
-    _.map(headerItems, (item) => {
-      header.get(insertBefore).insertBefore(item);
-    });
-  });
-
+export const injectTool = (toolName, toolButtonConfig) => async ({ tools, ...rest }) => {
   return {
     ...rest,
-    instance,
-    headerItems: []
+    tools: {
+      ...tools,
+      [toolName]: _.isFunction(toolButtonConfig) ? toolButtonConfig({ tools, ...rest, }) : toolButtonConfig.onClick ? {
+        ...toolButtonConfig,
+        onClick: toolButtonConfig.onClick({ ...rest, tools })
+      } : toolButtonConfig
+    }
   }
-};
+}
 
 
-export const registerHeaderGroup = ({ groupName }) => async ({ instance, headers, ...rest }) => {
+
+
+
+export const registerHeaderGroup = ({ groupName, toolNames = [] }) => async ({ instance, tools, headers, ...rest }) => {
   instance.setHeaderItems((obj) => {
     obj.headers[groupName] = [
       { type: 'spacer' },
       { type: 'divider' },
-      ...headers[groupName]
+      // ..._.pick(tools, toolNames)
+      ..._.values(_.pick(tools, toolNames))
     ]
     return obj;
   });
   
   return {
     ...rest,
+    tools,
     headers: _.omit(headers, groupName),
     instance,
   }
