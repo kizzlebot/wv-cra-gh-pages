@@ -7,29 +7,23 @@ import defineAnnotClass from './defineAnnotClass';
 
 
 /*
- * Creates tool for creating temporary boxes for widget annotations
- * used in signature/initials sign-here fields, and checkbox form fields
- * returns:
- *   {
- *    instance,
- *    tools: [],
- *    header: [],
- *    toolObject: Tool instance
- *    annotClass: Annotation created by tool
- *   }
- * Creates a RectangleAnnotation and replaces with a FreeTextAnnotation
+ * A template field or form field annotation (pre applied) is created as such:
+ *  1. On mouseDown/mouseMove we are drawing a `RectangleAnnotation`
+ *  2. On mouseUp, we replace the `RectangleAnnotation` with a `FreeTextAnnotation`
+ *     containing text determined by properties found in `annot.CustomData`
  * 
- * Tool (mouseDown) -> CustomRect Annot -> Tool.on('annotationAdded') -> createFreeText() -> FreeText
+ * This function creates extends `RectangleAnnotation` AND `FreeTextAnnotation`, then adds
+ * it to toolClasses in pipe
  */
 export const initRectAnnot = (name, customData) => R.pipeP(
   defineAnnotClass({
-    className: `${name}FreeTextAnnot`,
-    baseClassName: 'FreeTextAnnotation' ,
+    className: `${name}RectAnnot`,
+    baseClassName: 'RectangleAnnotation' ,
     customData
   }),
   defineAnnotClass({
-    className: `${name}RectAnnot`,
-    baseClassName: 'RectangleAnnotation' ,
+    className: `${name}FreeTextAnnot`,
+    baseClassName: 'FreeTextAnnotation' ,
     customData
   }),
 )

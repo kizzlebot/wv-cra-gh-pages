@@ -36,6 +36,9 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
     }
 
     setIsRequired(isRequired){
+      this.CustomData = this.CustomData || {};
+      this.CustomData.flags = this.CustomData.flags || {};
+      this.CustomData.flags.required = isRequired;
       this.setCustomData({
         ...this.CustomData,
         flags: {
@@ -43,9 +46,6 @@ export const defineAnnotClass = ({ className, baseClassName, customData = {} }) 
           required: isRequired
         }
       });
-      this.CustomData = this.CustomData || {};
-      this.CustomData.flags = this.CustomData.flags || {};
-      this.CustomData.flags.required = isRequired;
     }
   }
 

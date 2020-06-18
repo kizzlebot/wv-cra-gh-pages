@@ -29,6 +29,7 @@
     "dev": "PORT=3030 react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
@@ -94,8 +95,8 @@
       "<rootDir>/src"
     ],
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
+      "!src/**/*.d.ts",
+      "src/**/*.{js,jsx,ts,tsx}"
     ],
     "setupFiles": [
       "<rootDir>/config/jest/setupTestEnv",

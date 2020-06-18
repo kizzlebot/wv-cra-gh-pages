@@ -60,7 +60,10 @@ describe('defineAnnotClass({ className, baseClassName, customData })', () => {
       instance: { 
         Annotations: window.Annotations, 
         getSignerById,
-        annotManager: { redrawAnnotation: mockRedrawAnnots },
+        annotManager: { 
+          redrawAnnotation: mockRedrawAnnots,
+          trigger: () => {}
+        },
       },
       annotClasses: {}
     });
@@ -71,6 +74,12 @@ describe('defineAnnotClass({ className, baseClassName, customData })', () => {
     inst.setSigner('1');
     expect(mockRedrawAnnots).toHaveBeenCalledWith(inst);
     expect(getSignerById).toHaveBeenCalledWith('1');
+    inst.setIsRequired(true);
+    expect(inst.CustomData.flags.required).toEqual(true);
+    inst.CustomData = {};
+    inst.setIsRequired(false);
+    expect(inst.CustomData.flags.required).toEqual(false);
+
 
   });
 })
