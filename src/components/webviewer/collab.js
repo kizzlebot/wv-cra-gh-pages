@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
+import Promise from 'bluebird';
 import _ from 'lodash';
 import * as R from 'ramda';
 import Webviewer from "./viewer";
@@ -79,15 +80,15 @@ function Collab({
         // console.log('onReady', viewer);
       }}
 
-      onAnnotationAdded={(args) => {
-        server.createAnnotation(args.id, args)
-        server.setPageNumber(selectedDocId, args.pageNumber)
+      onAnnotationAdded={async (args) => {
+        await server.createAnnotation(args.id, args)
+        await server.setPageNumber(selectedDocId, args.pageNumber)
       }}
       onAnnotationUpdated={(args) => server.updateAnnotation(args.id, args)}
       onAnnotationDeleted={(args) => server.deleteAnnotation(args.id, args)}
-      onWidgetAdded={(args) => {
-        server.createWidget(args.id, args)
-        server.setPageNumber(args.docId, args.pageNumber)
+      onWidgetAdded={async (args) => {
+        await server.createWidget(args.id, args)
+        await server.setPageNumber(args.docId, args.pageNumber)
       }}
       onWidgetDeleted={(id) => server.deleteWidget(id)}
 
@@ -138,6 +139,14 @@ function Collab({
       // TODO: update firebase rtdb with the number of blank pages added so it syncs b/t other users
       onBlankPageRemoved={() => console.log('blank page has been removed')}
 
+
+      onRemoveFormFields={async () => {
+        const { selectedDocId } = getState()
+        await server.clearWidgets();
+        await server.setSelectedDocId('-1');
+        await Promise.delay(1000);
+        await server.setSelectedDocId(selectedDocId);
+      }}
 
       pageNumber={getPageState()[getState().selectedDocId]}
 

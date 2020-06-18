@@ -5,7 +5,7 @@ import Webviewer from '../viewer'
 
 
 
-it('renders without crashing', async () => {
+it.skip('renders without crashing', async () => {
   const mockOnReady = jest.fn((x) => console.log('onReady', x));
   const { findByTestId } = render(
     <Webviewer 

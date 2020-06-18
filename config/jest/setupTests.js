@@ -6,7 +6,6 @@ import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import '../../public/lib/core/CoreControls.js';
 
 
 configure({ adapter: new Adapter() });

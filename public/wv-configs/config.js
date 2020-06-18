@@ -871,7 +871,7 @@ function tracePropAccess(obj, propKeys) {
     exports.CoreControls.disableLogs(true);
 
     const { loadDocument } = instance;
-    return docViewer.trigger('ready', { 
+    const triggerReady = () => docViewer.trigger('ready', { 
       ...instance, 
       loadDocument: (pdfUrl, config) => {
         instance.docViewer.one('documentLoaded', async () => {
@@ -883,6 +883,9 @@ function tracePropAccess(obj, propKeys) {
       },
       Annotations, 
     });
+
+    docViewer.on('initReady', triggerReady)
+    return triggerReady();
 
   });
   

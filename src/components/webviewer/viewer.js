@@ -46,7 +46,10 @@ class Webviewer extends Component {
 
 
     // when ready is fired from public/wv-configs/config.js
-    return instance.docViewer.one('ready', async (instance) => {
+    instance.docViewer.one('ready', async (instance) => {
+      if (this.instance){
+        return;
+      }
       this.instance = instance;
       window.instance = instance;
 
@@ -94,6 +97,7 @@ class Webviewer extends Component {
       });
       instance.docViewer.on('blankPageAdded', callIfDefined(this.props.onBlankPageAdded));
       instance.docViewer.on('blankPageRemoved', callIfDefined(this.props.onBlankPageRemoved));
+      instance.docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
 
 
       instance.annotManager.setIsAdminUser(this.props.isAdminUser);
@@ -161,6 +165,8 @@ class Webviewer extends Component {
         this.props.onReady({ ...instance, });
       }
     });
+
+    instance.docViewer.trigger('initReady');
   }
 
 
