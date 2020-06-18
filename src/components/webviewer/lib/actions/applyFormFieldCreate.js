@@ -156,6 +156,7 @@ export const applyFormFieldCreate = (name) => async ({ instance, tools, header, 
   await pdfDoc.refreshFieldAppearances();
 
   
+  await instance.setToolMode('AnnotationEdit');
   return instance.setActiveHeaderGroup('default');
 };
 
