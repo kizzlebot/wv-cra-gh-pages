@@ -652,7 +652,6 @@ function tracePropAccess(obj, propKeys) {
       if (!doc) {
         return;
       }
-      console.log('numPages', numPages);
 
       const pdfDoc = await doc.getPDFDoc();
       await PDFNet.startDeallocateStack();
@@ -661,6 +660,9 @@ function tracePropAccess(obj, propKeys) {
       const pagesToAdded = numPages - (pageCount - originalPageCount);
       // const pageInfo = doc.getPageInfo(pageCount - 1);
 
+      if (pagesToAdded === 0){
+        return;
+      }
       if (pagesToAdded > 0){
         await doc.insertBlankPages(_.range(pageCount + 1, pageCount + pagesToAdded + 1));
       }
