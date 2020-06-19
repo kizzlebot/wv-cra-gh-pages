@@ -20,7 +20,7 @@ sessionStorage.setItem(userId, JSON.stringify(user));
 
 const docs = {
   'doc_a': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
-  'doc_b': 'https://storage.googleapis.com/enl-static-files/local/discrete.pdf',
+  'doc_cs': 'https://storage.googleapis.com/enl-static-files/local/cs2.pdf',
   'doc_c': 'https://storage.googleapis.com/enl-static-files/local/with_date.pdf',
 };
 
@@ -30,25 +30,23 @@ const docs = {
 
 if (process.env.NODE_ENV !== 'production') {
   ReactDOM.render(
-    <React.StrictMode>
-      <FirebaseProvider>
-        <ServerProvider 
-          config={{ 
-            nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
-            userId,
-            user,
-            rtdbNamespace:'8d976a23-b865-4fcd-9165-ddc0aedaf614'
-          }}
-        >
-          <App 
-            userId={userId}
-            user={user}
-            docs={docs}
-            isAdminUser={false}
-          />
-        </ServerProvider>
-      </FirebaseProvider>
-    </React.StrictMode>,
+    <FirebaseProvider>
+      <ServerProvider 
+        config={{ 
+          nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
+          userId,
+          user,
+          rtdbNamespace:'8d976a23-b865-4fcd-9165-ddc0aedaf614'
+        }}
+      >
+        <App 
+          userId={userId}
+          user={user}
+          docs={docs}
+          isAdminUser={false}
+        />
+      </ServerProvider>
+    </FirebaseProvider>,
     document.getElementById('root')
   );
 }

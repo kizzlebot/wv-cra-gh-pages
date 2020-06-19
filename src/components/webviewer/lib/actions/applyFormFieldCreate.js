@@ -151,8 +151,10 @@ export const applyFormFieldCreate = (name) => async ({ instance, tools, header, 
   });
 
   // await annotManager.addAnnotations(toAdd, false);
-  await annotManager.deleteAnnotations(annotsToDelete, true, false, false);
-  await annotManager.drawAnnotationsFromList(toDraw);
+  await Promise.all([
+    annotManager.deleteAnnotations(annotsToDelete, true, false, false),
+    annotManager.drawAnnotationsFromList(toDraw)
+  ]);
   await pdfDoc.refreshFieldAppearances();
 
   

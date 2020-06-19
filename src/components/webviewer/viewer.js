@@ -43,12 +43,12 @@ class Webviewer extends Component {
       path: `${process.env.PUBLIC_URL}/lib`,
       ...this.props.config,
       // pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
-      pdftronServer: 'https://demo.pdftron.com/',
+      // pdftronServer: 'http://47.198.214.240:8090/',
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
 
-
-
+    // instance.CoreControls.SetPreRenderLevel(5)
+    // instance.CoreControls.setProgressiveTime(2000);
     // when ready is fired from public/wv-configs/config.js
     instance.docViewer.one('ready', async (instance) => {
       // if already initialized, then return;
@@ -84,8 +84,28 @@ class Webviewer extends Component {
       });
     
 
-
       this.setState(({ instance }));
+
+
+      instance.docViewer.on('documentLoaded', callIfDefined(this.props.onDocumentLoaded));
+
+      instance.docViewer.on('documentUnloaded', R.pipeP(
+        R.pipe(callIfDefined(this.props.onDocumentUnloaded), R.bind(Promise.resolve, Promise)),
+        async () => instance.disableElements(['header'])
+      ));
+
+      instance.docViewer.on('annotationsLoaded', R.pipeP(
+        () => Promise.delay(2000),
+        async () => this.props.onAnnotationsLoaded(instance.getDocId()),
+        async () => instance.enableElements(['header'])
+      ));
+
+
+
+
+
+
+
 
 
       // Bind event handlers to functions passed as prop
@@ -95,17 +115,6 @@ class Webviewer extends Component {
       instance.annotManager.on('annotationUpdated', callIfDefined(this.props.onAnnotationUpdated));
       instance.annotManager.on('fieldUpdated', callIfDefined(this.props.onFieldUpdated));
 
-      instance.docViewer.on('documentLoaded', callIfDefined(this.props.onDocumentLoaded));
-
-      instance.docViewer.on('documentUnloaded', R.pipeP(
-        R.pipe(callIfDefined(this.props.onDocumentUnloaded), R.bind(Promise.resolve, Promise)),
-        async () => instance.disableElements(['header'])
-      ));
-      instance.docViewer.on('annotationsLoaded', R.pipeP(
-        () => Promise.delay(1000),
-        async () => this.props.onAnnotationsLoaded(instance.getDocId()),
-        async () => instance.enableElements(['header'])
-      ));
       instance.docViewer.on('blankPagesAdded', callIfDefined(this.props.onBlankPagesAdded));
       instance.docViewer.on('blankPagesRemoved', callIfDefined(this.props.onBlankPagesRemoved));
       instance.docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
@@ -113,9 +122,11 @@ class Webviewer extends Component {
 
       instance.annotManager.setIsAdminUser(this.props.isAdminUser);
 
-      // Set the list of signers to assign template fields for.
-      instance.annotManager.trigger('setSigners', this.props.signers);
       instance.docViewer.on('annotationsLoaded', async () => {
+
+        // Set the list of signers to assign template fields for.
+        instance.annotManager.trigger('setSigners', this.props.signers);
+
         // Set the selected signer
         instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
 

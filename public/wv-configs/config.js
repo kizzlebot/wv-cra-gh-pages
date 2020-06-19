@@ -568,6 +568,9 @@ function tracePropAccess(obj, propKeys) {
 
     const { id: annotId, xfdf, type } = val;
     let annotations;
+
+    await instance.docViewer.getAnnotationsLoadedPromise();
+    
     if (type === 'annotation') {
       annotations = await annotManager.importAnnotCommand(xfdf);
       const [annotation] = annotations;
@@ -654,6 +657,9 @@ function tracePropAccess(obj, propKeys) {
       }
 
       const pdfDoc = await doc.getPDFDoc();
+      if (!await pdfDoc.tryLock()){
+        return;
+      }
       await PDFNet.startDeallocateStack();
       const pageCount = await pdfDoc.getPageCount();
       const originalPageCount = await instance.getOriginalPageCount();
@@ -676,6 +682,7 @@ function tracePropAccess(obj, propKeys) {
       await instance.docViewer.updateView();
       await instance.docViewer.getDocument().refreshTextData();
       await PDFNet.endDeallocateStack();
+      await pdfDoc.unlock();
       // return instance.docViewer.trigger('blankPageAdded');
     }
 
@@ -775,25 +782,25 @@ function tracePropAccess(obj, propKeys) {
     /* 
      * When removeBlankPage is triggered. then remove a page
      */
-    docViewer.on('removeBlankPage', async (numPages) => {
-      await PDFNet.initialize();
-      const doc = instance.docViewer.getDocument();
-      if (!doc) {
-        return;
-      }
+    // docViewer.on('removeBlankPage', async (numPages) => {
+    //   await PDFNet.initialize();
+    //   const doc = instance.docViewer.getDocument();
+    //   if (!doc) {
+    //     return;
+    //   }
 
-      await instance.PDFNet.startDeallocateStack();
+    //   await instance.PDFNet.startDeallocateStack();
 
-      await instance.docViewer.getAnnotationsLoadedPromise();
-      const currPageCount = instance.docViewer.getPageCount()
-      await doc.removePages([currPageCount]);
-      await instance.docViewer.refreshAll();
-      await instance.docViewer.updateView();
-      await instance.docViewer.getDocument().refreshTextData();
-      await instance.PDFNet.endDeallocateStack();
+    //   await instance.docViewer.getAnnotationsLoadedPromise();
+    //   const currPageCount = instance.docViewer.getPageCount()
+    //   await doc.removePages([currPageCount]);
+    //   await instance.docViewer.refreshAll();
+    //   await instance.docViewer.updateView();
+    //   await instance.docViewer.getDocument().refreshTextData();
+    //   await instance.PDFNet.endDeallocateStack();
 
-      return instance.docViewer.trigger('blankPageRemoved');
-    });
+    //   return instance.docViewer.trigger('blankPageRemoved');
+    // });
 
 
 
