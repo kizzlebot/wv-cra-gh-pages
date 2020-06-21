@@ -9,7 +9,7 @@ const createTextField = ({ name, label, annotClassName }) => ({ instance, annotC
     const {
       type = _.toUpper(name),
       value = '',
-      flags = { readOnly: false, multiline: false, edit: true, required: true }
+      flags = { readOnly: true, multiline: false, edit: true, required: true }
     } = (custom || {});
 
     // console.debug('type', type);

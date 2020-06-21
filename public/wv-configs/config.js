@@ -372,10 +372,10 @@ function tracePropAccess(obj, propKeys) {
         'SignatureFreeTextAnnot',
         'SignatureRectAnnot',
         'TemplateRectAnnot',
-        'CheckboxFreeTextAnnot',
-        'CheckboxRectAnnot',
-        'FormFreeTextAnnot',
-        'FormRectAnnot'
+        'CheckFreeTextAnnot',
+        'CheckRectAnnot',
+        'TextFreeTextAnnot',
+        'TextRectAnnot'
       ];
       return _.findIndex(customClasses, (cc) => annot.Subject.includes(cc)) > -1
     };
@@ -436,7 +436,7 @@ function tracePropAccess(obj, propKeys) {
             if (annotation.InReplyTo) {
               parentAuthorId = annotManager.getAnnotationById(annotation.InReplyTo).authorId || 'default';
             }
-            annotManager.trigger('annotationAdded', {
+            annotManager.trigger('annotationAdded', [{
               id: annotation.Id,
               authorId,
               parentAuthorId,
@@ -445,7 +445,7 @@ function tracePropAccess(obj, propKeys) {
               type: 'annotation',
               createdBy: authorId,
               xfdf
-            });
+            }, exports.getDocId()]);
           } else if (type === 'modify') {
             // In case of replies, add extra field for server-side permission to be granted to the
             // parent annotation's author
@@ -453,25 +453,25 @@ function tracePropAccess(obj, propKeys) {
               parentAuthorId = annotManager.getAnnotationById(annotation.InReplyTo).authorId || 'default';
             }
 
-            annotManager.trigger('annotationUpdated', {
+            annotManager.trigger('annotationUpdated', [{
               id: annotation.Id,
               authorId,
               docId: exports.getDocId(),
               parentAuthorId,
               type: 'annotation',
               xfdf
-            });
+            }, exports.getDocId()]);
 
           } else if (type === 'delete') {
             // server.deleteAnnotation(annotation.Id);
-            annotManager.trigger('annotationDeleted', {
+            annotManager.trigger('annotationDeleted', [{
               id: annotation.Id,
               authorId,
               docId: exports.getDocId(),
               parentAuthorId,
               type: 'annotation',
               xfdf
-            });
+            }, exports.getDocId()]);
           }
         } 
 
@@ -517,7 +517,7 @@ function tracePropAccess(obj, propKeys) {
             const finalXfdf = xmlDoc.documentElement.outerHTML;
 
             const parentAuthorId = author || 'default';
-
+            const field = annotation.getField();
             const payload = {
               id: annotation.CustomData.id,
               authorId,
@@ -526,17 +526,28 @@ function tracePropAccess(obj, propKeys) {
               pageNumber: annotation.getPageNumber(),
               parentAuthorId,
               signerId,
+              subtype: annotation.CustomData.type,
+              fieldName: field.name,
+              fieldValue: field.value,
               type: 'widget',
               xfdf: `<?xml version="1.0" encoding="UTF-8" ?>${finalXfdf}`
             };
 
             // annotation.updateVisibility();
             annotManager.trigger('updateAnnotationPermission');
-            annotManager.trigger('widgetAdded', payload);
+            annotManager.trigger('widgetAdded', [payload, exports.getDocId()]);
             // annotManager.trigger('annotationAdded', payload);
           } else if (type === 'delete') {
             console.debug('deleting widget annotation', id);
-            annotManager.trigger('widgetDeleted', id);
+            annotManager.trigger('widgetDeleted', [{
+              id: annotation.CustomData.id,
+              authorId,
+              runId: exports.getRunId(),
+              docId: exports.getDocId(),
+              pageNumber: annotation.getPageNumber(),
+              signerId,
+              type: 'widget'
+            }, exports.getDocId()]);
           }
         }
       });
@@ -559,55 +570,78 @@ function tracePropAccess(obj, propKeys) {
    * Handle adding annotation/widget
    * @param {WebViewerInstance} instance 
    */
-  const handleAddAnnotation = (instance) => async (val) => {
+  const handleAddAnnotation = (instance) => async (annots, cb) => {
     const { Annotations, annotManager } = instance;
+    const docId = instance.getDocId();
 
-    if (!val) {
-      return;
-    }
 
-    const { id: annotId, xfdf, type } = val;
-    let annotations;
-
-    await instance.docViewer.getAnnotationsLoadedPromise();
-    
-    if (type === 'annotation') {
-      annotations = await annotManager.importAnnotCommand(xfdf);
-      const [annotation] = annotations;
-      if (annotation) {
-        await annotation.resourcesLoaded();
-        await annotManager.redrawAnnotation(annotation);
-      }
-    } else {
-      const annots = await annotManager.getAnnotationsList();
-      const existingAnnot = _.chain(annots)
-        .filter(el => el instanceof Annotations.WidgetAnnotation)
-        .find(el => {
-          const id = el.CustomData.id;
-          return id === annotId;
-        })
-        .value();
-
-      if (existingAnnot) {
+    const annotations = await Promise.mapSeries(_.uniqBy(_.castArray(annots), 'id'), async (val) => {
+      if (!val || val.docId !== docId) {
         return;
       }
+  
+      const { id: annotId, xfdf, type, action } = val;
+      let annotations;
+  
+      await instance.docViewer.getAnnotationsLoadedPromise();
+      
+      if (action === 'delete'){
+        const annot = (type === 'widget') ? instance.annotManager.getWidgetById(annotId) : instance.annotManager.getAnnotationById(annotId);
+        if (annot){
+          await instance.annotManager.deleteAnnotation(annot, true);
+        }
+      }
 
-      annotations = await annotManager.importAnnotations(val.xfdf);
-      const toDelete = _.chain(annotManager.getAnnotationsList())
-        .groupBy('CustomData.id')
-        .omit(['undefined'])
-        .mapValues((val) => val.length > 1 ? _.tail(val) : [])
-        .values()
-        .flatten()
-        .value()
-      annotManager.deleteAnnotations(toDelete, true);
-    }
+      else if (type === 'annotation') {
+        annotations = await annotManager.importAnnotCommand(xfdf);
+        const [annotation] = annotations;
+        if (annotation) {
+          try {
+            await annotation.resourcesLoaded();
+            await annotManager.redrawAnnotation(annotation);
+          } catch (err) {
+            console.log('caught error?', err)
+          }
+        }
+      } else {
+
+        const existing = _.filter(annotManager.getAnnotationsList(), (a) => a.CustomData && a.CustomData.id == annotId);
+        if (!_.isEmpty(existing)){
+          return;
+        }
+
+        annotations = await annotManager.importAnnotations(xfdf);
+        const [annot] = annotations;
+        if (!annot){
+          console.log('no annot rendered', annot);
+          return;
+        }
+
+        annot.CustomData = annot.custom = _.omit(annot, ['xfdf']);
+        annot.getField().setValue(val.fieldValue || '');
+        await annotManager.handleDeleteDuplicateWidgets();
+        if (annot){
+          annot.CustomData.id = annotId;
+          if (annot) {
+            try {
+              await annot.resourcesLoaded();
+              await annotManager.redrawAnnotation(annot);
+            } catch (err) {
+              console.log('caught error?', err);
+            }
+          }
+        }
+      }
+      return annotations;
+    })
 
     const locked = exports.getLock();
     if (locked) {
-      return annotManager.hideAnnotations(annotations);
+      annotManager.hideAnnotations(annotations);
     }
 
+    annotManager.trigger('updateAnnotationPermission');
+    return cb();
   }
 
 
@@ -697,11 +731,6 @@ function tracePropAccess(obj, propKeys) {
     const { Actions, Annotations, CoreControls, PartRetrievers, PDFNet, Tools, utils } = exports;
     const annotManager = docViewer.getAnnotationManager();
 
-    annotManager.getWidgetById = (widgetId) => {
-      const allAnnots = annotManager.getAnnotationsList();
-      const widget = _.find(allAnnots, (annot) => _.isEqual(_.get(annot, 'CustomData.id'), widgetId));
-      return widget;
-    };
     
     // extend webviewer instance w/ more functions and pass to react via `docViewer.on('ready', instance);`
     const instance = { 
@@ -734,6 +763,29 @@ function tracePropAccess(obj, propKeys) {
     }
 
 
+    instance.annotManager.handleDeleteDuplicateWidgets = _.debounce(async () => {
+      const toDelete = _.chain(annotManager.getAnnotationsList())
+        .filter((a) => a instanceof Annotations.WidgetAnnotation)
+        .groupBy('CustomData.id')
+        .omit(['undefined'])
+        .mapValues((vals) => vals.length > 1 ? _.tail(_.reverse(vals)) : null)
+        .values()
+        .flatten()
+        .filter(R.complement(R.isNil))
+        .value()
+
+      console.log('handleDelete dupes called', toDelete);
+      return instance.annotManager.deleteAnnotations(toDelete, true);
+    }, 2000, { leading: false, trailing: true })
+
+
+    annotManager.getWidgetById = (widgetId) => {
+      console.log('Annotations', Annotations);
+      const widgetAnnots = _.filter(annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.WidgetAnnotation);
+      const widget = _.find(widgetAnnots, (annot) => annot.CustomData.id === widgetId);
+      return widget;
+    };
+
     await extendAnnotations({ ...instance });
     const custom = JSON.parse(exports.readerControl.getCustomData()) || {};
     await configureFeatures(instance, custom)
@@ -747,13 +799,13 @@ function tracePropAccess(obj, propKeys) {
     annotManager.setAnnotationDisplayAuthorMap((annot) => {
       const signers = exports.getSigners();;
       const signer = exports.getSigner();;
+      const userId = annotManager.getCurrentUser();
 
       if (annot instanceof Annotations.WidgetAnnotation) {
         const signerId = _.get(annot, 'CustomData.signerId', annot.Author);
-        const signer = exports.getSignerById(signerId);
+        const signer = exports.getSignerById(userId);
         const rtn = parseName(signer);
         return rtn;
-
       }
 
       if (_.get(annot, 'Author')) {
@@ -764,7 +816,7 @@ function tracePropAccess(obj, propKeys) {
         }
       }
 
-      const s = _.find(signers, { id: signer });
+      const s = _.find(signers, { id: userId });
       if (s) {
         return parseName(s);
       }
@@ -803,6 +855,11 @@ function tracePropAccess(obj, propKeys) {
     // });
 
 
+    docViewer.getTool('AnnotationCreateSignature')
+      .on('annotationAdded', () => {
+        console.log('signature/initial annotation added');
+        return annotManager.handleDeleteDuplicateWidgets();
+      });
 
 
     // register events to trigger on annotManager. subscribed by parent component
@@ -829,7 +886,10 @@ function tracePropAccess(obj, propKeys) {
 
 
     // built-in event 
-    annotManager.on('updateAnnotationPermission', async annotation => {
+    annotManager.on('updateAnnotationPermission', _.debounce(async (annotation) => {
+      if (annotation){  
+        return;
+      }
       const allAnnots = annotManager.getAnnotationsList();
 
 
@@ -853,7 +913,7 @@ function tracePropAccess(obj, propKeys) {
           }
         }
       });
-    });
+    }, 2000, { trailing: true }));
 
 
     annotManager.on('setSelectedSigner', (signerId) => {

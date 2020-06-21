@@ -5,7 +5,7 @@ import _ from 'lodash';
 import * as R from 'ramda';
 import Webviewer from "./viewer";
 import { useServer } from '../../lib/hooks/useServerProvider';
-import { useQueue, useGetSetState } from 'react-use';
+import { useQueue, useGetSetState, createStateContext, useGetSet } from 'react-use';
 
 
 const saveSignatureToLocalStorage = (conf) => {
@@ -26,12 +26,12 @@ function Collab({
 }) {
 
   const server = useServer();
-  const { add: addAnnot, remove: removeAnnot, first: firstAnnot, size: annotSize } = useQueue();
-  const { add: addWidget, remove: removeWidget, first: firstWidget, size: widgetSize } = useQueue();
-  const [getState, setState] = useGetSetState({ pageNumber: {}, signers: {} });
+  const [getState, setState] = useGetSetState({ pageNumber: {}, signers: {}, fields: {} });
   const [getPageState, setPageState] = useGetSetState({ });
   const [getBlankPageState, setBlankPageState] = useGetSetState({ });
+  const [getAnnotsToImport, setAnnotsToImport] = useGetSet([]);
 
+  
   
   // when current document toggled. update fbase
   useEffect(() => {
@@ -45,7 +45,6 @@ function Collab({
         ...val,
       })
     })
-
     server.bind('onAuthorsChanged', ({ val }) => {
       setState({ 
         ...getState(), 
@@ -58,17 +57,21 @@ function Collab({
         selectedDocId: val,
       });
     });
+    server.bind('onFieldChanged', ({ val, key }) => {
+      setState({ 
+        ...getState(), 
+        fields: {
+          ...getState().fields,
+          [key.replace(/__/ig, ' ').replace(/_/ig, '.')]: val
+        },
+      });
+    });
   }, [getState, server, setState]);
-
-
-
 
 
   const { signers } = getState()
 
-  useEffect(() => {
-    onSignersUpdated(signers);
-  }, [signers]);
+  useEffect(() => onSignersUpdated(signers), [signers]);
 
 
 
@@ -91,8 +94,26 @@ function Collab({
   }, [userId])
 
 
+  const upsert = (fn, toAdd) => {
+    let allAnnots = getAnnotsToImport();
+    const i = _.findIndex(allAnnots, (b) => fn(toAdd, b));
+    if (i > -1){
+      console.log('upserting', toAdd, allAnnots.length)
+      allAnnots[i] = toAdd;
+    } else {
+      console.log('adding', toAdd, allAnnots.length)
+      allAnnots = [...allAnnots, toAdd];
+    }
+    return setAnnotsToImport(allAnnots);
+  };
 
 
+  const handleAnnotationAdded = (type) => async (args, docId) => {
+    const create = (type === 'annotation') ? server.createAnnotation : server.createWidget;
+    await create(args.id, args)
+    await server.setPageNumber(docId, args.pageNumber)
+  };
+  
   return (
     <Webviewer
 
@@ -100,62 +121,73 @@ function Collab({
         // console.log('onReady', viewer);
       }}
 
-      onAnnotationAdded={async (args) => {
-        await server.createAnnotation(args.id, args)
-        await server.setPageNumber(selectedDocId, args.pageNumber)
-      }}
+      onAnnotationAdded={handleAnnotationAdded('annotation')}
+      onWidgetAdded={handleAnnotationAdded('widget')}
       onAnnotationUpdated={(args) => server.updateAnnotation(args.id, args)}
       onAnnotationDeleted={(args) => server.deleteAnnotation(args.id, args)}
-      onWidgetAdded={async (args) => {
-        await server.createWidget(args.id, args)
-        await server.setPageNumber(args.docId, args.pageNumber)
-      }}
       onWidgetDeleted={(id) => server.deleteWidget(id)}
 
       // TODO: implement on field changed
-      onFieldUpdated={(args) => console.log('field changed', args)}
+      onFieldUpdated={async ({ name, value, widget }) => {
+        if (!widget || !widget.CustomData.id){
+          return;
+        }
+        console.log('field changed', name, value, widget)
+        await server.setField(name, value);
+        await server.updateWidget(widget.CustomData.id, {
+          fieldName: name,
+          fieldValue: value
+        })
+      }}
 
       // Pass the next item in the annot queue
-      annotToImport={firstAnnot}
-      annotSize={annotSize}
-      onAnnotImported={() => removeAnnot()}
+      annotToImport={getAnnotsToImport()}
+      onAnnotImported={() => setAnnotsToImport([])}
 
-      // Pass the next item in the widget queue
-      widgetToImport={firstWidget}
-      widgetSize={widgetSize}
-      onWidgetImported={() => removeWidget()}
 
 
 
       onSignatureSaved={(args) => saveSignatureToLocalStorage(args)}
+      fields={getState().fields}
 
 
-      // when document + annotations have loaded. Start listening on firebase
-      onAnnotationsLoaded={async (docId) => {
+      // after initial document + annotations have loaded. Start listening on firebase
+      onAnnotationsLoaded={async function * (docId, pageCount) {
+        await server.unbindAll();
+        const allAnnots = await server.getAnnotations(docId);
+
+        // pass annots to load to caller
+        yield allAnnots;
+
+        // get page
+        const pageNumber = await server.getPageNumber(docId); 
+        if (pageNumber > 0 && pageNumber <= pageCount) {
+          yield pageNumber;
+        }
+        else {
+          yield 1;
+        }
+
+        // const fields = await server.getFields();
+        // yield fields;
+        
+        
         await Promise.all([
-          server.bind('onPageChanged', docId, ({ val, key }) => setPageState({
-            ...getPageState(),
-            ...val,
-          })),
-          server.bind('onWidgetCreated', docId, ({ val, key }) => addWidget(val)),
+          server.bind('onPageChanged', docId, ({ val, key }) => setPageState({ ...getPageState(), ...val })),
+          server.bind('onWidgetCreated', docId, ({ val, key }) => upsert((a,b) => a.id === b.id, val)),
           // TODO: fix this. After first widget is delete from fbase, everything stops syncing
-          server.bind('onWidgetDeleted', docId, ({ val, key }) => addWidget({ ...val, type: 'delete' })),
-          server.bind('onAnnotationCreated', docId, ({ val, key }) => addAnnot(val)),
-          server.bind('onAnnotationUpdated', docId, ({ val, key }) => addAnnot(val)),
-          server.bind('onAnnotationDeleted', docId, ({ val, key }) => addAnnot({ ...val, type: 'delete' }))
+          server.bind('onWidgetDeleted', docId, ({ val, key }) => upsert((a, b) => a.id === b.id, { ...val, action: 'delete' })),
+          server.bind('onAnnotationCreated', docId, ({ val, key }) => upsert((a,b) => a.id === b.id, val)),
+          server.bind('onAnnotationUpdated', docId, ({ val, key }) => upsert((a,b) => a.id === b.id, val)),
+          server.bind('onAnnotationDeleted', docId, ({ val, key }) => upsert((a, b) => a.id === b.id, { ...val, action: 'delete' }))
         ])
       }}
       
       
       // When document is unloaded (`selectedDoc` changed). Clear queue and unbind from firebase
-      onDocumentUnloaded={() => {
-        while (annotSize > 0) {
-          removeAnnot();
-        }
-        while (widgetSize > 0) {
-          removeWidget();
-        }
-        server.unbindAll();
+      onDocumentUnloaded={async () => {
+        await server.clearWidgets();
+        setAnnotsToImport([]);
       }}
 
       

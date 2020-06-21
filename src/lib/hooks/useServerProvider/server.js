@@ -45,6 +45,7 @@ export default async (firebase, serverOpts) => {
       this.annotationsRef = roomRef.child('annotations');
       this.widgetRef = roomRef.child('widgets');
 
+      this.fieldRef = roomRef.child('fields');
       this.xfdfRef = roomRef.child('xfdf');
       this.connectionRef = firebase.database().ref('.info/connected');
       this.authorsRef = roomRef.child('authors');
@@ -172,7 +173,8 @@ export default async (firebase, serverOpts) => {
         case 'onAnnotation':
           return this.annotationsRef.on('value', callbackFunction);
 
-
+        case 'onFieldChanged':
+          return this.fieldRef.on('child_changed', callbackFunction)
 
 
 
@@ -248,6 +250,11 @@ export default async (firebase, serverOpts) => {
     };
 
 
+    getFields = () => this.fieldRef.once('value')
+      .then(R.invoker(0, 'val'))
+      .then((fields) => _.mapKeys(fields, (val, key) => key.replace(/__/ig, ' ').replace(/_/ig, '.')))
+      
+    setField = (name, val) => this.fieldRef.child(name.replace(/\ /ig, '__').replace(/\./ig, '_')).set(val)
     getAuthors = () => this.authorsRef.once('value').then(R.invoker(0, 'val'));
 
     setAuthor = (authorId, authorName) => this.authorsRef
@@ -268,6 +275,8 @@ export default async (firebase, serverOpts) => {
     };
 
     setPageNumber = (docId, num = 1) => this.pageRef.child(docId).set(num);
+    getPageNumber = (docId) => this.pageRef.child(docId).once('value')
+      .then(R.pipe(R.invoker(0, 'val'), R.defaultTo(1)));
     setBlankPages = (docId, num = 0) => this.blankPagesRef.child(docId).set(num);
     getBlankPagesByDocId = (docId) => this.blankPagesRef.child(docId).once('value').then(R.invoker(0, 'val'))
     getBlankPages = () => this.blankPagesRef.once('value').then(R.invoker(0, 'val')) || {}
@@ -305,7 +314,25 @@ export default async (firebase, serverOpts) => {
     setSelectedSigner = signerId => this.selectedSignerRef.set(signerId);
 
     clearAnnotations = () => this.annotationsRef.set({});
-    clearWidgets = () => this.widgetRef.set({});
+    clearWidgets = async () => {
+      const allSigWigets = await this.widgetRef
+        .orderByChild('subtype')
+        .equalTo('SIGNATURE')
+        .once('value')
+        .then(R.pipe(R.invoker(0, 'val')))
+      const allInitialsWidgets = await this.widgetRef
+        .orderByChild('subtype')
+        .equalTo('INITIALS')
+        .once('value')
+        .then(R.pipe(R.invoker(0, 'val')))
+      const updateVal = _.mapValues({ ...allSigWigets, ...allInitialsWidgets }, R.always(null));
+
+      console.log('updateVal', updateVal);
+      return this.widgetRef.update(updateVal);
+
+      
+
+    }
 
     createWidget = (widgetId, widgetData) => this.widgetRef.child(widgetId).set(widgetData); 
     updateWidget = (widgetId, widgetData) => this.widgetRef.child(widgetId).update(widgetData);
@@ -313,10 +340,16 @@ export default async (firebase, serverOpts) => {
 
     createAnnotation = (annotationId, annotationData) => this.annotationsRef.child(annotationId).set(annotationData);
     updateAnnotation = (annotationId, annotationData) => this.annotationsRef.child(annotationId).update(annotationData);
+    updateWidget = (widgetId, data) => this.widgetRef.child(widgetId).update(data);
     deleteAnnotation = (annotationId) => this.annotationsRef.child(annotationId).remove();
 
     getAnnotation = annotationId => this.annotationsRef.child(annotationId).once('value');
-    getAnnotations = annotationId => this.annotationsRef.once('value').then(R.pipe(R.invoker(0, 'val'), R.defaultTo({})))
+    getAnnotations = (docId) => this.annotationsRef
+      .orderByChild('docId')
+      .equalTo(docId)
+      .once('value')
+      .then(R.invoker(0, 'val'))
+
 
     setLock = (val) => this.lockRef.set(val);
 

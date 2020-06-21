@@ -20,6 +20,17 @@ const callIfDefined = R.when(
 
 
 
+const createEnableDisableTools = (disable) => (instance) => instance.setHeaderItems((header) => {
+  _.chain(header.headers.default)
+    .map('dataElement')
+    .filter(R.complement(_.isNil))
+    .forEach((dataEl) => {
+      instance.updateElement(dataEl, { disable: disable });
+    })
+    .value()
+
+  instance.annotManager.setReadOnly(disable)
+})
 
 
 class Webviewer extends Component {
@@ -34,6 +45,8 @@ class Webviewer extends Component {
     }
   }
 
+  disableAllTools = createEnableDisableTools(true)
+  enableAllTools = createEnableDisableTools(false)
 
   componentDidMount = async () => {
     // const { default: initWv } = await import('@pdftron/webviewer');
@@ -87,20 +100,68 @@ class Webviewer extends Component {
       this.setState(({ instance }));
 
 
-      instance.docViewer.on('documentLoaded', callIfDefined(this.props.onDocumentLoaded));
+      // instance.docViewer.on('pageComplete', callIfDefined(this.props.onDocumentLoaded));
 
       instance.docViewer.on('documentUnloaded', R.pipeP(
         R.pipe(callIfDefined(this.props.onDocumentUnloaded), R.bind(Promise.resolve, Promise)),
-        async () => instance.disableElements(['header'])
+        // async () => instance.disableElements(['header'])
+        async () => this.disableAllTools(this.instance),
+        async () => this.instance.showMessage('Loading...')
       ));
 
       instance.docViewer.on('annotationsLoaded', R.pipeP(
-        () => Promise.delay(2000),
-        async () => this.props.onAnnotationsLoaded(instance.getDocId()),
-        async () => instance.enableElements(['header'])
+        async () => {
+
+          // Set the list of signers to assign template fields for.
+          instance.annotManager.trigger('setSigners', this.props.signers);
+
+          // Set the selected signer
+          instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
+
+          // Set the currentUser
+          instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
+
+
+          if (_.isNumber(this.props.blankPages)){
+            instance.docViewer.trigger('setBlankPages', [this.props.blankPages]);
+          }
+        },
+        async () => {
+
+          const iter = this.props.onAnnotationsLoaded(instance.getDocId(), instance.docViewer.getPageCount());
+
+
+          // load the annots
+          const { value: annotsToLoad } = await iter.next();
+          if (_.values(annotsToLoad).length > 0){
+            this.instance.showMessage('Processing annotations...');
+          }
+          await new Promise((res) => this.instance.annotManager.trigger('addAnnotation', [_.values(annotsToLoad), () => res()]))
+
+
+
+
+          // go to page number
+          const { value: pageNumber } = await iter.next();
+          this.instance.docViewer.setCurrentPage(pageNumber);
+
+
+          // const { value: fields } = await iter.next();
+          // const fm = this.instance.annotManager.getFieldManager();
+          // _.map(fields, (val, key) => {
+          //   console.log(key);
+          //   const field = fm.getField(key);
+          //   if (field){
+          //     console.log('setting field')
+          //     field.setValue(val);
+          //   }
+          // });
+
+          await iter.next();
+        },
+        async () => this.enableAllTools(this.instance),
+        async () => this.instance.hideMessage(),
       ));
-
-
 
 
 
@@ -113,7 +174,16 @@ class Webviewer extends Component {
       instance.annotManager.on('annotationAdded', callIfDefined(this.props.onAnnotationAdded));
       instance.annotManager.on('annotationDeleted', callIfDefined(this.props.onAnnotationDeleted));
       instance.annotManager.on('annotationUpdated', callIfDefined(this.props.onAnnotationUpdated));
-      instance.annotManager.on('fieldUpdated', callIfDefined(this.props.onFieldUpdated));
+      instance.annotManager.on('fieldUpdated', R.pipe(
+        ({ name, value }) => {
+          const { widgets } = instance.annotManager.getFieldManager().getField(name)
+          const widget = _.head(_.uniqBy(widgets, 'CustomData.id'));
+          return {
+            name, value, widget
+          }
+        },
+        callIfDefined(this.props.onFieldUpdated)
+      ));
 
       instance.docViewer.on('blankPagesAdded', callIfDefined(this.props.onBlankPagesAdded));
       instance.docViewer.on('blankPagesRemoved', callIfDefined(this.props.onBlankPagesRemoved));
@@ -248,57 +318,44 @@ class Webviewer extends Component {
       }
     }
 
+    if (!this.instance.docViewer.getDocument()){
+      return;
+    }
+
+
     // await this.instance.docViewer.getAnnotationsLoadedPromise();
     if (prevProps.blankPages !== this.props.blankPages){
+      console.log('blank pages')
       if (_.isNumber(this.props.blankPages)){
         this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages]);
       }
     }
 
-    // import widgets if it changes
-    if (prevProps.widgetToImport !== this.props.widgetToImport) {
-
-      if (this.props.widgetToImport) {
-        const existing = await this.instance.annotManager.getWidgetById(this.props.widgetToImport.id)
-
-
-        // if delete called an
-        if (this.props.widgetToImport?.type === 'delete' && existing){
-          await this.instance.annotManager.deleteAnnotation(existing, true);
-        } 
-        else if (this.instance.getRunId() === this.props.widgetToImport?.runId && existing) {
-          this.props.onWidgetImported();
-        }
-        else {
-          if (!existing){
-            this.instance.annotManager.trigger('addAnnotation', { ...this.props.widgetToImport })
-          }
-
-          // await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
-          this.props.onWidgetImported();
-          this.instance.annotManager.trigger('updateAnnotationPermission');
-        }
-      }
-    }
 
     // annotsToImport will be a xfdf containing single annotation
     if (prevProps.annotToImport !== this.props.annotToImport) {
 
-      if (this.props.annotToImport) {
-        if (this.props.annotToImport.type === 'delete'){
-          const toDel = this.instance.annotManager.getAnnotationById(this.props.annotToImport.id);
-          if (toDel){
-            this.instance.annotManager.deleteAnnotation(toDel, true);
-          }
-        } else {
-          // const annots = await this.instance.annotManager.importAnnotations(this.props.annotToImport.xfdf);
-          // const annots = await this.instance.annotManager.importAnnotCommand(this.props.annotToImport.xfdf);
-          this.instance.annotManager.trigger('addAnnotation', { ...this.props.annotToImport })
-          // await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
-        }
+      if (!_.isEmpty(this.props.annotToImport)) {
+        await new Promise((res) => this.instance.annotManager.trigger('addAnnotation', [this.props.annotToImport, async () => {
+          await this.props.onAnnotImported();
+          return res();
+        }]))
+        
+        // await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
 
-        this.props.onAnnotImported();
       }
+    }
+
+
+    if (prevProps.fields !== this.props.fields){
+      const fm = this.instance.annotManager.getFieldManager();
+      console.log('fields changed')
+      _.map(this.props.fields, (val, key) => {
+        const field = fm.getField(key);
+        if (field){
+          field.setValue(val);
+        }
+      })
     }
 
 
@@ -306,13 +363,6 @@ class Webviewer extends Component {
       const currPageNum = this.instance.docViewer.getCurrentPage();
       if (currPageNum !== this.props.pageNumber){
         await this.instance.setCurrentPageNumber(this.props.pageNumber);
-      }
-    }
-
-
-    if (prevProps.annotSize !== this.props.annotSize || prevProps.widgetSize !== this.props.widgetSize) {
-      if ((prevProps.annotSize > 0 || prevProps.widgetSize > 0) || (this.props.annotSize === 0 || this.props.widgetSize === 0)) {
-        this.instance.annotManager.trigger('updateAnnotationPermission');
       }
     }
 
