@@ -11,6 +11,7 @@ import CertPdfModal from './components/CertPdfModal';
 
 
 const log = debug('viewer');
+const logMsg = (label, msg) => (...args) => log(`${label}: ${msg}`);
 
 const callIfDefined = R.when(
   R.isNil,
@@ -59,7 +60,7 @@ class Webviewer extends Component {
       path: `${process.env.PUBLIC_URL}/lib`,
       ...this.props.config,
       // pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
-      pdftronServer: 'http://47.198.214.240:8090/',
+      // pdftronServer: 'http://47.198.214.240:8090/',
       css: '/styles/webviewer.css',
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
@@ -104,8 +105,13 @@ class Webviewer extends Component {
 
       this.setState(({ instance }));
 
+      // _.mapValues(instance.docViewer._events, (val, fnName) => {
+      //   instance.docViewer.on(fnName, logMsg('event', fnName));
+      // })
 
-
+      // _.mapValues(instance.annotManager._events, (val, fnName) => {
+      //   instance.annotManager.on(fnName, logMsg('annotMgr:event', fnName));
+      // })
       instance.docViewer.on('documentUnloaded', R.pipeP(
         R.pipe(callIfDefined(this.props.onDocumentUnloaded), R.bind(Promise.resolve, Promise)),
         async () => this.disableAllTools(this.instance),
@@ -133,10 +139,10 @@ class Webviewer extends Component {
           // load the annots
           const { value: annotsToLoad } = await iter.next();
           console.log('loading annotations', annotsToLoad)
-          if (_.values(annotsToLoad).length > 0){
-            // this.instance.showMessage('Processing annotations...');
-            await new Promise((res) => this.instance.annotManager.trigger('addAnnotation', [_.values(annotsToLoad), () => res()]))
-          }
+          // if (_.values(annotsToLoad).length > 0){
+          //   // this.instance.showMessage('Processing annotations...');
+          //   await new Promise((res) => this.instance.annotManager.trigger('addAnnotation', [_.values(annotsToLoad), () => res()]))
+          // }
 
           const { value: blankPages = 0 } = await iter.next();
           console.log('blankPages', blankPages);

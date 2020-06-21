@@ -37,24 +37,24 @@ if (process.env.NODE_ENV !== 'production') {
   ReactDOM.render(
     <Router>
 
-    <FirebaseProvider>
-      
-      <ServerProvider 
-        config={{ 
-          nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
-          userId,
-          user,
-          rtdbNamespace:'8d976a23-b865-4fcd-9165-ddc0aedaf614'
-        }}
-      >
-        <App 
-          userId={userId}
-          user={user}
-          docs={docs}
-          isAdminUser={false}
-        />
-      </ServerProvider>
-    </FirebaseProvider>
+      <FirebaseProvider>
+        
+        <ServerProvider 
+          config={{ 
+            nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
+            userId,
+            user,
+            rtdbNamespace:'8d976a23-b865-4fcd-9165-ddc0aedaf614'
+          }}
+        >
+          <App 
+            userId={userId}
+            user={user}
+            docs={docs}
+            isAdminUser={false}
+          />
+        </ServerProvider>
+      </FirebaseProvider>
     </Router>,
     document.getElementById('root')
   );

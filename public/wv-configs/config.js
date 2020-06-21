@@ -790,6 +790,39 @@ function tracePropAccess(obj, propKeys) {
 
 
   
+    // preserve custom data from signature
+    const sigtool = instance.docViewer.getTool('AnnotationCreateSignature');
+    const { getAnnotationCopy } = instance.annotManager;
+    annotManager.getAnnotationCopy = (annotation) => {
+      const annot = getAnnotationCopy.call(instance.annotManager, annotation);
+      annot.CustomData = annotation.CustomData;
+      annot.CustomData.authorId = instance.annotManager.getCurrentUser();
+      return annot;
+    };
+
+
+    sigtool.on('signatureSaved', async (annot) => {
+      console.log('signature saved', annot)
+      const annots = await instance.annotManager.getAnnotationsList();
+      const toReplace = _.filter(annots, a => a.CustomData.authorId = instance.annotManager.getCurrentUser() && annot.Id !== a.Id);
+
+      console.log('signature saved: toreplace', toReplace);
+      const imageData = annot.ImageData;
+
+      if (toReplace.length > 0){
+        _.map(toReplace, (r) => {
+          r.ImageData = imageData;
+          return instance.annotManager.redrawAnnotation(r);
+        });
+      }
+
+
+
+    })
+
+
+
+
 
 
 

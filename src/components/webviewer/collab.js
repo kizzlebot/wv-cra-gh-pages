@@ -133,7 +133,7 @@ function Collab({
       }}
 
       // Pass the next item in the annot queue
-      annotToImport={appState.getAnnotsToImport()}
+      annotToImport={appState.annotsToImport}
       onAnnotImported={() => appState.setAnnotsToImport([])}
 
 
