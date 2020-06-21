@@ -1,32 +1,68 @@
-import React, { useRef, useEffect } from 'react';
-import Webviewer from "./viewer";
+import React, { useEffect } from 'react';
+import _ from 'lodash';
+import * as R from 'ramda';
+import { useGetSetState, useToggle, useEffectOnce } from 'react-use';
+import Collab from './collab';
+import { withAppStateProvider, useAppState } from './hooks/AppState';
 
 
-function WvApp(props) {
-  const wvRef = useRef();
+function WebviewerApp() {
+  const appState = useAppState();
 
-  const { current } = wvRef;
+  const [clearAll, toggleClearAll] = useToggle(false);
+
+
+  useEffectOnce(() => {
+    appState.setSelectedDoc(_.head(_.keys(appState.docs)))
+  }, []);
   
-  useEffect(() => {
-    if (current && props.isAdminUser) {
-      current.annotManager.setIsAdminUser(props.isAdminUser);
-    }
-  }, [props.isAdminUser, current])
-
 
 
   return (
-    <Webviewer
-      {...props}
-      onReady={(instance) => {
-        wvRef.current = instance;
-        wvRef.current.annotManager.setIsAdminUser(props.isAdminUser);
-        if (props.onReady) {
-          return props.onReady(instance)
-        }
-      }}
-    />
+    <>
+      <div>
+        <label htmlFor='signer'>Doc: </label>
+        <select
+          value={appState.getSelectedDoc()}
+          onChange={R.pipe(R.path(['target', 'value']), appState.setSelectedDoc)}
+        >
+          <option value={'-1'}>Select a document</option>
+          {
+            _.map(_.keys(appState.docs), (docId) => {
+              return (
+                <option key={docId} value={docId}>{docId}</option>
+              );
+            })
+          }
+        </select>
+      </div>
+      <div>
+        <button
+          type='button'
+          onClick={() => toggleClearAll(true)}
+        >
+          Clear All Widgets/Annots
+        </button>
+      </div>
+
+
+
+
+      <div className="App" style={{ height: '100% !important' }}>
+        <Collab
+          config={appState.config}
+          userId={appState.getCurrentUser()}
+          isAdminUser={appState.isAdminUser}
+          docs={appState.docs}
+          selectedDocId={appState.selectedDoc}
+          selectedSigner={appState.selectedSigner}
+          clearAll={clearAll}
+          onAllCleared={() => toggleClearAll(false)}
+          onSignersUpdated={(signers) => appState.setSigners(signers)}
+        />
+      </div>
+    </>
   );
 }
 
-export default WvApp;
+export default withAppStateProvider(WebviewerApp);

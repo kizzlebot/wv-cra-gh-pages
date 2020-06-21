@@ -423,6 +423,7 @@ function tracePropAccess(obj, propKeys) {
         }
 
         const annotType = annotation instanceof Annotations.WidgetAnnotation ? 'widget' : 'annotation';
+        
 
         // if type is annotation then export using exportAnnotCommand
         if (annotType === 'annotation') {
@@ -554,14 +555,12 @@ function tracePropAccess(obj, propKeys) {
     }
   }
 
-  const onFieldChanged = (instance) => {
-    return (field, value) => {
-      instance.annotManager.trigger('fieldUpdated', {
-        type: 'field',
-        name: field.name,
-        value: value
-      })
-    }
+  const onFieldChanged = (instance) => (field, value) => {
+    instance.annotManager.trigger('fieldUpdated', {
+      type: 'field',
+      name: field.name,
+      value: value
+    })
   }
 
 
@@ -671,7 +670,7 @@ function tracePropAccess(obj, propKeys) {
           await annotation.resourcesLoaded();
           // NOTE: Set a custom field authorId to be used in client-side permission check
           annotation.authorId = authorId;
-          // annotManager.redrawAnnotation(annotation);
+          annotManager.redrawAnnotation(annotation);
         }
       } catch (error) {
         console.error('error updating annotation', error);
@@ -680,47 +679,46 @@ function tracePropAccess(obj, propKeys) {
   }
 
 
-  const handleAddBlankPage = (instance) => {
+  const handleAddRemoveBlankPages = (instance) => {
     const { PDFNet } = instance;
 
-    const addBlankPage = async (numPages) => {
+    const addBlankPage = async (numPages, cb) => {
       await PDFNet.initialize();
       const doc = instance.docViewer.getDocument();
       if (!doc) {
+        console.log('no doc, returning');
+        if (_.isFunction(cb)){
+          return cb();
+        }
         return;
       }
 
       const pdfDoc = await doc.getPDFDoc();
-      if (!await pdfDoc.tryLock()){
-        return;
-      }
       await PDFNet.startDeallocateStack();
       const pageCount = await pdfDoc.getPageCount();
       const originalPageCount = await instance.getOriginalPageCount();
       const pagesToAdded = numPages - (pageCount - originalPageCount);
-      // const pageInfo = doc.getPageInfo(pageCount - 1);
 
       if (pagesToAdded === 0){
+        if (_.isFunction(cb)){
+          return cb();
+        }
         return;
       }
       if (pagesToAdded > 0){
         await doc.insertBlankPages(_.range(pageCount + 1, pageCount + pagesToAdded + 1));
       }
       if (pagesToAdded < 0){
-        doc.removePages(
-          _.range(pageCount + pagesToAdded + 1, pageCount + 1)
-        );
+        await doc.removePages(_.range(pageCount + pagesToAdded + 1, pageCount + 1));
       }
 
-      await instance.docViewer.refreshAll();
-      await instance.docViewer.updateView();
-      await instance.docViewer.getDocument().refreshTextData();
       await PDFNet.endDeallocateStack();
-      await pdfDoc.unlock();
-      // return instance.docViewer.trigger('blankPageAdded');
+      if (_.isFunction(cb)){
+        return cb();
+      }
     }
 
-    return _.throttle(addBlankPage, 1000, { trailing: true });
+    return _.debounce(addBlankPage, 1000, { trailing: true });
   }
 
   // window.addEventListener('viewerLoaded', async () => {
@@ -775,7 +773,7 @@ function tracePropAccess(obj, propKeys) {
         .value()
 
       console.log('handleDelete dupes called', toDelete);
-      return instance.annotManager.deleteAnnotations(toDelete, true);
+      await instance.annotManager.deleteAnnotations(toDelete, true);
     }, 2000, { leading: false, trailing: true })
 
 
@@ -825,34 +823,16 @@ function tracePropAccess(obj, propKeys) {
     });
 
 
+    // annotManager.setRedrawThrottle(1000);
 
     /* 
      * When addBlankPage is triggered. then add a page
      */
-    docViewer.on('setBlankPages', handleAddBlankPage(instance));
+    docViewer.on('setBlankPages', handleAddRemoveBlankPages(instance));
 
-    /* 
-     * When removeBlankPage is triggered. then remove a page
-     */
-    // docViewer.on('removeBlankPage', async (numPages) => {
-    //   await PDFNet.initialize();
-    //   const doc = instance.docViewer.getDocument();
-    //   if (!doc) {
-    //     return;
-    //   }
 
-    //   await instance.PDFNet.startDeallocateStack();
 
-    //   await instance.docViewer.getAnnotationsLoadedPromise();
-    //   const currPageCount = instance.docViewer.getPageCount()
-    //   await doc.removePages([currPageCount]);
-    //   await instance.docViewer.refreshAll();
-    //   await instance.docViewer.updateView();
-    //   await instance.docViewer.getDocument().refreshTextData();
-    //   await instance.PDFNet.endDeallocateStack();
 
-    //   return instance.docViewer.trigger('blankPageRemoved');
-    // });
 
 
     docViewer.getTool('AnnotationCreateSignature')
@@ -975,6 +955,8 @@ function tracePropAccess(obj, propKeys) {
           const pageCount = instance.docViewer.getPageCount()
           exports.setPageCount(config.docId, pageCount);
         });
+
+        instance.showMessage('Loading...');
         return loadDocument(pdfUrl, config);
       },
       Annotations, 

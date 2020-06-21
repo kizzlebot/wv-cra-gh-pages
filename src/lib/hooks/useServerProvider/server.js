@@ -1,6 +1,9 @@
 /* eslint-disable no-multi-assign */
 import * as R from 'ramda';
 import _ from 'lodash';
+import debug from 'debug';
+
+const log = debug('server');
 
 
 export default async (firebase, serverOpts) => {
@@ -64,22 +67,22 @@ export default async (firebase, serverOpts) => {
 
 
       this.refs = [
-        this.selectedSignerRef,
+        // this.selectedSignerRef,
         this.widgetRef,
         this.annotationsRef,
         this.xfdfRef,
-        this.pageRef,
-        this.participantsRef,
-        this.blankPagesRef,
-        this.lockRef,
-        this.vaDisclaimerRef,
-        this.selectedDocIdRef,
-        this.selectedDocTitleRef,
-        this.vaDisclaimerRejectedRef,
-        this.completingRef,
-        this.consumerSignatures,
-        this.pinModalRef,
-        this.authPinModalRef,
+        // this.pageRef,
+        // this.participantsRef,
+        // this.blankPagesRef,
+        // this.lockRef,
+        // this.vaDisclaimerRef,
+        // this.selectedDocIdRef,
+        // this.selectedDocTitleRef,
+        // this.vaDisclaimerRejectedRef,
+        // this.completingRef,
+        // this.consumerSignatures,
+        // this.pinModalRef,
+        // this.authPinModalRef,
         // Skip connectionRef b/c we need it for user-presence
         // this.connectionRef
       ]
@@ -127,7 +130,25 @@ export default async (firebase, serverOpts) => {
     };
 
 
-    unbindAll = () => R.map(R.pipe(R.invoker(0, 'off'), this.refs))
+    // unbindAll = () => R.map(R.pipe(R.invoker(0, 'off'), this.refs))
+    unbindAll = async () => {
+      if (this.annotInstRef){
+        log('unbinding annotInstRef')
+        await this.annotInstRef.off();
+        this.annotInstRef = null;
+      }
+      if (this.widgetInstRef){
+        log('unbinding widgetInstRef')
+        await this.widgetInstRef.off();
+        this.widgetInstRef = null;
+      }
+      if (this.pageInstRef){
+        log('unbinding pageInstRefj')
+        await this.pageInstRef.off();
+        this.pageInstRef = null;
+      }
+
+    }
 
 
 
@@ -166,50 +187,56 @@ export default async (firebase, serverOpts) => {
             }
           });
         case 'onPageChanged':
-          return this.pageRef
+          this.pageInstRef = this.pageInstRef ? this.pageInstRef : this.pageRef
             .orderByKey()
             .equalTo(docId)
+          return this.pageInstRef
             .on('value', callbackFunction);
-        case 'onAnnotation':
-          return this.annotationsRef.on('value', callbackFunction);
 
         case 'onFieldChanged':
           return this.fieldRef.on('child_changed', callbackFunction)
 
 
 
-        case 'onAnnotationCreated':
-          return this.annotationsRef
-            .orderByChild('docId')
-            .equalTo(docId)
-            .on('child_added', callbackFunction);
 
         case 'onWidgetCreated':
-          return this.widgetRef
+          this.widgetInstRef= this.widgetInstRef ? this.widgetInstRef : this.widgetRef
             .orderByChild('docId')
             .equalTo(docId)
-            .on('child_added', callbackFunction);
+          return this.widgetInstRef.on('child_added', callbackFunction);
         case 'onWidgetUpdated':
-          return this.widgetRef
+          this.widgetInstRef= this.widgetInstRef ? this.widgetInstRef : this.widgetRef
             .orderByChild('docId')
             .equalTo(docId)
-            .on('child_changed', callbackFunction);
+          return this.widgetInstRef.on('child_changed', callbackFunction);
         case 'onWidgetDeleted':
-          return this.widgetRef
+          this.widgetInstRef= this.widgetInstRef ? this.widgetInstRef : this.widgetRef
             .orderByChild('docId')
             .equalTo(docId)
-            .on('child_removed', callbackFunction);
+          return this.widgetInstRef.on('child_removed', callbackFunction);
+
+        case 'onAnnotation':
+          this.annotInstRef= this.annotInstRef ? this.annotInstRef : this.annotationsRef
+            .orderByChild('docId')
+            .equalTo(docId)
+          return this.annotInstRef.on('child_added', callbackFunction);
+
+        case 'onAnnotationCreated':
+          this.annotInstRef = this.annotInstRef ? this.annotInstRef : this.annotationsRef
+            .orderByChild('docId')
+            .equalTo(docId)
+          return this.annotInstRef.on('child_added', callbackFunction);
 
         case 'onAnnotationUpdated':
-          return this.annotationsRef
+          this.annotInstRef = this.annotInstRef ? this.annotInstRef : this.annotationsRef
             .orderByChild('docId')
             .equalTo(docId)
-            .on('child_changed', callbackFunction);
+          return this.annotInstRef.on('child_changed', callbackFunction);
         case 'onAnnotationDeleted':
-          return this.annotationsRef
+          this.annotInstRef = this.annotInstRef ? this.annotInstRef : this.annotationsRef
             .orderByChild('docId')
             .equalTo(docId)
-            .on('child_removed', callbackFunction);
+          return this.annotInstRef.on('child_removed', callbackFunction);
 
         case 'onSelectedSignerChange':
           return this.selectedSignerRef.on('value', callbackFunction);

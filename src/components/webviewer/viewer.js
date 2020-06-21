@@ -1,6 +1,7 @@
 import React, { Component, useEffect } from 'react'
 import _ from 'lodash';
 import * as R from 'ramda';
+import debug from 'debug';
 import Promise from 'bluebird';
 import SelectSigner from './components/SelectSigner';
 import RequiredCheckbox from './components/RequiredCheckbox';
@@ -8,6 +9,8 @@ import registerTools from './lib/tools';
 import initWv from '@pdftron/webviewer';
 import CertPdfModal from './components/CertPdfModal';
 
+
+const log = debug('viewer');
 
 const callIfDefined = R.when(
   R.isNil,
@@ -56,7 +59,8 @@ class Webviewer extends Component {
       path: `${process.env.PUBLIC_URL}/lib`,
       ...this.props.config,
       // pdftronServer: 'https://webviewer-server.staging.enotarylog.com',
-      // pdftronServer: 'http://47.198.214.240:8090/',
+      pdftronServer: 'http://47.198.214.240:8090/',
+      css: '/styles/webviewer.css',
       custom: JSON.stringify(this.props?.config?.custom)
     }, this.viewerRef.current);
 
@@ -70,6 +74,7 @@ class Webviewer extends Component {
       }
 
       this.instance = instance;
+      this.fieldManager = this.instance.annotManager.getFieldManager();
       window.instance = instance;
 
       instance.annotationPopup.add({
@@ -100,13 +105,10 @@ class Webviewer extends Component {
       this.setState(({ instance }));
 
 
-      // instance.docViewer.on('pageComplete', callIfDefined(this.props.onDocumentLoaded));
 
       instance.docViewer.on('documentUnloaded', R.pipeP(
         R.pipe(callIfDefined(this.props.onDocumentUnloaded), R.bind(Promise.resolve, Promise)),
-        // async () => instance.disableElements(['header'])
         async () => this.disableAllTools(this.instance),
-        async () => this.instance.showMessage('Loading...')
       ));
 
       instance.docViewer.on('annotationsLoaded', R.pipeP(
@@ -121,42 +123,38 @@ class Webviewer extends Component {
           // Set the currentUser
           instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
 
-
-          if (_.isNumber(this.props.blankPages)){
-            instance.docViewer.trigger('setBlankPages', [this.props.blankPages]);
-          }
         },
         async () => {
 
           const iter = this.props.onAnnotationsLoaded(instance.getDocId(), instance.docViewer.getPageCount());
 
 
+
           // load the annots
           const { value: annotsToLoad } = await iter.next();
+          console.log('loading annotations', annotsToLoad)
           if (_.values(annotsToLoad).length > 0){
-            this.instance.showMessage('Processing annotations...');
+            // this.instance.showMessage('Processing annotations...');
+            await new Promise((res) => this.instance.annotManager.trigger('addAnnotation', [_.values(annotsToLoad), () => res()]))
           }
-          await new Promise((res) => this.instance.annotManager.trigger('addAnnotation', [_.values(annotsToLoad), () => res()]))
+
+          const { value: blankPages = 0 } = await iter.next();
+          console.log('blankPages', blankPages);
+          await new Promise((res) => instance.docViewer.trigger('setBlankPages', [blankPages, () => res()]));
 
 
 
 
+          console.log('instance.docViewer.isInViewportRenderMode()', await instance.docViewer.isInViewportRenderMode());
           // go to page number
           const { value: pageNumber } = await iter.next();
-          this.instance.docViewer.setCurrentPage(pageNumber);
+          // console.log('setting pageNumber', pageNumber);
+          // const pgCnt = await this.instance.docViewer.getPageCount();
+          // if (pageNumber <= pgCnt && pageNumber > 0){
+          //   await this.instance.setCurrentPageNumber(this.props.pageNumber);
+          // }
 
-
-          // const { value: fields } = await iter.next();
-          // const fm = this.instance.annotManager.getFieldManager();
-          // _.map(fields, (val, key) => {
-          //   console.log(key);
-          //   const field = fm.getField(key);
-          //   if (field){
-          //     console.log('setting field')
-          //     field.setValue(val);
-          //   }
-          // });
-
+          // await instance.docViewer.zoomTo(instance.docViewer.getZoom())
           await iter.next();
         },
         async () => this.enableAllTools(this.instance),
@@ -178,6 +176,7 @@ class Webviewer extends Component {
         ({ name, value }) => {
           const { widgets } = instance.annotManager.getFieldManager().getField(name)
           const widget = _.head(_.uniqBy(widgets, 'CustomData.id'));
+          console.log(name, value);
           return {
             name, value, widget
           }
@@ -191,23 +190,6 @@ class Webviewer extends Component {
 
 
       instance.annotManager.setIsAdminUser(this.props.isAdminUser);
-
-      instance.docViewer.on('annotationsLoaded', async () => {
-
-        // Set the list of signers to assign template fields for.
-        instance.annotManager.trigger('setSigners', this.props.signers);
-
-        // Set the selected signer
-        instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
-
-        // Set the currentUser
-        instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
-
-
-        if (_.isNumber(this.props.blankPages)){
-          instance.docViewer.trigger('setBlankPages', [this.props.blankPages]);
-        }
-      });
 
 
       // initialize custom annotation tools
@@ -261,6 +243,8 @@ class Webviewer extends Component {
 
 
       if (this.props.docs[this.props.selectedDoc]) {
+        console.log('loading doc')
+        
         this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
           l: this.props.config.l, 
           docId: this.props.selectedDoc,
@@ -306,6 +290,7 @@ class Webviewer extends Component {
     }
 
     if (prevProps.selectedDoc !== this.props.selectedDoc && this.instance) {
+      console.log('loading doc cdm')
       
       if (this.props.docs[this.props.selectedDoc]) {
         return this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
@@ -319,18 +304,26 @@ class Webviewer extends Component {
     }
 
     if (!this.instance.docViewer.getDocument()){
+      log('no document loaded. returning')
       return;
     }
 
 
     // await this.instance.docViewer.getAnnotationsLoadedPromise();
     if (prevProps.blankPages !== this.props.blankPages){
-      console.log('blank pages')
       if (_.isNumber(this.props.blankPages)){
         this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages]);
+        await new Promise((res) => this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages, () => res()]));
       }
     }
 
+    // update fields if applicable
+    _.map(this.props.fields, (val, key) => {
+      const field = this.fieldManager.getField(key);
+      if (field && field.value !== val) {
+        field.setValue(val);
+      }
+    });
 
     // annotsToImport will be a xfdf containing single annotation
     if (prevProps.annotToImport !== this.props.annotToImport) {
@@ -339,24 +332,11 @@ class Webviewer extends Component {
         await new Promise((res) => this.instance.annotManager.trigger('addAnnotation', [this.props.annotToImport, async () => {
           await this.props.onAnnotImported();
           return res();
-        }]))
-        
-        // await Promise.map(annots, (annot) => this.instance.annotManager.redrawAnnotation(annot));
-
+        }]));
       }
     }
 
 
-    if (prevProps.fields !== this.props.fields){
-      const fm = this.instance.annotManager.getFieldManager();
-      console.log('fields changed')
-      _.map(this.props.fields, (val, key) => {
-        const field = fm.getField(key);
-        if (field){
-          field.setValue(val);
-        }
-      })
-    }
 
 
     if (prevProps.pageNumber !== this.props.pageNumber && _.isNumber(this.props.pageNumber)){

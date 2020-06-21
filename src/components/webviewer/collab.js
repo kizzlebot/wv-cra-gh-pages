@@ -5,13 +5,14 @@ import _ from 'lodash';
 import * as R from 'ramda';
 import Webviewer from "./viewer";
 import { useServer } from '../../lib/hooks/useServerProvider';
-import { useQueue, useGetSetState, createStateContext, useGetSet } from 'react-use';
+import { useQueue, useGetSetState, createStateContext, useGetSet, useEffectOnce } from 'react-use';
+import useAppState from './hooks/AppState';
 
 
 const saveSignatureToLocalStorage = (conf) => {
   localStorage.setItem(`${conf.type}_${conf.authorId}`, JSON.stringify(conf));
 }
-
+const tapP = (fn) => R.pipe(R.tap(fn), R.bind(Promise.resolve, Promise));
 
 function Collab({
   clearAll,
@@ -25,7 +26,12 @@ function Collab({
   onSignersUpdated = R.identity
 }) {
 
+
+
+  const appState = useAppState();
+
   const server = useServer();
+
   const [getState, setState] = useGetSetState({ pageNumber: {}, signers: {}, fields: {} });
   const [getPageState, setPageState] = useGetSetState({ });
   const [getBlankPageState, setBlankPageState] = useGetSetState({ });
@@ -35,41 +41,54 @@ function Collab({
   
   // when current document toggled. update fbase
   useEffect(() => {
-    server.setSelectedDocId(selectedDocId);
-  }, [selectedDocId])
+    if (selectedDocId){
+      server.setSelectedDocId(selectedDocId);
+    }
+  }, [appState.selectedDoc]);
 
-  useEffect(() => {
-    server.bind('onBlankPagesChanged', ({ val }) => {
-      console.log('blankPagesChanged', val)
-      setBlankPageState({
-        ...val,
-      })
-    })
-    server.bind('onAuthorsChanged', ({ val }) => {
-      setState({ 
-        ...getState(), 
-        signers: val,
-      });
-    });
-    server.bind('onSelectedDocIdChanged', ({ val }) => {
-      setState({ 
-        ...getState(), 
-        selectedDocId: val,
-      });
-    });
-    server.bind('onFieldChanged', ({ val, key }) => {
-      setState({ 
-        ...getState(), 
-        fields: {
-          ...getState().fields,
+
+  const bindServerEvents = async () => {
+    await Promise.all([
+      server.getFields()
+        .then((fields) => appState.setFields(fields)),
+
+      server.bind('onBlankPagesChanged', ({ val }) => {
+        console.log('blankPagesChanged', val)
+        setBlankPageState({ ...val })
+        appState.setBlankPages(val);
+      }),
+
+      server.bind('onAuthorsChanged', ({ val }) => {
+        setState({ 
+          ...getState(), 
+          signers: val,
+        });
+        appState.setSigners(val);
+      }),
+
+      server.bind('onSelectedDocIdChanged', ({ val }) => {
+        setState({ 
+          ...getState(), 
+          selectedDocId: val,
+        });
+        appState.setSelectedDoc(val);
+      }),
+
+      server.bind('onFieldChanged', ({ val, key }) => {
+        console.log('updateing fields',key, val)
+        appState.setFields({
+          ...appState.getFields(),
           [key.replace(/__/ig, ' ').replace(/_/ig, '.')]: val
-        },
-      });
-    });
+        })
+      }),
+    ]);
+  }
+  useEffectOnce(() => {
+    bindServerEvents();
   }, [getState, server, setState]);
 
 
-  const { signers } = getState()
+  const { signers } = appState.getSigners()
 
   useEffect(() => onSignersUpdated(signers), [signers]);
 
@@ -89,31 +108,16 @@ function Collab({
 
 
 
-
-  useEffect(() => {
-  }, [userId])
-
-
-  const upsert = (fn, toAdd) => {
-    let allAnnots = getAnnotsToImport();
-    const i = _.findIndex(allAnnots, (b) => fn(toAdd, b));
-    if (i > -1){
-      console.log('upserting', toAdd, allAnnots.length)
-      allAnnots[i] = toAdd;
-    } else {
-      console.log('adding', toAdd, allAnnots.length)
-      allAnnots = [...allAnnots, toAdd];
-    }
-    return setAnnotsToImport(allAnnots);
-  };
-
-
   const handleAnnotationAdded = (type) => async (args, docId) => {
     const create = (type === 'annotation') ? server.createAnnotation : server.createWidget;
     await create(args.id, args)
     await server.setPageNumber(docId, args.pageNumber)
   };
   
+  const handleAnnotationUpdated = (type) => async (args, docId) => {
+    const create = (type === 'annotation') ? server.updateAnnotation: server.updateWidget;
+    await create(args.id, args)
+  };
   return (
     <Webviewer
 
@@ -122,17 +126,16 @@ function Collab({
       }}
 
       onAnnotationAdded={handleAnnotationAdded('annotation')}
+      onAnnotationUpdated={handleAnnotationUpdated('annotation')}
       onWidgetAdded={handleAnnotationAdded('widget')}
-      onAnnotationUpdated={(args) => server.updateAnnotation(args.id, args)}
       onAnnotationDeleted={(args) => server.deleteAnnotation(args.id, args)}
       onWidgetDeleted={(id) => server.deleteWidget(id)}
 
       // TODO: implement on field changed
       onFieldUpdated={async ({ name, value, widget }) => {
-        if (!widget || !widget.CustomData.id){
+        if (!widget || !widget.CustomData.id || !value){
           return;
         }
-        console.log('field changed', name, value, widget)
         await server.setField(name, value);
         await server.updateWidget(widget.CustomData.id, {
           fieldName: name,
@@ -141,45 +144,44 @@ function Collab({
       }}
 
       // Pass the next item in the annot queue
-      annotToImport={getAnnotsToImport()}
-      onAnnotImported={() => setAnnotsToImport([])}
+      annotToImport={appState.getAnnotsToImport()}
+      onAnnotImported={() => appState.setAnnotsToImport([])}
 
 
 
 
       onSignatureSaved={(args) => saveSignatureToLocalStorage(args)}
-      fields={getState().fields}
+      fields={appState.getFields()}
 
 
       // after initial document + annotations have loaded. Start listening on firebase
+      // note we are using a generator here. 
       onAnnotationsLoaded={async function * (docId, pageCount) {
         await server.unbindAll();
-        const allAnnots = await server.getAnnotations(docId);
+        // pass number of blank pages to add to call
 
-        // pass annots to load to caller
+        // pass annots to load to caller and pause for initial annot import
+        const allAnnots = await server.getAnnotations(docId);
         yield allAnnots;
 
-        // get page
-        const pageNumber = await server.getPageNumber(docId); 
-        if (pageNumber > 0 && pageNumber <= pageCount) {
-          yield pageNumber;
-        }
-        else {
-          yield 1;
-        }
+        const blankPages = await server.getBlankPagesByDocId(docId);
+        yield blankPages;
 
-        // const fields = await server.getFields();
-        // yield fields;
+        // pageNumber to load
+        await server.setPageNumber(docId, 1)
+        const pageNumber = await server.getPageNumber(docId); 
+        const pgNumToYield = (pageNumber > 0 && pageNumber <= pageCount) ? pageNumber : 1;
+        yield pgNumToYield;
         
         
         await Promise.all([
-          server.bind('onPageChanged', docId, ({ val, key }) => setPageState({ ...getPageState(), ...val })),
-          server.bind('onWidgetCreated', docId, ({ val, key }) => upsert((a,b) => a.id === b.id, val)),
+          server.bind('onPageChanged', docId, ({ val, key }) => appState.setPageNumbers(val)),
+          server.bind('onWidgetCreated', docId, ({ val, key }) => appState.upsertAnnot(val)),
           // TODO: fix this. After first widget is delete from fbase, everything stops syncing
-          server.bind('onWidgetDeleted', docId, ({ val, key }) => upsert((a, b) => a.id === b.id, { ...val, action: 'delete' })),
-          server.bind('onAnnotationCreated', docId, ({ val, key }) => upsert((a,b) => a.id === b.id, val)),
-          server.bind('onAnnotationUpdated', docId, ({ val, key }) => upsert((a,b) => a.id === b.id, val)),
-          server.bind('onAnnotationDeleted', docId, ({ val, key }) => upsert((a, b) => a.id === b.id, { ...val, action: 'delete' }))
+          server.bind('onWidgetDeleted', docId, ({ val, key }) => appState.upsertAnnot({ ...val, action: 'delete' })),
+          server.bind('onAnnotationCreated', docId, ({ val, key }) => appState.upsertAnnot(val)),
+          server.bind('onAnnotationUpdated', docId, ({ val, key }) => appState.upsertAnnot(val)),
+          server.bind('onAnnotationDeleted', docId, ({ val, key }) => appState.upsertAnnot({ ...val, action: 'delete' }))
         ])
       }}
       
@@ -187,36 +189,34 @@ function Collab({
       // When document is unloaded (`selectedDoc` changed). Clear queue and unbind from firebase
       onDocumentUnloaded={async () => {
         await server.clearWidgets();
-        setAnnotsToImport([]);
+        appState.setAnnotsToImport([]);
       }}
 
       
-      // TODO: update firebase rtdb with the number of blank pages added so it syncs b/t other users
       onBlankPagesAdded={(docId, currBlankPages) => server.setBlankPages(docId, currBlankPages + 1)}
-      // TODO: update firebase rtdb with the number of blank pages added so it syncs b/t other users
       onBlankPagesRemoved={(docId, currBlankPages) => server.setBlankPages(docId, Math.max(currBlankPages - 1, 0))}
 
 
       onRemoveFormFields={async () => {
-        const { selectedDocId } = getState()
+        const selectedDocId = appState.getSelectedDoc()
         await server.clearWidgets();
         await server.setSelectedDocId('-1');
         await Promise.delay(1000);
         await server.setSelectedDocId(selectedDocId);
       }}
 
-      pageNumber={getPageState()[getState().selectedDocId]}
+      pageNumber={appState.getPageNumbers()[appState.getSelectedDoc()]}
 
-      selectedSigner={selectedSigner}
-      currentUser={userId}
-      selectedDoc={getState().selectedDocId}
+      selectedSigner={appState.getSelectedSigner()}
+      currentUser={appState.getCurrentUser()}
+      selectedDoc={appState.getSelectedDoc()}
 
-      blankPages={getBlankPageState()[getState().selectedDocId]}
+      blankPages={appState.blankPages[appState.getSelectedDoc()]}
 
-      isAdminUser={isAdminUser}
-      docs={docs}
-      config={config}
-      signers={_.values(getState().signers)}
+      isAdminUser={appState.isAdminUser}
+      docs={appState.docs}
+      config={appState.config}
+      signers={_.values(appState.getSigners())}
     />
   );
 }

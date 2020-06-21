@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import {
+  BrowserRouter as Router,
+} from "react-router-dom";
+
 import { FirebaseProvider } from './lib/hooks/useFirebase';
 import { ServerProvider } from './lib/hooks/useServerProvider';
 import faker from 'faker';
@@ -31,7 +35,10 @@ const docs = {
 
 if (process.env.NODE_ENV !== 'production') {
   ReactDOM.render(
+    <Router>
+
     <FirebaseProvider>
+      
       <ServerProvider 
         config={{ 
           nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
@@ -47,7 +54,8 @@ if (process.env.NODE_ENV !== 'production') {
           isAdminUser={false}
         />
       </ServerProvider>
-    </FirebaseProvider>,
+    </FirebaseProvider>
+    </Router>,
     document.getElementById('root')
   );
 }
