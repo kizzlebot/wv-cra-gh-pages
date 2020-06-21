@@ -33,9 +33,7 @@ function Collab({
   const server = useServer();
 
   const [getState, setState] = useGetSetState({ pageNumber: {}, signers: {}, fields: {} });
-  const [getPageState, setPageState] = useGetSetState({ });
-  const [getBlankPageState, setBlankPageState] = useGetSetState({ });
-  const [getAnnotsToImport, setAnnotsToImport] = useGetSet([]);
+
 
   
   
@@ -54,28 +52,19 @@ function Collab({
 
       server.bind('onBlankPagesChanged', ({ val }) => {
         console.log('blankPagesChanged', val)
-        setBlankPageState({ ...val })
         appState.setBlankPages(val);
       }),
 
       server.bind('onAuthorsChanged', ({ val }) => {
-        setState({ 
-          ...getState(), 
-          signers: val,
-        });
+
         appState.setSigners(val);
       }),
 
       server.bind('onSelectedDocIdChanged', ({ val }) => {
-        setState({ 
-          ...getState(), 
-          selectedDocId: val,
-        });
         appState.setSelectedDoc(val);
       }),
 
       server.bind('onFieldChanged', ({ val, key }) => {
-        console.log('updateing fields',key, val)
         appState.setFields({
           ...appState.getFields(),
           [key.replace(/__/ig, ' ').replace(/_/ig, '.')]: val
@@ -151,7 +140,7 @@ function Collab({
 
 
       onSignatureSaved={(args) => saveSignatureToLocalStorage(args)}
-      fields={appState.getFields()}
+      fields={{}}
 
 
       // after initial document + annotations have loaded. Start listening on firebase

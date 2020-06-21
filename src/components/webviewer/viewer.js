@@ -318,12 +318,12 @@ class Webviewer extends Component {
     }
 
     // update fields if applicable
-    _.map(this.props.fields, (val, key) => {
-      const field = this.fieldManager.getField(key);
-      if (field && field.value !== val) {
-        field.setValue(val);
-      }
-    });
+    // _.map(this.props.fields, (val, key) => {
+    //   const field = this.fieldManager.getField(key);
+    //   if (field && field.value !== val) {
+    //     field.setValue(val);
+    //   }
+    // });
 
     // annotsToImport will be a xfdf containing single annotation
     if (prevProps.annotToImport !== this.props.annotToImport) {
