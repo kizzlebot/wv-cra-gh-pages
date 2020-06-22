@@ -337,6 +337,19 @@ function tracePropAccess(obj, propKeys) {
       signHereElement.style.fontSize = '12px';
       return signHereElement;
     };
+
+
+
+
+
+
+    // ref: https://www.pdftron.com/documentation/web/guides/form-field-styling/
+    Annotations.WidgetAnnotation.getContainerCustomStyles = () => {
+      console.log('Annotations.WidgetAnnotation.getContainerCustomStyles called');
+      return {
+        border: '1px solid black'
+      }
+    }
   };
 
 
@@ -545,17 +558,27 @@ function tracePropAccess(obj, propKeys) {
             annotManager.trigger('widgetDeleted', getWidgetPayload(annotation, widgetXfdf));
           }
         }
-
       });
+
+      annotManager.trigger('updateAnnotationPermission', annotations);
     }
     
   }
 
+
+
+  /**
+   * when widget annotations field changed
+   */
   const onFieldChanged = (instance) => (field, value) => {
+    const { widgets } = field;
+    const widget = _.head(_.uniqBy(widgets, 'CustomData.id'));
     instance.annotManager.trigger('fieldUpdated', {
       type: 'field',
+      docId: exports.getDocId(),
       name: field.name,
-      value: value
+      value: value,
+      widget
     })
   }
 
@@ -677,8 +700,7 @@ function tracePropAccess(obj, propKeys) {
 
   const handleAddRemoveBlankPages = (instance) => {
     const { PDFNet } = instance;
-
-    const addBlankPage = async (numPages, cb) => {
+    return async (numPages, cb) => {
       await PDFNet.initialize();
       const doc = instance.docViewer.getDocument();
       if (!doc) {
@@ -721,12 +743,47 @@ function tracePropAccess(obj, propKeys) {
       if (_.isFunction(cb)){
         return cb();
       }
-    }
-
-    return _.debounce(addBlankPage, 1000, { trailing: true });
+    };
   }
 
-  // window.addEventListener('viewerLoaded', async () => {
+
+  const handleUpdateAnnotPermission = (instance) => {
+    const updateAnnotPerm = (isAdminUser, currUserId, locked) => (annot) => {
+
+      if (annot instanceof instance.Annotations.WidgetAnnotation) {
+        const signerId = _.get(annot.getMetadata(), 'signerId');
+
+        if (isAdminUser) {
+          annot.fieldFlags.set('ReadOnly', false);
+          return;
+        }
+
+        if (signerId !== currUserId || locked) {
+          annot.fieldFlags.set('ReadOnly', true);
+        } else {
+          annot.fieldFlags.set('ReadOnly', false);
+        }
+      }
+    }
+
+    return (annotation) => {
+      const locked = exports.getLock();
+      const currUserId = instance.annotManager.getCurrentUser();
+      const isAdminUser = instance.annotManager.getIsAdminUser();
+      const updatePerm = updateAnnotPerm(isAdminUser, currUserId, locked);
+      const annots = _.castArray(annotation);
+
+
+      if (annots && !_.isEmpty(annots)) {
+        console.debug('updateAnnotationPermission: annotations defined', annots);
+        return _.map(annots, updatePerm);
+      }
+
+      const allAnnots = instance.annotManager.getAnnotationsList();
+      return _.map(allAnnots, updatePerm);
+    }
+  };
+
   window.addEventListener('viewerLoaded', async () => {
     const { readerControl } = exports;
     const { docViewer } = exports.readerControl;
@@ -867,7 +924,8 @@ function tracePropAccess(obj, propKeys) {
     /* 
      * When addBlankPage is triggered. then add a page
      */
-    docViewer.on('setBlankPages', handleAddRemoveBlankPages(instance));
+    const addRemoveBlankPages = _.throttle(handleAddRemoveBlankPages(instance), 1200, { trailing: true });
+    docViewer.on('setBlankPages', addRemoveBlankPages);
 
 
 
@@ -875,10 +933,7 @@ function tracePropAccess(obj, propKeys) {
 
 
     docViewer.getTool('AnnotationCreateSignature')
-      .on('annotationAdded', () => {
-        console.log('signature/initial annotation added');
-        return annotManager.handleDeleteDuplicateWidgets();
-      });
+      .on('annotationAdded', annotManager.handleDeleteDuplicateWidgets);
 
 
     // register events to trigger on annotManager. subscribed by parent component
@@ -927,34 +982,8 @@ function tracePropAccess(obj, propKeys) {
 
 
     // built-in event 
-    annotManager.on('updateAnnotationPermission', _.throttle(async (annotation) => {
-      if (annotation){  
-        return;
-      }
-      const allAnnots = annotManager.getAnnotationsList();
-
-
-      const locked = exports.getLock();
-      const currUserId = annotManager.getCurrentUser();
-      const isAdminUser = annotManager.getIsAdminUser();
-
-      await Promise.map(allAnnots, (annot) => {
-        if (annot instanceof Annotations.WidgetAnnotation) {
-          const signerId = _.get(annot.getMetadata(), 'signerId');
-
-          if (isAdminUser) {
-            annot.fieldFlags.set('ReadOnly', false);
-            return;
-          }
-
-          if (signerId !== currUserId || locked) {
-            annot.fieldFlags.set('ReadOnly', true);
-          } else {
-            annot.fieldFlags.set('ReadOnly', false);
-          }
-        }
-      });
-    }, 2000, { trailing: true }));
+    const updateAnnotPerm = handleUpdateAnnotPermission(instance)
+    annotManager.on('updateAnnotationPermission', updateAnnotPerm);
 
 
     annotManager.on('setSelectedSigner', (signerId) => {
@@ -966,10 +995,9 @@ function tracePropAccess(obj, propKeys) {
       annotManager.setCurrentUser(currentUser);
       annotManager.trigger('currentUserChanged', currentUser);
     });
+
     // built-in event 
-    readerControl.docViewer.on('documentLoaded', () => {
-      return configureFeatures(instance, custom)
-    });
+    readerControl.docViewer.on('documentLoaded', () => configureFeatures(instance, custom));
    
 
 

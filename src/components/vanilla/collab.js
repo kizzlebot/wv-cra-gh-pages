@@ -6,7 +6,7 @@ import { useServer } from 'lib/hooks/useServerProvider';
 import Promise from 'bluebird';
 import { useEffectOnce } from 'react-use';
 import useAppState from '../../lib/hooks/AppState';
-import { importFbaseVal, delFbaseVal, importWidgetFbaseVal, delWidgetFbaseVal } from './lib/helpers/import';
+import { importFbaseVal, delFbaseVal, importWidgetFbaseVal, delWidgetFbaseVal, importField } from './lib/helpers/import';
 
 
 
@@ -59,7 +59,9 @@ export default function Collab(props){
         server.bind('onAnnotationUpdated', inst.getDocId(), importFbaseVal(inst)),
         server.bind('onAnnotationDeleted', inst.getDocId(), delFbaseVal(inst)),
         server.bind('onWidgetCreated', inst.getDocId(), importWidgetFbaseVal(inst)),
-        server.bind('onWidgetDeleted', inst.getDocId(), delWidgetFbaseVal(inst))
+        server.bind('onWidgetDeleted', inst.getDocId(), delWidgetFbaseVal(inst)),
+        server.bind('onFieldAdded', inst.getDocId(), importField(inst)),
+        server.bind('onFieldUpdated', inst.getDocId(), importField(inst)),
       ])}
       unbindEvents={({ selectedDoc }) => server.unbindAll(selectedDoc)}
 
@@ -73,6 +75,22 @@ export default function Collab(props){
 
       onBlankPagesAdded={(docId, currBlankPages) => server.setBlankPages(docId, currBlankPages + 1)}
       onBlankPagesRemoved={(docId, currBlankPages) => server.setBlankPages(docId, Math.max(currBlankPages - 1, 0))}
+
+      onFieldUpdated={async ({ name, value, docId, widget }) => {
+        if (!widget || !widget.CustomData.id || !value){
+          return;
+        }
+        console.log('fieldUpdated', name, value, docId, widget.CustomData.id)
+        await server.setField(widget.CustomData.id, {
+          docId,
+          name, 
+          value,
+        });
+        await server.updateWidget(widget.CustomData.id, {
+          fieldName: name,
+          fieldValue: value
+        })
+      }}
 
 
 

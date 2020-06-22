@@ -203,9 +203,15 @@ export default async (firebase, serverOpts) => {
           return this.pageInstRef
             .on('value', callbackFunction);
 
-        case 'onFieldChanged':
-          return this.fieldRef.on('child_changed', callbackFunction)
+        case 'onFieldAdded':
+          initializedRef = this.fieldRef.on('child_added', callbackFunction)
+          this.initializedRefs.push(() => this.fieldRef.off('child_added', initializedRef));
+          return initializedRef;
 
+        case 'onFieldUpdated':
+          initializedRef = this.fieldRef.on('child_changed', callbackFunction)
+          this.initializedRefs.push(() => this.fieldRef.off('child_changed', initializedRef));
+          return initializedRef;
 
 
 
@@ -366,10 +372,12 @@ export default async (firebase, serverOpts) => {
 
       console.log('updateVal', updateVal);
       return this.widgetRef.update(updateVal);
-
-      
-
     }
+
+    clearAll = async () => Promise.all([
+      this.annotationsRef.set({}),
+      this.widgetRef.set({})
+    ])
 
     createWidget = (widgetId, widgetData) => this.widgetRef.child(widgetId).set(widgetData); 
     updateWidget = (widgetId, widgetData) => this.widgetRef.child(widgetId).update(widgetData);

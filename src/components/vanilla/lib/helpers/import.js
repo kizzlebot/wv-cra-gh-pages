@@ -67,9 +67,31 @@ export const importWidgetFbaseVal = ({ selectedDoc, annotManager }) => async ({ 
       // Set a custom field authorId to be used in client-side permission check
       annotation.authorId = annotation.Author = val.authorId;
       annotation.CustomData = { ...annotation.CustomData, ..._.omit(val, ['xfdf']) };
+
+
+      if (val.fieldName && val.fieldValue && annotation.getField){
+        const field = annotation.getField();
+        if (field && field.value !== val) {
+          field.setValue(val.fieldValue);
+        } 
+      }
+
+
       annotManager.redrawAnnotation(annotation);
+      annotManager.trigger('updateAnnotationPermission', [annotation]);
     }
   } else {
     log(`widget found skipping: ${val.id}`);
   }
 };
+
+
+
+export const importField = ({ selectedDoc, annotManager }) => async({ val, key }) => {
+  console.log('improtField called', val, key);
+  const mgr = annotManager.getFieldManager();
+  const field = mgr.getField(val.name);
+  if (field){
+    field.setValue(val.value);
+  }
+}

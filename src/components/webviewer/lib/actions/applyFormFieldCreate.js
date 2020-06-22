@@ -7,22 +7,6 @@ export const applyFormFieldCreate = (name) => async ({ instance, tools, header, 
   const { PDFNet, docViewer, Annotations } = instance;
   const annotManager = instance.docViewer.getAnnotationManager();
 
-  Annotations.WidgetAnnotation.getCustomStyles = function (widget) {
-    if (widget instanceof Annotations.TextWidgetAnnotation) {
-      return {
-        'background-color': '#a5c7ff',
-        color: 'white',
-        border: 'none',
-        'font-size': '20px'
-      };
-    }
-
-    if (widget instanceof Annotations.SignatureWidgetAnnotation) {
-      return {
-        border: 'none',
-      };
-    }
-  };
 
   const customTypes = [
     'SIGNATURE',
@@ -134,7 +118,7 @@ export const applyFormFieldCreate = (name) => async ({ instance, tools, header, 
         }
         inputAnnot.custom = inputAnnot.CustomData = { ...annot.custom, ...annot.CustomData, id: annot.custom.id };
         inputAnnot.Author = annot.custom.name;
-        Annotations.WidgetAnnotation.getCustomStyles(inputAnnot);
+        // Annotations.WidgetAnnotation.getCustomStyles(inputAnnot);
 
         annotManager.addAnnotation(inputAnnot, false);
         fieldManager.addField(field);

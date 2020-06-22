@@ -183,6 +183,7 @@ class Webviewer extends Component {
         annotManager.on('widgetAdded', this.props.onWidgetAdded);
         annotManager.on('widgetUpdated', this.props.onWidgetUpdated);
         annotManager.on('widgetDeleted', this.props.onWidgetDeleted);
+        annotManager.on('fieldUpdated', this.props.onFieldUpdated);
       });
 
 
@@ -196,6 +197,7 @@ class Webviewer extends Component {
         annotManager.off('widgetAdded');
         annotManager.off('widgetUpdated');
         annotManager.off('widgetDeleted');
+        annotManager.off('fieldUpdated');
       })
 
 
