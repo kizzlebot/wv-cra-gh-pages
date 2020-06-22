@@ -1,13 +1,23 @@
+import debug from 'debug';
+import _ from 'lodash'
+
+const log = debug('vanilla:lib:helpers:import')
 
 /**
  * imports annotations pushed from firebase for non-widget annotations via importAnnotCommand
  */
 export const importFbaseVal = ({ selectedDoc, annotManager }) => async ({ val, key }) => {
-  console.log('annotation created/modified');
+  log('annotation created/modified');
   if (selectedDoc !== val.docId){
-    console.log('selectedDoc !== val.docId', { selectedDoc, docId: val.docId })
+    log('selectedDoc !== val.docId', { 
+      selectedDoc, 
+      annotDocId: val.docId,
+      annotId: val.id,
+    })
     return;
   }
+
+  log(`importing: ${val.id}`);
 
   // Import the annotation based on xfdf command
   const [annotation] = await annotManager.importAnnotCommand(val.xfdf);
@@ -15,7 +25,7 @@ export const importFbaseVal = ({ selectedDoc, annotManager }) => async ({ val, k
     await annotation.resourcesLoaded();
     // Set a custom field authorId to be used in client-side permission check
     annotation.authorId = annotation.Author = val.authorId;
-    annotation.CustomData = { ...annotation.CustomData, ...val };
+      annotation.CustomData = { ...annotation.CustomData, ..._.omit(val, ['xfdf']) };
     annotManager.redrawAnnotation(annotation);
   }
 }
@@ -43,19 +53,23 @@ export const delWidgetFbaseVal = ({ selectedDoc, annotManager }) => async ({ val
  */
 export const importWidgetFbaseVal = ({ selectedDoc, annotManager }) => async ({ val, key }) => {
   if (selectedDoc !== val.docId){
-    console.log('selectedDoc !== val.docId', { selectedDoc, docId: val.docId })
+    log('selectedDoc !== widgetVal.docId', { selectedDoc, docId: val.docId })
     return;
   }
 
   const widget = annotManager.getWidgetById(key);
   if (!widget){
+    log(`importing widget: ${val.id}`);
     const [annotation] = await annotManager.importAnnotations(val.xfdf);
+    
     if (annotation) {
       await annotation.resourcesLoaded();
       // Set a custom field authorId to be used in client-side permission check
       annotation.authorId = annotation.Author = val.authorId;
-      annotation.CustomData = { ...annotation.CustomData, ...val };
+      annotation.CustomData = { ...annotation.CustomData, ..._.omit(val, ['xfdf']) };
       annotManager.redrawAnnotation(annotation);
     }
+  } else {
+    log(`widget found skipping: ${val.id}`);
   }
-}
+};

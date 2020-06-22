@@ -57,8 +57,6 @@ class Webviewer extends Component {
   enableAllTools = createEnableDisableTools(false)
 
   componentDidMount = async () => {
-    // const { default: initWv } = await import('@pdftron/webviewer');
-
 
     const winstance = window.origInstance = await initWv({
       path: `${process.env.PUBLIC_URL}/lib`,
@@ -95,9 +93,49 @@ class Webviewer extends Component {
       await registerTools({
         instance,
         config: {
-          toolNames: ['SelectSigner', 'Divider', 'AddBlankPage', 'RemoveBlankPage', 'Divider', 'RemoveFormFields', 'Divider', 'FormFieldTools', 'TemplateTools', 'Divider', 'StampTools', 'CertTool']
+          toolNames: [
+            'SelectSigner', 
+            'Divider', 
+            'AddBlankPage', 
+            'RemoveBlankPage', 
+            'Divider', 
+            'RemoveFormFields', 
+            'Divider', 
+            'FormFieldTools', 
+            'TemplateTools', 
+            'Divider', 
+            'StampTools', 
+            'CertTool'
+          ]
         }
       });
+
+      instance.annotationPopup.add({
+        type: 'customElement',
+        title: 'Select Signer',
+        render: () => (
+          <SelectSigner
+            annotManager={instance.annotManager}
+            instance={instance}
+            signers={instance.getSigners()}
+          />
+        ),
+      });
+
+
+      instance.annotationPopup.add({
+        type: 'customElement',
+        title: 'Required',
+        render: () => (
+          <RequiredCheckbox
+            annotManager={instance.annotManager}
+            signers={instance.getSigners()}
+          />
+        ),
+      });
+    
+
+
 
 
       let authorId = currentUser;
@@ -112,16 +150,24 @@ class Webviewer extends Component {
       annotManager.setPermissionCheckCallback((author, annotation) => annotation.authorId === authorId || annotation.Author === authorId);
 
 
-      instance.docViewer.on('documentLoaded', async () => {
-        
-        await new Promise((res) => this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages, () => res()]));
+      instance.docViewer.one('documentLoaded', () => {
+        // attach event listeners to docViewer
+        docViewer.on('blankPagesAdded', callIfDefined(this.props.onBlankPagesAdded));
+        docViewer.on('blankPagesRemoved', callIfDefined(this.props.onBlankPagesRemoved));
+        docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
 
         // when cert modal clicked
         instance.docViewer.on('certModal', ({ type, pdf }) => this.setState({ certModal: { show: true, pdf } }));
+      });
 
 
-        // Bind server-side authorization state change to a callback function
-        // The event is triggered in the beginning as well to check if author has already signed in
+      instance.docViewer.on('documentLoaded', async () => {
+        
+        new Promise((res) => this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages, () => res()]));
+
+
+
+        // bind events for receiving downstream updates 
         if (_.isFunction(this.props.bindEvents)){
           await this.props.bindEvents({
             ...instance,
@@ -130,25 +176,27 @@ class Webviewer extends Component {
         }
 
 
-        // attach event listeners to annotManager
+        // add event listeners on annotManager for sending annots upstream
         annotManager.on('annotationAdded', this.props.onAnnotationAdded);
         annotManager.on('annotationUpdated', this.props.onAnnotationUpdated);
         annotManager.on('annotationDeleted', this.props.onAnnotationDeleted);
         annotManager.on('widgetAdded', this.props.onWidgetAdded);
         annotManager.on('widgetUpdated', this.props.onWidgetUpdated);
         annotManager.on('widgetDeleted', this.props.onWidgetDeleted);
-
-
-
-        // attach event listeners to docViewer
-        docViewer.on('blankPagesAdded', callIfDefined(this.props.onBlankPagesAdded));
-        docViewer.on('blankPagesRemoved', callIfDefined(this.props.onBlankPagesRemoved));
-        docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
       });
 
 
 
+
       // detach all listeners
+      instance.docViewer.on('documentUnloaded', () => {
+        annotManager.off('annotationAdded');
+        annotManager.off('annotationUpdated');
+        annotManager.off('annotationDeleted');
+        annotManager.off('widgetAdded');
+        annotManager.off('widgetUpdated');
+        annotManager.off('widgetDeleted');
+      })
 
 
 
@@ -189,16 +237,16 @@ class Webviewer extends Component {
       return;
     }
 
-    // selected document has changed
+    // selected document has changed. close doc and open new
     if (prevProps.selectedDoc !== this.props.selectedDoc) {
       if (this.props.docs[this.props.selectedDoc]) {
 
         // unBind any external listeners
         if (_.isFunction(this.props.unbindEvents)) {
-          // await this.props.unbindEvents({
-          //   ...this.instance,
-          //   selectedDoc: this.instance.getDocId(),
-          // })
+          await this.props.unbindEvents({
+            ...this.instance,
+            selectedDoc: this.instance.getDocId(),
+          })
         }
 
         await this.instance.closeDocument();
@@ -259,14 +307,12 @@ class Webviewer extends Component {
         <CertPdfModal
           show={this.state.certModal.show}
           pdf={this.state.certModal.pdf}
+          onHide={() => this.setState({ certModal: { show: false }})}
           onSubmit={({ img, dataUrl }) => {
             this.instance.setCertPdf({ img, dataUrl });
-
             this.instance.setToolMode('NotaryCertTool');
             this.setState({ certModal: { show: false } });
           }}
-
-          onHide={() => this.setState({ certModal: { show: false } })}
         />
       </>
     );

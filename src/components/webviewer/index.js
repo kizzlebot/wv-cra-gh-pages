@@ -4,6 +4,8 @@ import * as R from 'ramda';
 import { useGetSetState, useToggle, useEffectOnce } from 'react-use';
 import Collab from './collab';
 import { withAppStateProvider, useAppState } from '../../lib/hooks/AppState';
+import { withServerProvider } from 'lib/hooks/useServerProvider';
+import { useParams } from 'react-router-dom';
 
 
 function WebviewerApp() {
@@ -65,4 +67,19 @@ function WebviewerApp() {
   );
 }
 
-export default withAppStateProvider(WebviewerApp);
+const composeComponent = R.compose(
+  withServerProvider((props) => {
+    const { organizationId, nsId } = useParams();
+    const rtn = {
+      nsId: nsId,
+      userId: props.userId,
+      user: props.user,
+      rtdbNamespace: organizationId,
+    }
+    return rtn;
+  }),
+  withAppStateProvider,
+);
+
+
+export default composeComponent(WebviewerApp);

@@ -65,6 +65,7 @@ export default async (firebase, serverOpts) => {
       this.pinModalRef = roomRef.child('pinModalOpen');
       this.authPinModalRef = roomRef.child('showAuthPinModal');
 
+      this.initializedRefs = [];
 
       this.refs = [
         // this.selectedSignerRef,
@@ -133,12 +134,12 @@ export default async (firebase, serverOpts) => {
     // unbindAll = () => R.map(R.pipe(R.invoker(0, 'off'), this.refs))
     unbindAll = async (docId) => {
       if (docId){
-        this.annotationsRef
-          .off();
-        this.widgetRef
-          .off();
-        this.pageRef
-          .off();
+        log('unbinding', this.initializedRefs.length)
+        await this.annotationsRef.off();
+        await this.widgetRef.off();
+        await this.pageRef.off();
+        await Promise.map(this.initializedRefs, (unbind) => unbind());
+        this.initializedRefs = [];
 
 
         return;
@@ -178,6 +179,7 @@ export default async (firebase, serverOpts) => {
 
       const callbackFunction = R.pipe(R.applySpec({ val: R.invoker(0, 'val'), key: R.prop('key') }), cbFunc);
       
+      let initializedRef;
 
       switch (action) {
         case 'onAuthStateChanged':
@@ -208,38 +210,31 @@ export default async (firebase, serverOpts) => {
 
 
         case 'onWidgetCreated':
-          this.widgetInstRef = this.widgetInstRef ? this.widgetInstRef : this.widgetRef
-            .orderByChild('docId')
-            .equalTo(docId)
-          return this.widgetRef.on('child_added', callbackFunction);
+          initializedRef = this.widgetRef.on('child_added', callbackFunction);
+          this.initializedRefs.push(() => this.widgetRef.off('child_added', initializedRef));
+          return initializedRef;
         case 'onWidgetUpdated':
-          this.widgetInstRef = this.widgetInstRef ? this.widgetInstRef : this.widgetRef
-            .orderByChild('docId')
-            .equalTo(docId)
-          return this.widgetRef.on('child_changed', callbackFunction);
+          initializedRef = this.widgetRef.on('child_changed', callbackFunction);
+          this.initializedRefs.push(() => this.widgetRef.off('child_changed', initializedRef));
+          return initializedRef;
         case 'onWidgetDeleted':
-          this.widgetInstRef= this.widgetInstRef ? this.widgetInstRef : this.widgetRef
-            .orderByChild('docId')
-            .equalTo(docId)
-          return this.widgetRef.on('child_removed', callbackFunction);
+          initializedRef = this.widgetRef.on('child_removed', callbackFunction);
+          this.initializedRefs.push(() => this.widgetRef.off('child_removed', initializedRef));
+          return initializedRef;
 
 
         case 'onAnnotationCreated':
-          this.annotInstRef = this.annotInstRef ? this.annotInstRef : this.annotationsRef
-            .orderByChild('docId')
-            .equalTo(docId)
-          return this.annotationsRef.on('child_added', callbackFunction);
-
+          initializedRef = this.annotationsRef.on('child_added', callbackFunction);
+          this.initializedRefs.push(() => this.annotationsRef.off('child_added', initializedRef));
+          return initializedRef;
         case 'onAnnotationUpdated':
-          this.annotInstRef = this.annotInstRef ? this.annotInstRef : this.annotationsRef
-            .orderByChild('docId')
-            .equalTo(docId)
-          return this.annotationsRef.on('child_changed', callbackFunction);
+          initializedRef = this.annotationsRef.on('child_changed', callbackFunction);
+          this.initializedRefs.push(() => this.annotationsRef.off('child_changed', initializedRef));
+          return initializedRef;
         case 'onAnnotationDeleted':
-          this.annotInstRef = this.annotInstRef ? this.annotInstRef : this.annotationsRef
-            .orderByChild('docId')
-            .equalTo(docId)
-          return this.annotationsRef.on('child_removed', callbackFunction);
+          initializedRef = this.annotationsRef.on('child_removed', callbackFunction);
+          this.initializedRefs.push(() => this.annotationsRef.off('child_removed', initializedRef));
+          return initializedRef;
 
 
 

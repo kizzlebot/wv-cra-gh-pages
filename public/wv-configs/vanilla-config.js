@@ -514,7 +514,6 @@ function tracePropAccess(obj, propKeys) {
 
       // Iterate through all annotations and call appropriate server methods
       annotations.forEach(annotation => {
-
         const { shouldContinue } = shouldSendToFbase(annotation, type, info);
         const annotType = annotation instanceof Annotations.WidgetAnnotation ? 'widget' : 'annotation';
         
@@ -601,7 +600,7 @@ function tracePropAccess(obj, propKeys) {
         }
       } else {
 
-        const existing = _.filter(annotManager.getAnnotationsList(), (a) => a.CustomData && a.CustomData.id == annotId);
+        const existing = _.filter(annotManager.getAnnotationsList(), (a) => a.CustomData && a.CustomData.id === annotId);
         if (!_.isEmpty(existing)){
           return;
         }
@@ -703,10 +702,19 @@ function tracePropAccess(obj, propKeys) {
         return;
       }
       if (pagesToAdded > 0){
-        await doc.insertBlankPages(_.range(pageCount + 1, pageCount + pagesToAdded + 1));
+        doc.insertBlankPages(_.range(pageCount + 1, pageCount + pagesToAdded + 1));
       }
       if (pagesToAdded < 0){
-        await doc.removePages(_.range(pageCount + pagesToAdded + 1, pageCount + 1));
+        // get annotations which are on the blank page
+        const pageNumsToRemove = _.range(pageCount + pagesToAdded + 1, pageCount + 1)
+
+        const annotsToDel = _.filter(instance.annotManager.getAnnotationsList(), (annot) => pageNumsToRemove.indexOf(annot.PageNumber) > -1);
+
+        if (annotsToDel.length > 0){
+          console.log('annotations to delete', annotsToDel, pageNumsToRemove)
+          instance.annotManager.deleteAnnotations(annotsToDel, false, true, false);
+        }
+        doc.removePages(pageNumsToRemove);
       }
 
       await PDFNet.endDeallocateStack();
@@ -881,9 +889,8 @@ function tracePropAccess(obj, propKeys) {
 
 
 
-    // prevent template annotations from being selected in a group
+    // prevent intermediate annotations from being selected in a group so it doesnt synced to firebase
     annotManager.on('annotationSelected', (annots, action) => {
-      console.log('annotationSelected', annots, action);
       // if group is selected, dont mix intermediate annots which shouldnt be synced between signers
       if (action === 'selected' && annots.length > 1){
         const intermediates = _.filter(annots, isIntermediateField);
@@ -920,7 +927,7 @@ function tracePropAccess(obj, propKeys) {
 
 
     // built-in event 
-    annotManager.on('updateAnnotationPermission', _.debounce(async (annotation) => {
+    annotManager.on('updateAnnotationPermission', _.throttle(async (annotation) => {
       if (annotation){  
         return;
       }

@@ -37,21 +37,21 @@ if (process.env.NODE_ENV !== 'production') {
   ReactDOM.render(
     <Router>
       <FirebaseProvider>
-        <ServerProvider 
+        {/* <ServerProvider 
           config={{ 
-            nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
             userId,
             user,
+            nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
             rtdbNamespace:'8d976a23-b865-4fcd-9165-ddc0aedaf614'
           }}
-        >
+        > */}
           <App 
             userId={userId}
             user={user}
             docs={docs}
             isAdminUser={false}
           />
-        </ServerProvider>
+        {/* </ServerProvider> */}
       </FirebaseProvider>
     </Router>,
     document.getElementById('root')
