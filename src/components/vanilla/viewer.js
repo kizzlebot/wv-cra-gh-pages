@@ -70,7 +70,7 @@ class Webviewer extends Component {
       config: '/wv-configs/vanilla-config.js'
     }, this.viewerRef.current);
 
-    const { docs, selectedDoc, userId } = this.props;
+    const { docs, selectedDoc, currentUser } = this.props;
 
 
 
@@ -83,8 +83,9 @@ class Webviewer extends Component {
       }
 
       this.instance = window.instance = instance;
-      const annotManager = this.annotManager = instance.annotManager;
-      this.fieldManager = this.instance.annotManager.getFieldManager();
+      const annotManager = this.annotManager = window.annotManager = instance.annotManager;
+      const docViewer = this.docViewer = window.docViewer = instance.docViewer;
+      const fieldManager = this.fieldManager = window.fieldManager = this.instance.annotManager.getFieldManager();
 
 
       this.instance.annotManager.trigger('setSigners', this.props.signers);
@@ -99,8 +100,8 @@ class Webviewer extends Component {
       });
 
 
-      let authorId = userId;
-      annotManager.setCurrentUser(userId);
+      let authorId = currentUser;
+      annotManager.setCurrentUser(currentUser);
 
 
       await this.props.authenticate();
@@ -113,6 +114,7 @@ class Webviewer extends Component {
 
       instance.docViewer.on('documentLoaded', async () => {
         
+        await new Promise((res) => this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages, () => res()]));
 
         // when cert modal clicked
         instance.docViewer.on('certModal', ({ type, pdf }) => this.setState({ certModal: { show: true, pdf } }));
@@ -135,21 +137,18 @@ class Webviewer extends Component {
         annotManager.on('widgetAdded', this.props.onWidgetAdded);
         annotManager.on('widgetUpdated', this.props.onWidgetUpdated);
         annotManager.on('widgetDeleted', this.props.onWidgetDeleted);
+
+
+
+        // attach event listeners to docViewer
+        docViewer.on('blankPagesAdded', callIfDefined(this.props.onBlankPagesAdded));
+        docViewer.on('blankPagesRemoved', callIfDefined(this.props.onBlankPagesRemoved));
+        docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
       });
 
 
 
-      instance.docViewer.on('documentUnloaded', async () => {
-
-        // when cert modal clicked
-        instance.docViewer.off('certModal');
-
-
-
-
-        // attach event listeners to annotManager
-        annotManager.off();
-      });
+      // detach all listeners
 
 
 
@@ -168,7 +167,6 @@ class Webviewer extends Component {
       });
 
       if (docs[selectedDoc]){
-
         await instance.loadDocument(docs[selectedDoc], {
           l: this.props.config.l, 
           docId: selectedDoc,
@@ -176,8 +174,7 @@ class Webviewer extends Component {
           extension: 'pdf' 
         })
       }
-
-
+      
     });
 
     return winstance.docViewer.trigger('initReady');
@@ -192,19 +189,22 @@ class Webviewer extends Component {
       return;
     }
 
+    // selected document has changed
     if (prevProps.selectedDoc !== this.props.selectedDoc) {
       if (this.props.docs[this.props.selectedDoc]) {
 
-        // UnBind server-side authorization state change to a callback function
+        // unBind any external listeners
         if (_.isFunction(this.props.unbindEvents)) {
-          await this.props.unbindEvents({
-            ...this.instance,
-            selectedDoc: this.instance.getDocId(),
-          })
+          // await this.props.unbindEvents({
+          //   ...this.instance,
+          //   selectedDoc: this.instance.getDocId(),
+          // })
         }
 
+        await this.instance.closeDocument();
         return this.instance.loadDocument(this.props.docs[this.props.selectedDoc], { 
           docId: this.props.selectedDoc, 
+          filename: this.props.selectedDoc,
           l: this.props.config.l, 
           extension: 'pdf' 
         });
@@ -213,9 +213,35 @@ class Webviewer extends Component {
       }
     }
 
+    // signers list has been updated
     if (prevProps.signers !== this.props.signers) {
       this.instance.annotManager.trigger('setSigners', this.props.signers);
     }
+
+    // the current user has been changed
+    if (prevProps.currentUser !== this.props.currentUser) {
+      this.instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
+    }
+
+    // selected signer has been changed
+    if (prevProps.selectedSigner !== this.props.selectedSigner) {
+      this.instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
+    }
+
+    // admin user status changed
+    if (prevProps.isAdminUser !== this.props.isAdminUser) {
+      this.instance.annotManager.setIsAdminUser(this.props.isAdminUser);
+    }
+
+
+    if (prevProps.blankPages !== this.props.blankPages){
+      if (_.isNumber(this.props.blankPages)){
+        this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages]);
+        await new Promise((res) => this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages, () => res()]));
+      }
+    }
+
+
 
   }
 

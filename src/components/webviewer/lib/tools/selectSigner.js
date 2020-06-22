@@ -33,7 +33,6 @@ class SelectSigner extends React.Component {
       <select
         value={this.state.selectedSigner}
         onChange={(evt) => {
-          console.log('setSelectedSigner', evt.target.value)
           this.props.instance.annotManager.trigger('setSelectedSigner', evt.target.value)
         }}
       >

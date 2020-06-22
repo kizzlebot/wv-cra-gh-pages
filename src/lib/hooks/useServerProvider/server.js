@@ -134,16 +134,10 @@ export default async (firebase, serverOpts) => {
     unbindAll = async (docId) => {
       if (docId){
         this.annotationsRef
-          .orderByChild('doc_id')
-          .equalTo(docId)
           .off();
         this.widgetRef
-          .orderByChild('doc_id')
-          .equalTo(docId)
           .off();
         this.pageRef
-          .orderByKey()
-          .equalTo(docId)
           .off();
 
 
@@ -180,10 +174,7 @@ export default async (firebase, serverOpts) => {
 
     setVaDisclaimerRejected = val => this.vaDisclaimerRejectedRef.set(val);
 
-    bind = (action, docId, cbFunc) => {
-      if (_.isFunction(docId)){
-        cbFunc = docId;
-      }
+    bind = (action, docId, cbFunc = docId) => {
 
       const callbackFunction = R.pipe(R.applySpec({ val: R.invoker(0, 'val'), key: R.prop('key') }), cbFunc);
       
@@ -220,40 +211,42 @@ export default async (firebase, serverOpts) => {
           this.widgetInstRef = this.widgetInstRef ? this.widgetInstRef : this.widgetRef
             .orderByChild('docId')
             .equalTo(docId)
-          return this.widgetInstRef.on('child_added', callbackFunction);
+          return this.widgetRef.on('child_added', callbackFunction);
         case 'onWidgetUpdated':
           this.widgetInstRef = this.widgetInstRef ? this.widgetInstRef : this.widgetRef
             .orderByChild('docId')
             .equalTo(docId)
-          return this.widgetInstRef.on('child_changed', callbackFunction);
+          return this.widgetRef.on('child_changed', callbackFunction);
         case 'onWidgetDeleted':
           this.widgetInstRef= this.widgetInstRef ? this.widgetInstRef : this.widgetRef
             .orderByChild('docId')
             .equalTo(docId)
-          return this.widgetInstRef.on('child_removed', callbackFunction);
+          return this.widgetRef.on('child_removed', callbackFunction);
 
-        case 'onAnnotation':
-          this.annotInstRef= this.annotInstRef ? this.annotInstRef : this.annotationsRef
-            .orderByChild('docId')
-            .equalTo(docId)
-          return this.annotInstRef.on('child_added', callbackFunction);
 
         case 'onAnnotationCreated':
           this.annotInstRef = this.annotInstRef ? this.annotInstRef : this.annotationsRef
             .orderByChild('docId')
             .equalTo(docId)
-          return this.annotInstRef.on('child_added', callbackFunction);
+          return this.annotationsRef.on('child_added', callbackFunction);
 
         case 'onAnnotationUpdated':
           this.annotInstRef = this.annotInstRef ? this.annotInstRef : this.annotationsRef
             .orderByChild('docId')
             .equalTo(docId)
-          return this.annotInstRef.on('child_changed', callbackFunction);
+          return this.annotationsRef.on('child_changed', callbackFunction);
         case 'onAnnotationDeleted':
           this.annotInstRef = this.annotInstRef ? this.annotInstRef : this.annotationsRef
             .orderByChild('docId')
             .equalTo(docId)
-          return this.annotInstRef.on('child_removed', callbackFunction);
+          return this.annotationsRef.on('child_removed', callbackFunction);
+
+
+
+
+
+
+
 
         case 'onSelectedSignerChange':
           return this.selectedSignerRef.on('value', callbackFunction);

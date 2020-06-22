@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as R from 'ramda';
 import _ from 'lodash';
 import Viewer from './viewer';
@@ -6,7 +6,7 @@ import { useServer } from 'lib/hooks/useServerProvider';
 import Promise from 'bluebird';
 import { useEffectOnce } from 'react-use';
 import useAppState from '../../lib/hooks/AppState';
-import { importFbaseVal, delFbaseVal, importWidgetFbaseVal } from './lib/helpers/import';
+import { importFbaseVal, delFbaseVal, importWidgetFbaseVal, delWidgetFbaseVal } from './lib/helpers/import';
 
 
 
@@ -22,40 +22,59 @@ export default function Collab(props){
 
   useEffectOnce(() => {
     server.bind('onAuthorsChanged', ({ val }) => appState.setSigners(val));
-  })
+    server.bind('onBlankPagesChanged', ({ val }) => appState.setBlankPages(val));
+    server.bind('onSelectedDocIdChanged', ({ val }) => appState.setSelectedDoc(val));
+  });
 
 
+  useEffect(() => {
+    if (appState.selectedDoc){
+      server.setSelectedDocId(appState.selectedDoc);
+    }
+  }, [appState.selectedDoc, server]);
 
   return (
     <Viewer
-      {...props}
-      userId={appState.currentUser}
+      /*
+       * appState
+       */
+      config={appState.config}
+      currentUser={appState.currentUser}
       isAdminUser={appState.isAdminUser}
-      authenticate={server.authenticate}
       signers={_.values(appState.signers)}
       docs={appState.docs}
       selectedDoc={appState.selectedDoc}
       selectedSigner={appState.selectedSigner}
+      blankPages={appState.blankPages[appState.getSelectedDoc()]}
 
-      bindEvents={(inst) => {
-        return Promise.all([
-          server.bind('onAnnotationCreated', inst.selectedDoc, importFbaseVal(inst)),
-          server.bind('onAnnotationUpdated', inst.selectedDoc, importFbaseVal(inst)),
-          server.bind('onAnnotationDeleted', inst.selectedDoc, delFbaseVal(inst)),
-          server.bind('onWidgetCreated', inst.selectedDoc, importWidgetFbaseVal(inst))
-        ])
-      }}
-      unbindEvents={({ selectedDoc, ...rest }) => { 
-        console.log('unbinding events called', selectedDoc);
-        return server.unbindAll(selectedDoc);
-      }}
 
+      /**
+       * The following props synchronize data in firebase with webviewer
+       */
+      authenticate={server.authenticate}
+
+      // bind listeners for downstream updates; when firebase pushes data to browser, update webviewer
+      bindEvents={(inst) => Promise.all([
+        server.bind('onAnnotationCreated', inst.getDocId(), importFbaseVal(inst)),
+        server.bind('onAnnotationUpdated', inst.getDocId(), importFbaseVal(inst)),
+        server.bind('onAnnotationDeleted', inst.getDocId(), delFbaseVal(inst)),
+        server.bind('onWidgetCreated', inst.getDocId(), importWidgetFbaseVal(inst)),
+        server.bind('onWidgetDeleted', inst.getDocId(), delWidgetFbaseVal(inst))
+      ])}
+      unbindEvents={({ selectedDoc }) => server.unbindAll(selectedDoc)}
+
+      // upstream updates; when webviewer emits changes, push it up to firebase
       onAnnotationAdded={invokeServerMethod(server.createAnnotation)}
       onAnnotationUpdated={invokeServerMethod(server.updateAnnotation)}
       onAnnotationDeleted={invokeServerMethod(server.deleteAnnotation)}
       onWidgetAdded={invokeServerMethod(server.createWidget)}
       onWidgetUpdated={invokeServerMethod(server.updateWidget)}
       onWidgetDeleted={invokeServerMethod(server.deleteWidget)}
+
+      onBlankPagesAdded={(docId, currBlankPages) => server.setBlankPages(docId, currBlankPages + 1)}
+      onBlankPagesRemoved={(docId, currBlankPages) => server.setBlankPages(docId, Math.max(currBlankPages - 1, 0))}
+
+
 
     />
   )
