@@ -101,6 +101,7 @@ function tracePropAccess(obj, propKeys) {
   };
 
   exports.getSigner = () => selectedSigner;
+  exports.getSelectedSigner = () => selectedSigner;
   exports.getSignerById = (id) => _.find(signers, { id });
   exports.setNotary = (n) => {
     notary = n;
@@ -160,6 +161,8 @@ function tracePropAccess(obj, propKeys) {
     const { docViewer, Annotations, Tools } = instance;
     const annotManager = docViewer.getAnnotationManager();
     const { createSignHereElement, serialize, deserialize } = Annotations.SignatureWidgetAnnotation.prototype;
+    const { serialize: aSerialize, deserialize: aDeserialize } = Annotations.Annotation.prototype;
+
 
     docViewer
       .getTool('AnnotationCreateFreeText')
@@ -257,6 +260,7 @@ function tracePropAccess(obj, propKeys) {
 
 
 
+    
 
     class BetterSigWidgetAnnotation extends Annotations.SignatureWidgetAnnotation {
       createInnerElement(...args){
@@ -287,11 +291,21 @@ function tracePropAccess(obj, propKeys) {
         return signHereElement;
       }
 
-      serialize(el, pageMatrix) {
-        return serialize.call(this, el, pageMatrix);
+      serialize(...args) {
+        const el = serialize.apply(this, args);
+
+        console.log('serialize called', el);
+        if (this.CustomData.id && el){
+          console.log('has custom id, serialized it')
+          el.setAttribute('orig-id', this.CustomData.id);
+        }
+
+        return el;
       }
       deserialize(...args){
-        return deserialize.apply(this, args);
+        deserialize.apply(this, args);
+        const [el] = args;
+        this.origId = el.getAttribute('orig-id');
       }
     }
     BetterSigWidgetAnnotation.prototype.elementName = 'BetterSignatureWidget';
@@ -359,26 +373,25 @@ function tracePropAccess(obj, propKeys) {
     return { instance }
   };
 
-
+  const isIntermediateField = annot => {
+    const customClasses = [
+      'InitialsFreeTextAnnot',
+      'InitialsRectAnnot',
+      'SignatureFreeTextAnnot',
+      'SignatureRectAnnot',
+      'TemplateRectAnnot',
+      'CheckFreeTextAnnot',
+      'CheckRectAnnot',
+      'TextFreeTextAnnot',
+      'TextRectAnnot'
+    ];
+    return _.findIndex(customClasses, (cc) => annot.Subject.includes(cc)) > -1
+  };
 
   // when annotation changed, call annotManger.trigger('annotationupdated'),
   // annotManger.trigger('annotationAdded'), annotManger.trigger('widgetAdded')
   const onAnnotationChanged = (instance) => {
 
-    const isIntermediateField = annot => {
-      const customClasses = [
-        'InitialsFreeTextAnnot',
-        'InitialsRectAnnot',
-        'SignatureFreeTextAnnot',
-        'SignatureRectAnnot',
-        'TemplateRectAnnot',
-        'CheckFreeTextAnnot',
-        'CheckRectAnnot',
-        'TextFreeTextAnnot',
-        'TextRectAnnot'
-      ];
-      return _.findIndex(customClasses, (cc) => annot.Subject.includes(cc)) > -1
-    };
 
     const shouldSendToFbase = (annotation, type, info) => {
 
@@ -406,153 +419,137 @@ function tracePropAccess(obj, propKeys) {
     };
 
 
+    const getAnnotPayload = (annotation, xfdf) => {
+      // In case of replies, add extra field for server-side permission to be granted to the
+      // parent annotation's author
+      let parentAuthorId = 'default';
+      if (annotation.InReplyTo) {
+        parentAuthorId = instance.annotManager.getAnnotationById(annotation.InReplyTo).authorId || 'default';
+      }
+      const authorId = instance.annotManager.getCurrentUser()
+      return {
+        id: annotation.Id,
+        authorId,
+        parentAuthorId,
+        pageNumber: annotation.getPageNumber(),
+        docId: exports.getDocId(),
+        type: 'annotation',
+        createdBy: authorId,
+        xfdf
+      };
+    }
+
+
+
+    const extractWidget = (fieldName, xfdf) => {
+      // extract out xml nodes pertaining to this widget only
+      const parser = new window.DOMParser();
+      const xmlDoc = parser.parseFromString(xfdf, 'text/xml');
+      const allFields = xmlDoc
+        .querySelector('pdf-info')
+        .querySelectorAll('ffield');
+      const allWidgets = xmlDoc
+        .querySelector('pdf-info')
+        .querySelectorAll('widget');
+      const ffields = xmlDoc
+        .querySelector('pdf-info')
+        .querySelectorAll(`ffield[name*="${fieldName}"]`);
+      const widgets = xmlDoc
+        .querySelector('pdf-info')
+        .querySelectorAll(`widget[field*="${fieldName}"]`);
+      const diffFields = _.difference(allFields, ffields);
+      const diffWidgets = _.difference(allWidgets, widgets);
+
+      for (const diffField of [...diffFields, ...diffWidgets]) {
+        xmlDoc.querySelector('pdf-info').removeChild(diffField);
+      }
+      return `<?xml version="1.0" encoding="UTF-8" ?>${xmlDoc.documentElement.outerHTML}`;
+    }
+
+
+
+    const getWidgetPayload = (annotation, widgetXfdf) => {
+      const field = annotation.getField();
+      const fieldName = field.name;
+
+      const [, , id, author, signerId] = fieldName.split('.');
+      
+      const xfdf = extractWidget(fieldName, widgetXfdf);
+      const parentAuthorId = author || 'default';
+      const authorId = instance.annotManager.getCurrentUser();
+      return {
+        id: annotation.CustomData.id,
+        authorId,
+        runId: exports.getRunId(),
+        docId: exports.getDocId(),
+        pageNumber: annotation.getPageNumber(),
+        parentAuthorId,
+        signerId,
+        subtype: annotation.CustomData.type,
+        fieldName: field.name,
+        fieldValue: field.value,
+        type: 'widget',
+        xfdf: xfdf
+      };
+
+    }
+
     return async (annotations, type, info) => {
+      const annotManager = instance.annotManager;
 
-      const { Annotations, annotManager } = instance;
-      const authorId = annotManager.getCurrentUser();
+      // info.imported is true by default for annotations from pdf and annotations added by importAnnotCommand
+      if (info.imported) {
+        return;
+      }
 
+      const xfdf = await annotManager.exportAnnotCommand();
 
+      const widgetXfdf = await annotManager.exportAnnotations({
+        annotList: annotations,
+        widgets: true,
+        fields: true,
+        links: true
+      });
+      
 
-
-      annotations.forEach(async (annotation) => {
+      // Iterate through all annotations and call appropriate server methods
+      annotations.forEach(annotation => {
 
         const { shouldContinue } = shouldSendToFbase(annotation, type, info);
+        const annotType = annotation instanceof Annotations.WidgetAnnotation ? 'widget' : 'annotation';
+        
 
         if (!shouldContinue) {
           return;
         }
 
-        const annotType = annotation instanceof Annotations.WidgetAnnotation ? 'widget' : 'annotation';
-        
-
-        // if type is annotation then export using exportAnnotCommand
-        if (annotType === 'annotation') {
-          let parentAuthorId = null;
-          let xfdf = await annotManager.exportAnnotCommand();
-          
-
+        if (annotType === 'annotation'){
           if (type === 'add') {
-            // In case of replies, add extra field for server-side permission to be granted to the
-            // parent annotation's author
-            if (annotation.InReplyTo) {
-              parentAuthorId = annotManager.getAnnotationById(annotation.InReplyTo).authorId || 'default';
-            }
-            annotManager.trigger('annotationAdded', [{
-              id: annotation.Id,
-              authorId,
-              parentAuthorId,
-              pageNumber: annotation.getPageNumber(),
-              docId: exports.getDocId(),
-              type: 'annotation',
-              createdBy: authorId,
-              xfdf
-            }, exports.getDocId()]);
+            annotManager.trigger('annotationAdded', getAnnotPayload(annotation, xfdf));
           } else if (type === 'modify') {
-            // In case of replies, add extra field for server-side permission to be granted to the
-            // parent annotation's author
-            if (annotation.InReplyTo) {
-              parentAuthorId = annotManager.getAnnotationById(annotation.InReplyTo).authorId || 'default';
-            }
-
-            annotManager.trigger('annotationUpdated', [{
-              id: annotation.Id,
-              authorId,
-              docId: exports.getDocId(),
-              parentAuthorId,
-              type: 'annotation',
-              xfdf
-            }, exports.getDocId()]);
-
+            annotManager.trigger('annotationUpdated', getAnnotPayload(annotation, xfdf));
           } else if (type === 'delete') {
-            // server.deleteAnnotation(annotation.Id);
-            annotManager.trigger('annotationDeleted', [{
-              id: annotation.Id,
-              authorId,
-              docId: exports.getDocId(),
-              parentAuthorId,
-              type: 'annotation',
-              xfdf
-            }, exports.getDocId()]);
+            annotManager.trigger('annotationDeleted', getAnnotPayload(annotation, xfdf));
           }
         } 
-
-        // type is a widget 
+        
+        
         else {
-
           if (!annotation.getField) {
             return;
           }
-          const fieldName = annotation.getField().name;
-          const [, , id, author, signerId] = fieldName.split('.');
-
 
           if (type === 'add' || type === 'modify') {
-            const xfdf = await annotManager.exportAnnotations({
-              annotList: [annotation],
-              widgets: true,
-              fields: true,
-              links: true
-            });
-
-            // extract out xml nodes pertaining to this widget only
-            const parser = new window.DOMParser();
-            const xmlDoc = parser.parseFromString(xfdf, 'text/xml');
-            const allFields = xmlDoc
-              .querySelector('pdf-info')
-              .querySelectorAll('ffield');
-            const allWidgets = xmlDoc
-              .querySelector('pdf-info')
-              .querySelectorAll('widget');
-            const ffields = xmlDoc
-              .querySelector('pdf-info')
-              .querySelectorAll(`ffield[name*="${fieldName}"]`);
-            const widgets = xmlDoc
-              .querySelector('pdf-info')
-              .querySelectorAll(`widget[field*="${fieldName}"]`);
-            const diffFields = _.difference(allFields, ffields);
-            const diffWidgets = _.difference(allWidgets, widgets);
-
-            for (const diffField of [...diffFields, ...diffWidgets]) {
-              xmlDoc.querySelector('pdf-info').removeChild(diffField);
-            }
-            const finalXfdf = xmlDoc.documentElement.outerHTML;
-
-            const parentAuthorId = author || 'default';
-            const field = annotation.getField();
-            const payload = {
-              id: annotation.CustomData.id,
-              authorId,
-              runId: exports.getRunId(),
-              docId: exports.getDocId(),
-              pageNumber: annotation.getPageNumber(),
-              parentAuthorId,
-              signerId,
-              subtype: annotation.CustomData.type,
-              fieldName: field.name,
-              fieldValue: field.value,
-              type: 'widget',
-              xfdf: `<?xml version="1.0" encoding="UTF-8" ?>${finalXfdf}`
-            };
-
-            // annotation.updateVisibility();
-            annotManager.trigger('updateAnnotationPermission');
-            annotManager.trigger('widgetAdded', [payload, exports.getDocId()]);
-            // annotManager.trigger('annotationAdded', payload);
-          } else if (type === 'delete') {
-            console.debug('deleting widget annotation', id);
-            annotManager.trigger('widgetDeleted', [{
-              id: annotation.CustomData.id,
-              authorId,
-              runId: exports.getRunId(),
-              docId: exports.getDocId(),
-              pageNumber: annotation.getPageNumber(),
-              signerId,
-              type: 'widget'
-            }, exports.getDocId()]);
+            const actionName = (type === 'add') ? 'widgetAdded' : 'widgetUpdated';
+            annotManager.trigger(actionName, getWidgetPayload(annotation, widgetXfdf));
+          } else if (type === 'delete'){
+            annotManager.trigger('widgetDeleted', getWidgetPayload(annotation, widgetXfdf));
           }
         }
+
       });
     }
+    
   }
 
   const onFieldChanged = (instance) => (field, value) => {
@@ -744,6 +741,7 @@ function tracePropAccess(obj, propKeys) {
       getDocId: () => exports.getDocId(),
       getRunId: () => exports.getRunId(),
       setSelectedSigner: (arg) => exports.setSelectedSigner(arg),
+      getSelectedSigner: () => exports.getSelectedSigner(),
       getOriginalPageCount: () => exports.getOriginalPageCount(),
       getPageCount: () => exports.getPageCount(),
       setPageCount: (arg) => exports.setPageCount(arg),
@@ -753,7 +751,6 @@ function tracePropAccess(obj, propKeys) {
       getNotary: exports.getNotary,
       getSigners: exports.getSigners,
       getSigner: exports.getSigner,
-      getSelectedSigner: exports.getSigner,
       getSignerById: exports.getSignerById,
       setSigners: (signers) => {
         exports.setSigners(signers);
@@ -878,7 +875,30 @@ function tracePropAccess(obj, propKeys) {
 
     // register events to trigger on annotManager. subscribed by parent component
     // built-in event 
-    annotManager.on('annotationChanged', onAnnotationChanged(instance))
+    // annotManager.on('annotationChanged', onAnnotationChanged(instance))
+    annotManager.on('annotationChanged', onAnnotationChanged(instance));
+
+
+
+
+    // prevent template annotations from being selected in a group
+    annotManager.on('annotationSelected', (annots, action) => {
+      console.log('annotationSelected', annots, action);
+      // if group is selected, dont mix intermediate annots which shouldnt be synced between signers
+      if (action === 'selected' && annots.length > 1){
+        const intermediates = _.filter(annots, isIntermediateField);
+        if (intermediates.length > 0){
+          // all arent intermediate fields. continue
+          if (intermediates.length !== annots.length) {
+            instance.annotManager.deselectAllAnnotations()
+          }
+        }
+      }
+    });
+
+
+
+
     annotManager.on('fieldChanged', onFieldChanged(instance))
 
 
@@ -939,7 +959,11 @@ function tracePropAccess(obj, propKeys) {
       annotManager.setCurrentUser(currentUser);
       annotManager.trigger('currentUserChanged', currentUser);
     });
-
+    // built-in event 
+    readerControl.docViewer.on('documentLoaded', () => {
+      return configureFeatures(instance, custom)
+    });
+   
 
 
     annotManager.on('addSigner', async (args) => exports.addSigner(args));
@@ -949,19 +973,12 @@ function tracePropAccess(obj, propKeys) {
     });
 
 
-    docViewer.on('updateFeatures', configureFeatures(instance));
     docViewer.on('setDocId', (docId) => exports.setDocId(docId));
 
 
     // TODO: use this when at v6.3
     readerControl.setColorPalette(['#4B92DB', '#000000']);
 
-
-    // built-in event 
-    readerControl.docViewer.on('documentLoaded', () => {
-      return configureFeatures(instance, custom)
-    });
-   
 
     // disables hotkeys when document loads
     // built-in event 
@@ -985,12 +1002,14 @@ function tracePropAccess(obj, propKeys) {
       ...instance, 
       loadDocument: (pdfUrl, config) => {
         instance.docViewer.one('documentLoaded', async () => {
-          instance.docViewer.trigger('setDocId', config.docId);
           const pageCount = instance.docViewer.getPageCount()
           exports.setPageCount(config.docId, pageCount);
+          instance.hideMessage('Loading...');
+          return configureFeatures(instance, custom)
         });
 
         instance.showMessage('Loading...');
+        instance.docViewer.trigger('setDocId', config.docId);
         return loadDocument(pdfUrl, config);
       },
       Annotations, 

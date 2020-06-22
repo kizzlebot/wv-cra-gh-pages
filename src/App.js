@@ -3,6 +3,7 @@ import _ from 'lodash';
 import config from './stories/lib/config';
 import { useGetSetState, useToggle } from 'react-use';
 import WebviewerApp from './components/webviewer';
+import WebviewerVanilla from './components/vanilla';
 import { Route } from 'react-router-dom';
 
 
@@ -14,7 +15,13 @@ function App({
   return (
     <>
       <Route path='/v1'>
-        <div>hello world</div>
+        <WebviewerVanilla
+          config={config}
+          userId={userId} 
+          isAdminUser={isAdminUser}
+          docs={docs}
+          selectedDoc={_.head(_.keys(docs))}
+        />
       </Route>
 
       <Route path='/v2'>

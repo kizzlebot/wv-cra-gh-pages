@@ -43,6 +43,7 @@ function WebviewerApp() {
         >
           Clear All Widgets/Annots
         </button>
+        <div>{appState.selectedDoc}</div>
       </div>
 
 
@@ -54,7 +55,7 @@ function WebviewerApp() {
           userId={appState.getCurrentUser()}
           isAdminUser={appState.isAdminUser}
           docs={appState.docs}
-          selectedDocId={appState.selectedDoc}
+          selectedDoc={appState.selectedDoc}
           selectedSigner={appState.selectedSigner}
           clearAll={clearAll}
           onAllCleared={() => toggleClearAll(false)}

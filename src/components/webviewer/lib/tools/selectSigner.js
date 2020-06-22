@@ -9,22 +9,23 @@ import parseName from '../helpers/parseName';
 
 
 class SelectSigner extends React.Component {
-  state = { 
-    signers: [],
-    selectedSigner: null
+  constructor(props, ctx){
+    super(props, ctx)
+
+    this.state = { 
+      signers: props.signers,
+      selectedSigner: null
+    }
   }
+
   componentDidMount() {
     const { instance } = this.props;
     this.setState({
       signers: instance.getSigners(),
-      selectedSigner: instance.getSigner(),
+      selectedSigner: instance.getSelectedSigner(),
     })
-    instance.annotManager.on('signersChanged', () => {
-      this.setState({ signers: instance.getSigners() });
-    });
-    instance.annotManager.on('selectedSignerChanged', (signer) => {
-      this.setState({ selectedSigner: signer });
-    });
+    instance.annotManager.on('signersChanged', (...args) => this.setState({ signers: instance.getSigners() }));
+    instance.annotManager.on('selectedSignerChanged', (signer) => this.setState({ selectedSigner: signer }));
   }
   
   render() { 
@@ -53,7 +54,7 @@ const setCurrentSigner = ({ instance }) => {
     type: 'customElement',
     title: 'Select Signer',
     dataElement: 'selectSigner',
-    render: () => <SelectSigner instance={instance} />
+    render: () => <SelectSigner signers={instance.getSigners()} instance={instance} />
   });
 }
 

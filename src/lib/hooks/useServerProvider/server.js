@@ -131,7 +131,24 @@ export default async (firebase, serverOpts) => {
 
 
     // unbindAll = () => R.map(R.pipe(R.invoker(0, 'off'), this.refs))
-    unbindAll = async () => {
+    unbindAll = async (docId) => {
+      if (docId){
+        this.annotationsRef
+          .orderByChild('doc_id')
+          .equalTo(docId)
+          .off();
+        this.widgetRef
+          .orderByChild('doc_id')
+          .equalTo(docId)
+          .off();
+        this.pageRef
+          .orderByKey()
+          .equalTo(docId)
+          .off();
+
+
+        return;
+      }
       if (this.annotInstRef){
         log('unbinding annotInstRef')
         await this.annotInstRef.off();
@@ -200,12 +217,12 @@ export default async (firebase, serverOpts) => {
 
 
         case 'onWidgetCreated':
-          this.widgetInstRef= this.widgetInstRef ? this.widgetInstRef : this.widgetRef
+          this.widgetInstRef = this.widgetInstRef ? this.widgetInstRef : this.widgetRef
             .orderByChild('docId')
             .equalTo(docId)
           return this.widgetInstRef.on('child_added', callbackFunction);
         case 'onWidgetUpdated':
-          this.widgetInstRef= this.widgetInstRef ? this.widgetInstRef : this.widgetRef
+          this.widgetInstRef = this.widgetInstRef ? this.widgetInstRef : this.widgetRef
             .orderByChild('docId')
             .equalTo(docId)
           return this.widgetInstRef.on('child_changed', callbackFunction);
@@ -292,8 +309,9 @@ export default async (firebase, serverOpts) => {
     checkAuthor = (authorId, openReturningAuthorPopup, openNewAuthorPopup) => {
       this.authorsRef.once('value', authors => {
         if (authors.hasChild(authorId)) {
-          this.authorsRef.child(authorId).once('value', author => {
-            openReturningAuthorPopup(author.val().authorName);
+          this.authorsRef.child(authorId).once('value', (data) => {
+            const val = data.val();
+            openReturningAuthorPopup(`${val.firstName} ${val.lastName}`);
           });
         } else {
           openNewAuthorPopup();
@@ -323,6 +341,10 @@ export default async (firebase, serverOpts) => {
         .thru(proms => Promise.all(proms))
         .value();
     }
+
+    authenticate = () => new Promise((res) => {
+      this.bind('onAuthStateChanged', (user) => (user) ? res(user) : server.signInAnonymously());
+    })
 
     signInWithToken = async (token) => {
       await firebase

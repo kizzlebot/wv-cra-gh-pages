@@ -59,6 +59,17 @@ export function ServerProvider({ config, ...props }) {
 }
 
 
+// hook
+export const useServer = () => {
+  const server = useContext(ServerCtx);
+  if (!server){
+    throw new Error('useServer must be called within <ServerProvider/> context');
+  }
+  return server;
+};
+
+
+
 // HOC
 export const withServerProvider = (useConfig) => (Component) => function WithServerProvider(props) {
   const conf = useConfig(props);
@@ -70,14 +81,11 @@ export const withServerProvider = (useConfig) => (Component) => function WithSer
   );
 };
 
-
-
-
-// hook
-export const useServer = () => {
-  const server = useContext(ServerCtx);
-  if (!server){
-    throw new Error('useServer must be called within <ServerProvider/> context');
-  }
-  return server;
+export const withUseServer = (Component) => (props) => {
+  const server = useServer();
+  return (
+    <Component {...props} server={server} />
+  )
 };
+
+

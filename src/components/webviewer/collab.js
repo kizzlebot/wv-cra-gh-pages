@@ -4,9 +4,9 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import * as R from 'ramda';
 import Webviewer from "./viewer";
-import { useServer } from '../../lib/hooks/useServerProvider';
+import { useServer } from 'lib/hooks/useServerProvider';
 import { useQueue, useGetSetState, createStateContext, useGetSet, useEffectOnce } from 'react-use';
-import useAppState from './hooks/AppState';
+import useAppState from '../../lib/hooks/AppState';
 
 
 const saveSignatureToLocalStorage = (conf) => {

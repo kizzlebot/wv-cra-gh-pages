@@ -103,6 +103,7 @@ export function AppStateProvider({
     selectedDoc: getSelectedDoc(),
     annotsToImport: getAnnotsToImport(),
     currentUser: getCurrentUser(),
+    userId: getCurrentUser(),
     isAdminUser,
     config,
     docs,

@@ -36,9 +36,7 @@ const docs = {
 if (process.env.NODE_ENV !== 'production') {
   ReactDOM.render(
     <Router>
-
       <FirebaseProvider>
-        
         <ServerProvider 
           config={{ 
             nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
