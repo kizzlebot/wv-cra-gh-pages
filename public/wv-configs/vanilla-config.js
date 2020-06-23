@@ -768,22 +768,19 @@ function tracePropAccess(obj, propKeys) {
 
     // TODO: if a signer changes their signature, change all signatures which are already present in the page
     sigtool.on('signatureSaved', async (annot) => {
-      console.log('signature saved', annot)
-      const annots = await instance.annotManager.getAnnotationsList();
-      const toReplace = _.filter(annots, a => a.CustomData.authorId = instance.annotManager.getCurrentUser() && annot.Id !== a.Id);
+      // console.log('signature saved', annot)
+      // const annots = await instance.annotManager.getAnnotationsList();
+      // const toReplace = _.filter(annots, a => a.CustomData.authorId = instance.annotManager.getCurrentUser() && annot.Id !== a.Id);
 
-      console.log('signature saved: toreplace', toReplace);
-      const imageData = annot.ImageData;
+      // console.log('signature saved: toreplace', toReplace);
+      // const imageData = annot.ImageData;
 
-      if (toReplace.length > 0){
-        _.map(toReplace, (r) => {
-          r.ImageData = imageData;
-          return instance.annotManager.redrawAnnotation(r);
-        });
-      }
-
-
-
+      // if (toReplace.length > 0){
+      //   _.map(toReplace, (r) => {
+      //     r.ImageData = imageData;
+      //     return instance.annotManager.redrawAnnotation(r);
+      //   });
+      // }
     })
 
 
