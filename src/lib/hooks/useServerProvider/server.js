@@ -373,7 +373,6 @@ export default async (firebase, serverOpts) => {
         .then(R.pipe(R.invoker(0, 'val')))
       const updateVal = _.mapValues({ ...allSigWigets, ...allInitialsWidgets }, R.always(null));
 
-      console.log('updateVal', updateVal);
       return this.widgetRef.update(updateVal);
     }
 

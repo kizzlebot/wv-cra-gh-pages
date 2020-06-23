@@ -779,7 +779,6 @@ function tracePropAccess(obj, propKeys) {
 
 
     annotManager.getWidgetById = (widgetId) => {
-      console.log('Annotations', Annotations);
       const widgetAnnots = _.filter(annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.WidgetAnnotation);
       const widget = _.find(widgetAnnots, (annot) => annot.CustomData.id === widgetId);
       return widget;

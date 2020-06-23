@@ -5,6 +5,7 @@ import * as R from 'ramda';
 import { Dropdown } from 'react-bootstrap';
 import styled from 'styled-components';
 import useAppState from 'lib/hooks/AppState';
+import { useEffectOnce } from 'react-use';
 
 const DocSelectorWrapper = styled.div`
   #doc-select {
@@ -15,6 +16,11 @@ const DocSelectorWrapper = styled.div`
 
 const DocSelector = (props) => {
   const appState = useAppState();
+  useEffectOnce(() => {
+    if (!appState.selectedDoc){
+      appState.setSelectedDoc(_.head(_.keys(appState.docs)));
+    }
+  })
   
   return (
     <DocSelectorWrapper className='col-xs-12 text-center'>

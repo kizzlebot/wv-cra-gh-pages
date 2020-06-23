@@ -7,10 +7,12 @@ import Promise from 'bluebird';
 import { useEffectOnce } from 'react-use';
 import useAppState from 'lib/hooks/AppState';
 import { importFbaseVal, delFbaseVal, importWidgetFbaseVal, delWidgetFbaseVal, importField, setBlankPages } from './lib/helpers/import';
+import debug from 'debug';
+const log = debug('collab');
 
 
 const invokeServerMethod = (fn) => R.pipe(
-  R.tap((args) => console.log('annotation created', args)),
+  R.tap((args) => log('annotation created', args)),
   R.converge(fn, [R.prop('id'), R.identity])
 );
 
@@ -40,6 +42,27 @@ export default function Collab(props){
        * appState
        */
       config={appState.config}
+      toolConfig={{
+        toolNames: [
+          // 'ShowSigner', 
+          'SelectSigner', 
+          'Divider', 
+          'AddBlankPage', 
+          'RemoveBlankPage', 
+          'Divider', 
+          'RemoveFormFields', 
+          'Divider', 
+          'FormFieldTools', 
+          'TemplateTools', 
+          'Divider', 
+          'StampTools', 
+          'CertTool'
+        ],
+        popupNames: [
+          'AssignSigner',
+          'SetRequired'
+        ]
+      }}
       currentUser={appState.currentUser}
       isAdminUser={appState.isAdminUser}
       signers={_.values(appState.signers)}

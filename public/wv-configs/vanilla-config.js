@@ -294,9 +294,7 @@ function tracePropAccess(obj, propKeys) {
       serialize(...args) {
         const el = serialize.apply(this, args);
 
-        console.log('serialize called', el);
         if (this.CustomData.id && el){
-          console.log('has custom id, serialized it')
           el.setAttribute('orig-id', this.CustomData.id);
         }
 
@@ -579,7 +577,6 @@ function tracePropAccess(obj, propKeys) {
       await PDFNet.initialize();
       const doc = instance.docViewer.getDocument();
       if (!doc) {
-        console.log('no doc, returning');
         if (_.isFunction(cb)){
           return cb();
         }
@@ -608,7 +605,6 @@ function tracePropAccess(obj, propKeys) {
         const annotsToDel = _.filter(instance.annotManager.getAnnotationsList(), (annot) => pageNumsToRemove.indexOf(annot.PageNumber) > -1);
 
         if (annotsToDel.length > 0){
-          console.log('annotations to delete', annotsToDel, pageNumsToRemove)
           instance.annotManager.deleteAnnotations(annotsToDel, false, true, false);
         }
         doc.removePages(pageNumsToRemove);
@@ -734,13 +730,11 @@ function tracePropAccess(obj, propKeys) {
         .filter(R.complement(R.isNil))
         .value()
 
-      console.log('handleDelete dupes called', toDelete);
       await instance.annotManager.deleteAnnotations(toDelete, true);
     }, 2000, { leading: false, trailing: true })
 
 
     annotManager.getWidgetById = (widgetId) => {
-      console.log('Annotations', Annotations);
       const widgetAnnots = _.filter(annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.WidgetAnnotation);
       const widget = _.find(widgetAnnots, (annot) => annot.CustomData.id === widgetId);
       return widget;

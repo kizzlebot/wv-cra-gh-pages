@@ -18,7 +18,7 @@ const logMsg = (label, msg) => (...args) => log(`${label}: ${msg}`);
 const callIfDefined = R.when(
   R.isNil,
   R.pipe(
-    R.tap((val) => console.log('callback not defined', val)),
+    R.tap((val) => log('callback not defined', val)),
     R.identity
   )
 )
@@ -66,9 +66,7 @@ class Webviewer extends Component {
       // pdftronServer: 'http://47.198.214.240:8090/',
       css: '/styles/webviewer.css',
       custom: JSON.stringify(this.props?.config?.custom),
-      config: '/wv-configs/vanilla-config.js',
-      useSharedWorker: true,
-
+      config: '/wv-configs/vanilla-config.js'
     }, this.viewerRef.current);
 
     const { docs, selectedDoc, currentUser } = this.props;
@@ -95,27 +93,7 @@ class Webviewer extends Component {
       // initialize custom annotation tools
       await registerTools({
         instance,
-        config: {
-          toolNames: [
-            // 'ShowSigner', 
-            'SelectSigner', 
-            'Divider', 
-            'AddBlankPage', 
-            'RemoveBlankPage', 
-            'Divider', 
-            'RemoveFormFields', 
-            'Divider', 
-            'FormFieldTools', 
-            'TemplateTools', 
-            'Divider', 
-            'StampTools', 
-            'CertTool'
-          ],
-          popupNames: [
-            'AssignSigner',
-            'SetRequired'
-          ]
-        }
+        config: this.props.toolConfig
       });
 
 
@@ -123,7 +101,9 @@ class Webviewer extends Component {
       annotManager.setCurrentUser(currentUser);
 
 
-      await this.props.authenticate();
+      if (_.isFunction(this.props.authenticate)){
+        await this.props.authenticate();
+      }
 
       // Overwrite client-side permission check method on the annotation manager
       // The default was set to compare the authorName
@@ -323,4 +303,4 @@ class Webviewer extends Component {
   }
 }
 
-export default withUseServer(Webviewer);
+export default Webviewer;

@@ -71,8 +71,8 @@ const createTextField = ({ name, label, annotClassName }) => ({ instance, annotC
 
     // TODO: Set the author here
     // textAnnot.Author = annotManager.getCurrentUser();
-    await annotManager.addAnnotation(textAnnot, false);
     await annotManager.deleteAnnotation(rectAnnot, true);
+    await annotManager.addAnnotation(textAnnot, false);
     await annotManager.deselectAllAnnotations();
     await annotManager.redrawAnnotation(textAnnot);
     await annotManager.selectAnnotation(textAnnot);

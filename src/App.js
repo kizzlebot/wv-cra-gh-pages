@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import _ from 'lodash';
 import config from './stories/lib/config';
 import WebviewerApp from './components/webviewer';
+import WebviewerEsignApp from './components/webviewer/esign';
 import { Route, Switch, Link } from 'react-router-dom';
-import {useDefault} from 'react-use';
+import { useDefault } from 'react-use';
 
 const initialData = {
   nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
@@ -28,6 +29,17 @@ function App({
     <Switch>
       <Route path='/v2/:organizationId/rooms/:nsId'>
         <WebviewerApp
+          config={config}
+          user={user}
+          userId={userId}
+          isAdminUser={isAdminUser}
+          docs={docs}
+          selectedDoc={_.head(_.keys(docs))}
+        />
+      </Route>
+
+      <Route path='/esign/:nsId'>
+        <WebviewerEsignApp
           config={config}
           user={user}
           userId={userId}
@@ -71,7 +83,11 @@ function App({
           </div>
         </div>
         
+
         <div className='d-flex flex-column mt-5'>
+          <div>
+            <Link to={`/esign/8d976a23-b865-4fcd-9165-ddc0aedaf614`}>Esignature</Link>
+          </div>
           <div>
             <Link to={`/v2/8d976a23-b865-4fcd-9165-ddc0aedaf614/rooms/8d976a23-b865-4fcd-9165-ddc0aedaf614`}>Go to V2</Link>
           </div>
