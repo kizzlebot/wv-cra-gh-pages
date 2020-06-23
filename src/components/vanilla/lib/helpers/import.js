@@ -46,8 +46,6 @@ export const delWidgetFbaseVal = ({ selectedDoc, annotManager }) => async ({ val
   }
 };
 
-
-
 /**
  * Imports widget annot pushed from firebase into webviewer if it doesn't already exist
  */
@@ -86,9 +84,10 @@ export const importWidgetFbaseVal = ({ selectedDoc, annotManager }) => async ({ 
 };
 
 
-
+/**
+ * Checks if field exists and if it does will set its value
+ */
 export const importField = ({ selectedDoc, annotManager }) => async({ val, key }) => {
-  console.log('improtField called', val, key);
   const mgr = annotManager.getFieldManager();
   const field = mgr.getField(val.name);
   if (field){
