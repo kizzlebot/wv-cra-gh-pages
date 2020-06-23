@@ -33,6 +33,10 @@ const createTextField = ({ name, label, annotClassName }) => ({ instance, annotC
     const signerId = instance.getSigner();
     const signer = instance.getSignerById(signerId);
 
+    if (!signer || !signer.id){
+      await annotManager.deleteAnnotation(rectAnnot, true);
+      return annotManager.deselectAllAnnotations();
+    }
 
     textAnnot.custom = {
       ...custom,
@@ -67,8 +71,8 @@ const createTextField = ({ name, label, annotClassName }) => ({ instance, annotC
 
     // TODO: Set the author here
     // textAnnot.Author = annotManager.getCurrentUser();
-    await annotManager.deleteAnnotation(rectAnnot, true);
     await annotManager.addAnnotation(textAnnot, false);
+    await annotManager.deleteAnnotation(rectAnnot, true);
     await annotManager.deselectAllAnnotations();
     await annotManager.redrawAnnotation(textAnnot);
     await annotManager.selectAnnotation(textAnnot);

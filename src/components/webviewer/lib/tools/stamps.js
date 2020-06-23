@@ -113,7 +113,7 @@ export const createStampAnnotation = ({ name, imageUrl, buttonImage, tooltip }) 
     buttonImage,
     dataElement: name,
     tooltip,
-    hidden: ['tablet', 'mobile'],
+    // hidden: ['tablet', 'mobile'],
   }),
 )
 
@@ -138,7 +138,7 @@ const createStampAnnotTool = R.pipeP(
     title: 'Stamps',
     dataElement: 'stampToolGroupButton',
     onClick: ({ instance }) => () => instance.setActiveHeaderGroup('stampToolsGroup') ,
-    hidden: ['tablet', 'mobile']
+    // hidden: ['tablet', 'mobile']
   }),
   registerHeaderGroup({ 
     groupName: 'stampToolsGroup',

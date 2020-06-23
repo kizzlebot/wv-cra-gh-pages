@@ -74,7 +74,7 @@ const createInjectCertTool = ({ pdfUrl, type, toolName, tooltip }) => injectTool
     return instance.setActiveHeaderGroup('default')
   },
   title: tooltip,
-  hidden: ['tablet', 'mobile']
+  // hidden: ['tablet', 'mobile']
 })
 
 

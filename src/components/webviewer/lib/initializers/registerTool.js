@@ -37,7 +37,7 @@ const registerTool = ({
         type: 'toolButton',
         toolName,
         dataElement: _.lowerFirst(toolName),
-        hidden: ['tablet', 'mobile'],
+        // hidden: ['tablet', 'mobile'],
       }
     },
   };
