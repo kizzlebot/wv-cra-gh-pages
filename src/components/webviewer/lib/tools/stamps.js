@@ -119,16 +119,6 @@ export const createStampAnnotation = ({ name, imageUrl, buttonImage, tooltip }) 
 
 
 
-export const createNotaryStampAnnotation = createStampAnnotation({
-  name: 'NotaryStamp',
-  imageUrl: '/imgs/stamp.png',
-  buttonImage: `/imgs/stamp.png`,
-  tooltip: 'Notary Stamp'
-})
-
-export const defineAnnotTools = R.pipeP(createNotaryStampAnnotation);
-
-
 const createStampAnnotTool = R.pipeP(
   createStampAnnotation({
     name: 'NotaryStamp',
