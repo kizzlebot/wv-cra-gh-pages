@@ -7,12 +7,10 @@ import registerNotaryCertTool from "./notaryCerts";
 import registerAddRemovePage from './addRemovePage';
 import registerRemoveFormFields from './removeFormFields';
 import registerSelectSigner from './selectSigner';
-import enableToolButtons from '../initializers/enableToolButtons';
 import registerShowSigner from './showSigner';
 
 
 const registerTools = R.pipeP(
-  injectToolArr,
   registerSelectSigner,
   registerShowSigner,
   registerAddRemovePage,
@@ -21,7 +19,6 @@ const registerTools = R.pipeP(
   registerFormFieldTools,
   registerTemplateTools,
   registerStampAnnotTool,
-  enableToolButtons
 );
 
 export default registerTools;

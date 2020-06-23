@@ -3,9 +3,7 @@ import _ from 'lodash';
 import * as R from 'ramda';
 import debug from 'debug';
 import Promise from 'bluebird';
-import SelectSigner from './components/SelectSigner';
-import RequiredCheckbox from './components/RequiredCheckbox';
-import registerTools from './lib/tools';
+import registerTools from './lib';
 import initWv from '@pdftron/webviewer';
 import CertPdfModal from './components/CertPdfModal';
 import { withUseServer } from 'lib/hooks/useServerProvider';
@@ -110,38 +108,14 @@ class Webviewer extends Component {
             'Divider', 
             'StampTools', 
             'CertTool'
+          ],
+          popupNames: [
+            'AssignSigner',
+            'SetRequired'
           ]
         }
       });
 
-
-
-      // TODO: move to registerTools
-      instance.annotationPopup.add({
-        type: 'customElement',
-        title: 'Select Signer',
-        render: () => (
-          <SelectSigner
-            annotManager={instance.annotManager}
-            instance={instance}
-            signers={instance.getSigners()}
-          />
-        ),
-      });
-
-
-      // TODO: move to registerTools
-      instance.annotationPopup.add({
-        type: 'customElement',
-        title: 'Required',
-        render: () => (
-          <RequiredCheckbox
-            annotManager={instance.annotManager}
-            signers={instance.getSigners()}
-          />
-        ),
-      });
-    
 
 
       annotManager.setCurrentUser(currentUser);

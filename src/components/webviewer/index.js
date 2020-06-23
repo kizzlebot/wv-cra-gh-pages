@@ -23,35 +23,6 @@ function WebviewerApp() {
 
   return (
     <>
-      <div>
-        <label htmlFor='signer'>Doc: </label>
-        <select
-          value={appState.getSelectedDoc()}
-          onChange={R.pipe(R.path(['target', 'value']), appState.setSelectedDoc)}
-        >
-          <option value={'-1'}>Select a document</option>
-          {
-            _.map(_.keys(appState.docs), (docId) => {
-              return (
-                <option key={docId} value={docId}>{docId}</option>
-              );
-            })
-          }
-        </select>
-      </div>
-      <div>
-        <button
-          type='button'
-          onClick={() => server.clearAll()}
-        >
-          Clear All Widgets/Annots
-        </button>
-        <div>{appState.selectedDoc}</div>
-      </div>
-
-
-
-
       <div className="App" style={{ height: '100% !important' }}>
         <Collab
           config={appState.config}

@@ -9,7 +9,7 @@ const getTemplateAnnots = R.filter(
   )
 );
 
-export default class SelectSigner extends Component {
+export default class RequiredCheckbox extends Component {
   constructor(...args) {
     super(...args);
     this.state = { checked: false };
