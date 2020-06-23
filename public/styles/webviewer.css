@@ -1,0 +1,25 @@
+@keyframes pulse {
+  0%, 100% {
+    border-color: #001F3F;
+  }
+  50% {
+    border-color: #FF4136;
+  }
+}
+
+@keyframes stretch {
+  0% {
+    background-color: red;
+  }
+  50% {
+    background-color: orange;
+  }
+  100% {
+    background-color: yellow;
+  }
+}
+
+.input-required {
+  animation: pulse 5s ease-in-out infinite alternate;
+  border: 2px solid black;
+}

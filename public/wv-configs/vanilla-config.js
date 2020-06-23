@@ -341,13 +341,55 @@ function tracePropAccess(obj, propKeys) {
 
 
 
+    const createInnerElement = Annotations.TextWidgetAnnotation.prototype.createInnerElement;
+    Annotations.TextWidgetAnnotation.prototype.createInnerElement = function () {
+      const button = this;
+
+      const el = createInnerElement.apply(this, arguments);
+
+      return el;
+    };
+    
+    // const createInnerElement = Annotations.TextWidgetAnnotation.prototype.createInnerElement;
+    const sigCreateInnerElement = Annotations.SignatureWidgetAnnotation.prototype.createInnerElement;
+    // Annotations.SignatureWidgetAnnotation.prototype.createInnerElement = function () {
+    //   const button = this;
+
+    //   const el = sigCreateInnerElement.apply(this, arguments);
+
+
+    //   instance.annotManager.on('setSelectedSigner', (signerId) => {
+    //     console.log('selected signer changed', signerId)
+    //     if (this.CustomData.signerId !== signerId){
+    //       el.classList.remove('input-required');
+    //     } else {
+    //       el.classList.add('input-required');
+    //     }
+    //   });
+
+    //   setTimeout(() => {
+    //     if (this.CustomData.signerId !== instance.getSelectedSigner()){
+    //       el.classList.remove('input-required');
+    //     } else {
+    //       el.classList.add('input-required');
+    //     }
+    //     el.style.removeProperty('border');
+    //   }, 200);
+
+    //   return el;
+    // };
 
 
     // ref: https://www.pdftron.com/documentation/web/guides/form-field-styling/
-    Annotations.WidgetAnnotation.getContainerCustomStyles = () => {
-      console.log('Annotations.WidgetAnnotation.getContainerCustomStyles called');
+    Annotations.WidgetAnnotation.getContainerCustomStyles = (widget) => {
+      if (widget.CustomData.signerId === instance.getSelectedSigner()){
+        return {
+          // animation: 'pulse 2s infinite',
+          border: '1px solid black' 
+        }
+      }
       return {
-        border: '1px solid black'
+          border: '1px solid black' 
       }
     }
   };
