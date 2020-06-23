@@ -13,7 +13,7 @@ const addBlankPage = {
     const originalPageCount = instance.getOriginalPageCount();
     const currDocId = instance.getDocId();
     const currBlankPages = currPageCount - originalPageCount
-    return instance.docViewer.trigger('blankPagesAdded', [currDocId, currBlankPages]);
+    return instance.docViewer.trigger('blankPagesAdded', [currDocId, currBlankPages + 1]);
   },
 };
 
@@ -30,7 +30,10 @@ const removeBlankPage = {
     const originalPageCount = instance.getOriginalPageCount();
     const currDocId = instance.getDocId();
     const currBlankPages = currPageCount - originalPageCount
-    return instance.docViewer.trigger('blankPagesRemoved', [currDocId, currBlankPages]);
+    if (currBlankPages === 0){
+      return;
+    }
+    return instance.docViewer.trigger('blankPagesRemoved', [currDocId, currBlankPages - 1]);
   },
 };
 

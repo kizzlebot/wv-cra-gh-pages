@@ -242,8 +242,14 @@ export default async (firebase, serverOpts) => {
           this.initializedRefs.push(() => this.annotationsRef.off('child_removed', initializedRef));
           return initializedRef;
 
-
-
+        case 'onBlankPagesChanged':
+          initializedRef = this.blankPagesRef
+            .child(docId)
+            .on('value', callbackFunction);
+          this.initializedRefs.push(() => this.blankPagesRef
+            .child(docId)
+            .off('value', initializedRef));
+          return initializedRef;
 
 
 
@@ -257,9 +263,6 @@ export default async (firebase, serverOpts) => {
             .orderByKey()
             .equalTo(docId)
             .on('child_added', callbackFunction);
-        case 'onBlankPagesChanged':
-          return this.blankPagesRef
-            .on('value', callbackFunction);
 
         case 'onBlankPageAdded':
           return this.blankPagesRef.on('child_changed', callbackFunction);

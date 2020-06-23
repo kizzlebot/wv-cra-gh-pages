@@ -7,8 +7,7 @@ import parseName from '../helpers/parseName';
 
 
 
-
-class SelectSigner extends React.Component {
+class ShowSigner extends React.Component {
   constructor(props, ctx){
     super(props, ctx)
 
@@ -29,35 +28,28 @@ class SelectSigner extends React.Component {
   }
   
   render() { 
+    const signer = _.find(this.state.signers, { id: this.state.selectedSigner });
+    if (!signer){
+      return <></>
+    }
     return (  
-      <select
-        value={this.state.selectedSigner}
-        onChange={(evt) => {
-          this.props.instance.annotManager.trigger('setSelectedSigner', evt.target.value)
-        }}
-      >
-        {
-          _.map(this.state.signers, (signer) => (
-            <option key={signer.id} value={signer.id}>{parseName(signer)}</option>
-          ))
-        }
-      </select>
-
+      <div>{parseName(signer)}</div>
     );
   }
 }
 
 
-const setCurrentSigner = ({ instance }) => ({
-  type: 'customElement',
-  title: 'Select Signer',
-  dataElement: 'selectSigner',
-  render: () => <SelectSigner signers={instance.getSigners()} instance={instance} />
-});
+const showCurrentSigner = ({ instance }) => {
+  return ({
+    type: 'customElement',
+    title: 'Current Signer',
+    dataElement: 'showSigner',
+    render: () => <ShowSigner signers={instance.getSigners()} instance={instance}  />
+  });
+};
 
+const registerShowSigner = R.pipeP(
+  injectTool('ShowSigner', showCurrentSigner)
+);
 
-const registerSelectSigner = R.pipeP(
-  injectTool('SelectSigner', setCurrentSigner),
-)
-
-export default registerSelectSigner;
+export default registerShowSigner;

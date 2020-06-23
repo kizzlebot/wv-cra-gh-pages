@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import _ from 'lodash';
 import * as R from 'ramda';
 import { useToggle, useEffectOnce } from 'react-use';
 import Collab from './collab';
-import { withAppStateProvider, useAppState } from '../../lib/hooks/AppState';
+import { withAppStateProvider, useAppState } from 'lib/hooks/AppState';
 import { withServerProvider, useServer } from 'lib/hooks/useServerProvider';
 import { useParams } from 'react-router-dom';
 
@@ -46,6 +46,7 @@ function WebviewerApp() {
         >
           Clear All Widgets/Annots
         </button>
+        <div>{appState.selectedDoc}</div>
       </div>
 
 
@@ -57,7 +58,7 @@ function WebviewerApp() {
           userId={appState.getCurrentUser()}
           isAdminUser={appState.isAdminUser}
           docs={appState.docs}
-          selectedDocId={appState.selectedDoc}
+          selectedDoc={appState.selectedDoc}
           selectedSigner={appState.selectedSigner}
           clearAll={clearAll}
           onAllCleared={() => toggleClearAll(false)}
@@ -68,9 +69,11 @@ function WebviewerApp() {
   );
 }
 
+
 const composeComponent = R.compose(
   withServerProvider((props) => {
     const { organizationId, nsId } = useParams();
+
     const rtn = {
       nsId: nsId,
       userId: props.userId,
@@ -80,7 +83,7 @@ const composeComponent = R.compose(
     return rtn;
   }),
   withAppStateProvider,
-);
+)
 
 
 export default composeComponent(WebviewerApp);
