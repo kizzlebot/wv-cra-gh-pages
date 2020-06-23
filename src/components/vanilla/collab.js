@@ -9,11 +9,10 @@ import useAppState from '../../lib/hooks/AppState';
 import { importFbaseVal, delFbaseVal, importWidgetFbaseVal, delWidgetFbaseVal, importField } from './lib/helpers/import';
 
 
-
 const invokeServerMethod = (fn) => R.pipe(
   R.tap((args) => console.log('annotation created', args)),
   R.converge(fn, [R.prop('id'), R.identity])
-)
+);
 
 export default function Collab(props){
 
@@ -82,7 +81,6 @@ export default function Collab(props){
         if (!widget || !widget.CustomData.id || !value){
           return;
         }
-        console.log('fieldUpdated', name, value, docId, widget.CustomData.id)
         await server.setField(widget.CustomData.id, {
           docId,
           name, 
