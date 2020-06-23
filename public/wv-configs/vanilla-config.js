@@ -341,15 +341,15 @@ function tracePropAccess(obj, propKeys) {
 
 
 
-    const createInnerElement = Annotations.TextWidgetAnnotation.prototype.createInnerElement;
-    Annotations.TextWidgetAnnotation.prototype.createInnerElement = function () {
-      const button = this;
+    // const createInnerElement = Annotations.TextWidgetAnnotation.prototype.createInnerElement;
+    // Annotations.TextWidgetAnnotation.prototype.createInnerElement = function () {
+    //   const button = this;
 
-      const el = createInnerElement.apply(this, arguments);
+    //   const el = createInnerElement.apply(this, arguments);
 
-      return el;
-    };
-    
+    //   return el;
+    // };
+
     // const createInnerElement = Annotations.TextWidgetAnnotation.prototype.createInnerElement;
     const sigCreateInnerElement = Annotations.SignatureWidgetAnnotation.prototype.createInnerElement;
     // Annotations.SignatureWidgetAnnotation.prototype.createInnerElement = function () {
@@ -381,17 +381,17 @@ function tracePropAccess(obj, propKeys) {
 
 
     // ref: https://www.pdftron.com/documentation/web/guides/form-field-styling/
-    Annotations.WidgetAnnotation.getContainerCustomStyles = (widget) => {
-      if (widget.CustomData.signerId === instance.getSelectedSigner()){
-        return {
-          // animation: 'pulse 2s infinite',
-          border: '1px solid black' 
-        }
-      }
-      return {
-          border: '1px solid black' 
-      }
-    }
+    // Annotations.WidgetAnnotation.getContainerCustomStyles = (widget) => {
+    //   if (widget.CustomData.signerId === instance.getSelectedSigner()){
+    //     return {
+    //       // animation: 'pulse 2s infinite',
+    //       border: '1px solid black' 
+    //     }
+    //   }
+    //   return {
+    //       border: '1px solid black' 
+    //   }
+    // }
   };
 
 
