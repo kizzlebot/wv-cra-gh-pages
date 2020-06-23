@@ -195,7 +195,7 @@ class Webviewer extends Component {
 
 
         // NOTE: this fixes an issue where on initial load, if there are text annots on the page, the webviewer shows a cursor
-        setTimeout(() => instance.docViewer.zoomTo(instance.docViewer.getZoom()), 500);
+        setTimeout(() => instance.docViewer.zoomTo(instance.docViewer.getZoom()), 2000);
       });
 
 
