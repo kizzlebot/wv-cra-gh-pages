@@ -11,6 +11,6 @@ export default R.pipeP(
   injectToolArr,
   registerTools,
   registerPopups,
-  enableToolButtons,
   enablePopups,
+  enableToolButtons,
 )

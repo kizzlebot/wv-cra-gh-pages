@@ -66,7 +66,9 @@ class Webviewer extends Component {
       // pdftronServer: 'http://47.198.214.240:8090/',
       css: '/styles/webviewer.css',
       custom: JSON.stringify(this.props?.config?.custom),
-      config: '/wv-configs/vanilla-config.js'
+      config: '/wv-configs/vanilla-config.js',
+      useSharedWorker: true,
+
     }, this.viewerRef.current);
 
     const { docs, selectedDoc, currentUser } = this.props;

@@ -4,9 +4,9 @@ import registerAssignSigner from './assignSigner';
 import registerSetRequired from './setRequired';
 
 
-const registerPopovers = R.pipeP(
+const registerPopups = R.pipeP(
   registerAssignSigner,
   registerSetRequired
 );
 
-export default registerPopovers;
+export default registerPopups;
