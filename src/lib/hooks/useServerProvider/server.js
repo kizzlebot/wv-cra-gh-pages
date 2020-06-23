@@ -354,7 +354,7 @@ export default async (firebase, serverOpts) => {
       return firebase.auth().signInAnonymously();
     };
     removeAllXfdf = () => this.xfdfRef.set({});
-    setSelectedSigner = signerId => this.selectedSignerRef.set(signerId);
+    setSelectedSigner = (signerId) => this.selectedSignerRef.set(signerId);
 
     clearAnnotations = () => this.annotationsRef.set({});
     clearWidgets = async () => {

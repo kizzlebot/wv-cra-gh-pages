@@ -21,6 +21,7 @@ export default function Collab(props){
   const appState = useAppState();
 
   useEffectOnce(() => {
+    server.bind('onSelectedSignerChange', ({ val }) => appState.setSelectedSigner(val))
     server.bind('onAuthorsChanged', ({ val }) => appState.setSigners(val));
     server.bind('onBlankPagesChanged', ({ val }) => appState.setBlankPages(val));
     server.bind('onSelectedDocIdChanged', ({ val }) => appState.setSelectedDoc(val));
@@ -73,6 +74,7 @@ export default function Collab(props){
       onWidgetUpdated={invokeServerMethod(server.updateWidget)}
       onWidgetDeleted={invokeServerMethod(server.deleteWidget)}
 
+      onSelectedSignerChanged={server.setSelectedSigner}
       onBlankPagesAdded={(docId, currBlankPages) => server.setBlankPages(docId, currBlankPages + 1)}
       onBlankPagesRemoved={(docId, currBlankPages) => server.setBlankPages(docId, Math.max(currBlankPages - 1, 0))}
 

@@ -184,6 +184,7 @@ class Webviewer extends Component {
         annotManager.on('widgetUpdated', this.props.onWidgetUpdated);
         annotManager.on('widgetDeleted', this.props.onWidgetDeleted);
         annotManager.on('fieldUpdated', this.props.onFieldUpdated);
+        annotManager.on('selectedSignerChanged', this.props.onSelectedSignerChanged)
       });
 
 
