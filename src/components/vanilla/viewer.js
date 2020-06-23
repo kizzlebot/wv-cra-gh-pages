@@ -150,6 +150,12 @@ class Webviewer extends Component {
       annotManager.setPermissionCheckCallback((author, annotation) => annotation.authorId === authorId || annotation.Author === authorId);
 
 
+
+
+
+
+
+      // setup listeners which apply no matter which document is loaded 
       instance.docViewer.one('documentLoaded', () => {
         // attach event listeners to docViewer
         docViewer.on('blankPagesAdded', callIfDefined(this.props.onBlankPagesAdded));
@@ -161,6 +167,7 @@ class Webviewer extends Component {
       });
 
 
+      // setup listeners which listen for events fired from webviewer
       instance.docViewer.on('documentLoaded', async () => {
         
         new Promise((res) => this.instance.docViewer.trigger('setBlankPages', [this.props.blankPages, () => res()]));
@@ -184,7 +191,11 @@ class Webviewer extends Component {
         annotManager.on('widgetUpdated', this.props.onWidgetUpdated);
         annotManager.on('widgetDeleted', this.props.onWidgetDeleted);
         annotManager.on('fieldUpdated', this.props.onFieldUpdated);
-        annotManager.on('selectedSignerChanged', this.props.onSelectedSignerChanged)
+        annotManager.on('selectedSignerChanged', this.props.onSelectedSignerChanged);
+
+
+        // NOTE: this fixes an issue where on initial load, if there are text annots on the page, the webviewer shows a cursor
+        setTimeout(() => instance.docViewer.zoomTo(instance.docViewer.getZoom()), 500);
       });
 
 

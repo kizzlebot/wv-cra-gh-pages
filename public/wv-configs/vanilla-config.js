@@ -573,120 +573,6 @@ function tracePropAccess(obj, propKeys) {
 
 
 
-  /**
-   * Handle adding annotation/widget
-   * @param {WebViewerInstance} instance 
-   */
-  const handleAddAnnotation = (instance) => async (annots, cb) => {
-    const { Annotations, annotManager } = instance;
-    const docId = instance.getDocId();
-
-
-    const annotations = await Promise.mapSeries(_.uniqBy(_.castArray(annots), 'id'), async (val) => {
-      if (!val || val.docId !== docId) {
-        return;
-      }
-  
-      const { id: annotId, xfdf, type, action } = val;
-      let annotations;
-  
-      await instance.docViewer.getAnnotationsLoadedPromise();
-      
-      if (action === 'delete'){
-        const annot = (type === 'widget') ? instance.annotManager.getWidgetById(annotId) : instance.annotManager.getAnnotationById(annotId);
-        if (annot){
-          await instance.annotManager.deleteAnnotation(annot, true);
-        }
-      }
-
-      else if (type === 'annotation') {
-        annotations = await annotManager.importAnnotCommand(xfdf);
-        const [annotation] = annotations;
-        if (annotation) {
-          try {
-            await annotation.resourcesLoaded();
-            await annotManager.redrawAnnotation(annotation);
-          } catch (err) {
-            console.log('caught error?', err)
-          }
-        }
-      } else {
-
-        const existing = _.filter(annotManager.getAnnotationsList(), (a) => a.CustomData && a.CustomData.id === annotId);
-        if (!_.isEmpty(existing)){
-          return;
-        }
-
-        annotations = await annotManager.importAnnotations(xfdf);
-        const [annot] = annotations;
-        if (!annot){
-          console.log('no annot rendered', annot);
-          return;
-        }
-
-        annot.CustomData = annot.custom = _.omit(annot, ['xfdf']);
-        annot.getField().setValue(val.fieldValue || '');
-        await annotManager.handleDeleteDuplicateWidgets();
-        if (annot){
-          annot.CustomData.id = annotId;
-          if (annot) {
-            try {
-              await annot.resourcesLoaded();
-              await annotManager.redrawAnnotation(annot);
-            } catch (err) {
-              console.log('caught error?', err);
-            }
-          }
-        }
-      }
-      return annotations;
-    })
-
-    const locked = exports.getLock();
-    if (locked) {
-      annotManager.hideAnnotations(annotations);
-    }
-
-    annotManager.trigger('updateAnnotationPermission');
-    return cb();
-  }
-
-
-
-  /**
-   * 
-   * @param {WebViewerInstance} instance 
-   */
-  const handleUpdateAnnotation = (instance) => async (val) => {
-    const { annotManager } = instance;
-    const { xfdf, type, authorId } = val;
-    if (authorId === annotManager.getCurrentUser()) {
-      return;
-    }
-
-    // Import the annotation based on xfdf command
-    if (type === 'annotation') {
-      try {
-        const annotations = await annotManager.importAnnotCommand(xfdf);
-        const annotation = annotations[0];
-
-        const locked = exports.getLock();
-        if (locked === true) {
-          await annotManager.hideAnnotations(annotations);
-        }
-        if (annotation) {
-          await annotation.resourcesLoaded();
-          // NOTE: Set a custom field authorId to be used in client-side permission check
-          annotation.authorId = authorId;
-          annotManager.redrawAnnotation(annotation);
-        }
-      } catch (error) {
-        console.error('error updating annotation', error);
-      }
-    }
-  }
-
-
   const handleAddRemoveBlankPages = (instance) => {
     const { PDFNet } = instance;
     return async (numPages, cb) => {
@@ -773,6 +659,30 @@ function tracePropAccess(obj, propKeys) {
     }
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
+   * When viewerLoaded fires, configures features and adds additional functions to WebViewerInstance before calling
+   * `docViewer.trigger('ready', [instance]);` to pass up customized WebViewerInstance to the react component
+   */
   window.addEventListener('viewerLoaded', async () => {
     const { readerControl } = exports;
     const { docViewer } = exports.readerControl;
@@ -845,6 +755,9 @@ function tracePropAccess(obj, propKeys) {
     // preserve custom data from signature
     const sigtool = instance.docViewer.getTool('AnnotationCreateSignature');
     const { getAnnotationCopy } = instance.annotManager;
+
+
+    // when an signature annotation is copied in webviewer-ui code, it doesn't copy over the CustomData.
     annotManager.getAnnotationCopy = (annotation) => {
       const annot = getAnnotationCopy.call(instance.annotManager, annotation);
       annot.CustomData = annotation.CustomData;
@@ -853,6 +766,7 @@ function tracePropAccess(obj, propKeys) {
     };
 
 
+    // TODO: if a signer changes their signature, change all signatures which are already present in the page
     sigtool.on('signatureSaved', async (annot) => {
       console.log('signature saved', annot)
       const annots = await instance.annotManager.getAnnotationsList();
@@ -926,8 +840,6 @@ function tracePropAccess(obj, propKeys) {
 
 
     // register events to trigger on annotManager. subscribed by parent component
-    // built-in event 
-    // annotManager.on('annotationChanged', onAnnotationChanged(instance))
     annotManager.on('annotationChanged', onAnnotationChanged(instance));
 
 
@@ -952,17 +864,7 @@ function tracePropAccess(obj, propKeys) {
 
     annotManager.on('fieldChanged', onFieldChanged(instance))
 
-
     // register listeners. triggered from parent component
-    annotManager.on('addAnnotation', handleAddAnnotation(instance))
-
-    annotManager.on('updateAnnotation', handleUpdateAnnotation(instance));
-
-    annotManager.on('deleteAnnotation', async (val) => {
-      const command = `<delete><id>${val.id}</id></delete>`;
-      return annotManager.importAnnotCommand(command);
-    });
-
     annotManager.on('setLockStatus', async (val) => {
       exports.setLock(val);
       return exports.readerControl.setReadOnly(val);
