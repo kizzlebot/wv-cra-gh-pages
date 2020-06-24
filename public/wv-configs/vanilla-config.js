@@ -708,9 +708,10 @@ function tracePropAccess(obj, propKeys) {
     exports.setSigners(args)
     return instance.annotManager.trigger('signersChanged', args);
   };
+  
   const onSetLockStatus = (instance) => async (val) => {
     exports.setLock(val);
-    return instance.annotManager.setReadOnly(val);
+    instance.docViewer.trigger('lockChanged', [val]);
   }
 
   const onSetSelectedSigner = (instance) => (signerId) => {
@@ -887,6 +888,7 @@ function tracePropAccess(obj, propKeys) {
      */
 
     instance.docViewer.on('setBlankPages', onSetBlankPages(instance));
+    instance.docViewer.on('setLockStatus', onSetLockStatus(instance));
     // disables hotkeys when document loads
     instance.docViewer.on('annotationsLoaded', buildDisableHotKeys(instance));
     instance.annotManager.on('updateAnnotationPermission', () => {
@@ -904,7 +906,6 @@ function tracePropAccess(obj, propKeys) {
     instance.annotManager.on('updateAnnotationPermission', onUpdateAnnotationPermission(instance));
     instance.annotManager.on('fieldChanged', onFieldChanged(instance))
 
-    instance.annotManager.on('setLockStatus', onSetLockStatus(instance));
     instance.annotManager.on('setSelectedSigner', onSetSelectedSigner(instance));
     instance.annotManager.on('setCurrentUser', onSetCurrentUser(instance));
 
