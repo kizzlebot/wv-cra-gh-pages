@@ -49,16 +49,31 @@ function App({
         />
       </Route>
 
-      <Route path='/notarization/:nsId/notary'>
+      <Route path='/notarization/:nsId/notary/:organizationId'>
         <WebviewerApp
           config={config}
           user={user}
           userId={userId}
-          isAdminUser={isAdminUser}
+          isAdminUser={true}
           docs={docs}
-          selectedDoc={_.head(_.keys(docs))}
+          selectedDoc={'-1'}
         />
       </Route>
+
+      <Route path='/notarization/:nsId/consumer/:organizationId'>
+        <WebviewerApp
+          config={config}
+          user={user}
+          userId={userId}
+          isAdminUser={false}
+          docs={docs}
+          selectedDoc={'-1'}
+        />
+      </Route>
+
+
+
+
 
       <Route path='/'>
         <div>
@@ -92,11 +107,12 @@ function App({
             <Link to={`/v2/8d976a23-b865-4fcd-9165-ddc0aedaf614/rooms/8d976a23-b865-4fcd-9165-ddc0aedaf614`}>Go to V2</Link>
           </div>
           <hr />
+
           <div>
-            <Link to={`/notarization/${data.nsId}/consumer?orgId=${data.orgId}`}>Notarization Room (Consumer)</Link>
+            <Link to={`/notarization/${data.nsId}/consumer/${data.orgId}`}>Notarization Room (Consumer)</Link>
           </div>
           <div>
-            <Link to={`/notarization/${data.nsId}/notary?orgId=${data.orgId}`}>Notarization Room (Notary)</Link>
+            <Link to={`/notarization/${data.nsId}/notary/${data.orgId}`}>Notarization Room (Notary)</Link>
           </div>
 
           <hr />

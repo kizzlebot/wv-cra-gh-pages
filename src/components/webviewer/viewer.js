@@ -52,6 +52,7 @@ class Webviewer extends Component {
     this.state = {
       certModal: { show: false, },
     }
+    this.notarialCertUploadRef = React.createRef();
   }
 
   disableAllTools = createEnableDisableTools(true)
@@ -125,7 +126,12 @@ class Webviewer extends Component {
         docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
 
         // when cert modal clicked
-        instance.docViewer.on('certModal', ({ type, pdf }) => this.setState({ certModal: { show: true, pdf } }));
+        instance.docViewer.on('certModal', ({ type, pdf }) => {
+          if (type === 'file'){
+            return this.notarialCertUploadRef.current.click()
+          }
+          return this.setState({ certModal: { show: true, pdf } })
+        });
       });
 
 
@@ -280,6 +286,7 @@ class Webviewer extends Component {
     return (
       <>
         <DocSelector />
+        
         <div
           style={{ height: '100%' }}
           data-testid='webviewer-container'
@@ -288,6 +295,13 @@ class Webviewer extends Component {
         />
 
 
+        <input
+          ref={this.notarialCertUploadRef}
+          type='file'
+          style={{ display: 'none' }}
+          accept='image/*,.pdf'
+          onChange={(e) => this.setState({ certModal: { show: true, type: 'file', pdf: e.target.files[0] } })}
+        />
         <CertPdfModal
           show={this.state.certModal.show}
           pdf={this.state.certModal.pdf}

@@ -21,6 +21,10 @@ const DocSelector = (props) => {
       appState.setSelectedDoc(_.head(_.keys(appState.docs)));
     }
   })
+
+  if (!appState.isAdminUser){
+    return <></>
+  }
   
   return (
     <DocSelectorWrapper className='col-xs-12 text-center'>

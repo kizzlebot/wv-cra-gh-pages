@@ -23,7 +23,7 @@ function WebviewerApp() {
 
   return (
     <>
-      <div className="App" style={{ height: '100% !important' }}>
+      <div className="App d-flex flex-column" style={{ height: '100% !important' }}>
         <Collab
           config={appState.config}
           userId={appState.getCurrentUser()}

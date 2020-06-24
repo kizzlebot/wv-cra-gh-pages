@@ -45,13 +45,18 @@ class CertViewer extends Component {
     const instance = await WebViewer({
       path: '/lib',
       fullAPI: true,
-      initialDoc: this.props.pdf,
+      initialDoc: (_.isString(this.props.pdf)) ? this.props.pdf : undefined,
       l: 'eNotaryLog, LLC(enotarylog.com):OEM:eNotaryLog::B+:AMS(20201230):76A52CDD0477580A3360B13AC982537860612F83FF486E45958D86734C8F4E902A4935F5C7',
       enableAnnotations: true,
       pdftronServer: 'https://demo.pdftron.com/',
       disabledElements: [
       ]
     }, this.viewer.current);
+
+
+    if (!_.isString(this.props.pdf)){
+      await instance.loadDocument(this.props.pdf);
+    }
 
     // await createCertModalHeader(instance);
     // at this point, the viewer is 'ready'
