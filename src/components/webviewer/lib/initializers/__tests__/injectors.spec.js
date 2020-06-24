@@ -1,4 +1,6 @@
-import { injectToolArr, injectTool, registerHeaderGroup, updateTool } from '../injectors';
+import { injectToolArr, injectTool, updateTool } from '../injectors';
+import registerHeaderGroup from '../registerHeaderGroup';
+
 
 
 

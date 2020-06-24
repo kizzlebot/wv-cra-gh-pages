@@ -28,6 +28,7 @@
     "twilio-video": "^2.3.0"
   },
   "scripts": {
+    "download-webviewer": "npx @pdftron/webviewer-downloader --path ./public/lib --v 6.3.2 --npm",
     "start": "PORT=3030 react-scripts start",
     "dev": "PORT=3030 react-scripts start",
     "build": "react-scripts build",

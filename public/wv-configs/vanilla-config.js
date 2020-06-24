@@ -26,7 +26,7 @@ function tracePropAccess(obj, propKeys) {
 
 ((exports) => {
 
-  const { Promise, R, _ } = window.getExternalLibs()
+  const { Promise, R, _ } = window.parent;
   // eslint-disable-next-line no-unused-vars
   const tapP = (fn) => (args) => Promise.resolve(fn(args)).then(R.always(args));
 
@@ -35,7 +35,15 @@ function tracePropAccess(obj, propKeys) {
     const lName = _.get(user, 'lastName', _.get(user, 'user.lastName'));
     return `${_.upperFirst(fName)} ${_.upperFirst(lName)}`;
   }
-
+  const callIfDefined = R.when(
+    R.isNil,
+    R.pipe(
+      R.tap((val) => console.log('callback not defined', val)),
+      R.identity
+    )
+  )
+  
+  
   const runId = !!window.sessionStorage.getItem('runId') ? window.sessionStorage.getItem('runId') : `${Math.floor(Math.random() * 10000)}`;
   window.sessionStorage.setItem('runId', runId);
 
@@ -346,9 +354,14 @@ function tracePropAccess(obj, propKeys) {
       disableTools = [], 
       fitMode, 
       layoutMode,
-      disableElements = [] 
+      disableElements = [],
+      colorPalette = []
     } = config;
     
+    // TODO: use this when at v6.3
+    if (!_.isEmpty(colorPalette)){
+      _.map(colorPalette, instance.setColorPalette);
+    }
 
     const { FitMode, LayoutMode } = instance;
     if (fitMode) {
@@ -570,10 +583,41 @@ function tracePropAccess(obj, propKeys) {
   }
 
 
+  const handleSetAnnotationDisplayAuthorMap = (instance) => (annot) => {
+    const signers = exports.getSigners();;
+    const signer = exports.getSigner();;
+    const userId = instance.annotManager.getCurrentUser();
 
-  const handleAddRemoveBlankPages = (instance) => {
+    if (annot instanceof Annotations.WidgetAnnotation) {
+      const signerId = _.get(annot, 'CustomData.signerId', annot.Author);
+      const signer = exports.getSignerById(userId);
+      const rtn = parseName(signer);
+      return rtn;
+    }
+
+    if (_.get(annot, 'Author')) {
+      const user = _.find(signers, { id: annot.Author });
+
+      if (user) {
+        return parseName(user);
+      }
+    }
+
+    const s = _.find(signers, { id: userId });
+    if (s) {
+      return parseName(s);
+    }
+
+    return _.get(annot, 'Author');
+  }
+
+
+
+  const onSetBlankPages = (instance) => {
     const { PDFNet } = instance;
-    return async (numPages, cb) => {
+    // const onSetBlankPages = _.throttle(handleAddRemoveBlankPages(instance), 1200, { trailing: true });
+    const setBlankPages = async (numPages, cb) => {
+      console.log('set blank pages called');
       await PDFNet.initialize();
       const doc = instance.docViewer.getDocument();
       if (!doc) {
@@ -615,10 +659,11 @@ function tracePropAccess(obj, propKeys) {
         return cb();
       }
     };
+    return _.throttle(setBlankPages, 1200, { trailing: true })
   }
 
 
-  const handleUpdateAnnotPermission = (instance) => {
+  const onUpdateAnnotationPermission = (instance) => {
     const updateAnnotPerm = (isAdminUser, currUserId, locked) => (annot) => {
 
       if (annot instanceof instance.Annotations.WidgetAnnotation) {
@@ -655,24 +700,78 @@ function tracePropAccess(obj, propKeys) {
     }
   };
 
+  const onSetCurrentUser = (instance) => (currentUser) => {
+    instance.annotManager.setCurrentUser(currentUser);
+    instance.annotManager.trigger('currentUserChanged', currentUser);
+  };
+  const onSetSigners = (instance) => async (...args) => {
+    exports.setSigners(args)
+    return instance.annotManager.trigger('signersChanged', args);
+  };
+  const onSetLockStatus = (instance) => async (val) => {
+    exports.setLock(val);
+    return instance.annotManager.setReadOnly(val);
+  }
+
+  const onSetSelectedSigner = (instance) => (signerId) => {
+    exports.setSelectedSigner(signerId);
+    instance.annotManager.trigger('selectedSignerChanged', signerId);
+  };
+
+  // prevent intermediate annotations from being selected in a group so it doesnt synced to firebase
+  const onAnnotationSelected = (instance) => (annots, action) => {
+    // if group is selected, dont mix intermediate annots which shouldnt be synced between signers
+    if (action === 'selected' && annots.length > 1){
+      const intermediates = _.filter(annots, isIntermediateField);
+      if (intermediates.length > 0){
+        // all arent intermediate fields. continue
+        if (intermediates.length !== annots.length) {
+          instance.annotManager.deselectAllAnnotations()
+        }
+      }
+    }
+  };
 
 
+  const buildGetAnnotationCopy = (instance) => {
+    const { getAnnotationCopy } = instance.annotManager;
+    return (annotation) => {
+      const annot = getAnnotationCopy.call(instance.annotManager, annotation);
+      annot.CustomData = { ...annotation.CustomData };
+      if (annotation.Subject === 'Signature'){
+        annot.CustomData.sigType = annotation.CustomData.type;
+      }
 
+      console.log('get annotation copy called', { annotation: annotation.CustomData, annot: annot.CustomData });
+      annot.CustomData.authorId = instance.annotManager.getCurrentUser();
+      return annot;
+    };
+  }
 
+  const buildHandleDeleteDuplicateWidgets = (instance) => _.debounce(async () => {
+    const toDelete = _.chain(instance.annotManager.getAnnotationsList())
+      .filter((a) => a instanceof Annotations.WidgetAnnotation)
+      .groupBy('CustomData.id')
+      .omit(['undefined'])
+      .mapValues((vals) => vals.length > 1 ? _.tail(_.reverse(vals)) : null)
+      .values()
+      .flatten()
+      .filter(R.complement(R.isNil))
+      .value()
 
+    await instance.annotManager.deleteAnnotations(toDelete, true);
+  }, 2000, { leading: false, trailing: true });
 
+  const buildGetWidgetById = (instance) => (widgetId) => {
+    const widgetAnnots = _.filter(instance.annotManager.getAnnotationsList(), (annot) => annot instanceof instance.Annotations.WidgetAnnotation);
+    const widget = _.find(widgetAnnots, (annot) => annot.CustomData.id === widgetId);
+    return widget;
+  };
 
-
-
-
-
-
-
-
-
-
-
-
+  const buildDisableHotKeys = (instance) => () => {
+    instance.hotkeys.off();
+    instance.hotkeys.on('AnnotationEdit');
+  }
 
 
   /**
@@ -716,29 +815,16 @@ function tracePropAccess(obj, propKeys) {
         exports.setSigners(signers);
         annotManager.trigger('signersChanged', signers);
       },
+      showMessage: callIfDefined(readerControl.showMessage),
+      hideMessage: callIfDefined(readerControl.hideMessage),
     }
 
 
-    instance.annotManager.handleDeleteDuplicateWidgets = _.debounce(async () => {
-      const toDelete = _.chain(annotManager.getAnnotationsList())
-        .filter((a) => a instanceof Annotations.WidgetAnnotation)
-        .groupBy('CustomData.id')
-        .omit(['undefined'])
-        .mapValues((vals) => vals.length > 1 ? _.tail(_.reverse(vals)) : null)
-        .values()
-        .flatten()
-        .filter(R.complement(R.isNil))
-        .value()
-
-      await instance.annotManager.deleteAnnotations(toDelete, true);
-    }, 2000, { leading: false, trailing: true })
+    
+    instance.annotManager.handleDeleteDuplicateWidgets = buildHandleDeleteDuplicateWidgets(instance);
+    instance.annotManager.getWidgetById = buildGetWidgetById(instance)
 
 
-    annotManager.getWidgetById = (widgetId) => {
-      const widgetAnnots = _.filter(annotManager.getAnnotationsList(), (annot) => annot instanceof Annotations.WidgetAnnotation);
-      const widget = _.find(widgetAnnots, (annot) => annot.CustomData.id === widgetId);
-      return widget;
-    };
 
     await extendAnnotations({ ...instance });
     const custom = JSON.parse(exports.readerControl.getCustomData()) || {};
@@ -747,35 +833,20 @@ function tracePropAccess(obj, propKeys) {
 
   
     // preserve custom data from signature
-    const sigtool = instance.docViewer.getTool('AnnotationCreateSignature');
-    const { getAnnotationCopy } = instance.annotManager;
+    const sigTool = instance.docViewer.getTool('AnnotationCreateSignature');
 
 
-    // when an signature annotation is copied in webviewer-ui code, it doesn't copy over the CustomData.
-    annotManager.getAnnotationCopy = (annotation) => {
-      const annot = getAnnotationCopy.call(instance.annotManager, annotation);
-      annot.CustomData = annotation.CustomData;
-      annot.CustomData.authorId = instance.annotManager.getCurrentUser();
-      return annot;
-    };
+    // when an signature annotation is copied in webviewer-ui code, it doesn't copy over the CustomData. So extend this
+    instance.annotManager.getAnnotationCopy = buildGetAnnotationCopy(instance);
 
 
-    // TODO: if a signer changes their signature, change all signatures which are already present in the page
-    sigtool.on('signatureSaved', async (annot) => {
-      // console.log('signature saved', annot)
-      // const annots = await instance.annotManager.getAnnotationsList();
-      // const toReplace = _.filter(annots, a => a.CustomData.authorId = instance.annotManager.getCurrentUser() && annot.Id !== a.Id);
+    // this handles gettings the name of the author based on authorId
+    annotManager.setAnnotationDisplayAuthorMap(handleSetAnnotationDisplayAuthorMap(instance));
 
-      // console.log('signature saved: toreplace', toReplace);
-      // const imageData = annot.ImageData;
 
-      // if (toReplace.length > 0){
-      //   _.map(toReplace, (r) => {
-      //     r.ImageData = imageData;
-      //     return instance.annotManager.redrawAnnotation(r);
-      //   });
-      // }
-    })
+
+    // when a signature/initial is added remove duplicate widgets
+    sigTool.on('annotationAdded', annotManager.handleDeleteDuplicateWidgets);
 
 
 
@@ -784,136 +855,54 @@ function tracePropAccess(obj, propKeys) {
 
 
 
-    annotManager.setAnnotationDisplayAuthorMap((annot) => {
-      const signers = exports.getSigners();;
-      const signer = exports.getSigner();;
-      const userId = annotManager.getCurrentUser();
-
-      if (annot instanceof Annotations.WidgetAnnotation) {
-        const signerId = _.get(annot, 'CustomData.signerId', annot.Author);
-        const signer = exports.getSignerById(userId);
-        const rtn = parseName(signer);
-        return rtn;
-      }
-
-      if (_.get(annot, 'Author')) {
-        const user = _.find(signers, { id: annot.Author });
-
-        if (user) {
-          return parseName(user);
-        }
-      }
-
-      const s = _.find(signers, { id: userId });
-      if (s) {
-        return parseName(s);
-      }
-
-      return _.get(annot, 'Author');
-    });
 
 
-    // annotManager.setRedrawThrottle(1000);
+
 
     /* 
-     * When addBlankPage is triggered. then add a page
+     * register listeners
      */
-    const addRemoveBlankPages = _.throttle(handleAddRemoveBlankPages(instance), 1200, { trailing: true });
-    docViewer.on('setBlankPages', addRemoveBlankPages);
 
+    instance.docViewer.on('setBlankPages', onSetBlankPages(instance));
+    // disables hotkeys when document loads
+    instance.docViewer.on('annotationsLoaded', buildDisableHotKeys(instance));
+    instance.annotManager.on('updateAnnotationPermission', () => {
+      instance.hotkeys.off();
+      instance.hotkeys.on('AnnotationEdit');
+    });
 
-
-
-
-
-    docViewer.getTool('AnnotationCreateSignature')
-      .on('annotationAdded', annotManager.handleDeleteDuplicateWidgets);
 
 
     // register events to trigger on annotManager. subscribed by parent component
-    annotManager.on('annotationChanged', onAnnotationChanged(instance));
+    instance.annotManager.on('annotationChanged', onAnnotationChanged(instance));
+    instance.annotManager.on('annotationSelected', onAnnotationSelected(instance));
 
 
+    instance.annotManager.on('updateAnnotationPermission', onUpdateAnnotationPermission(instance));
+    instance.annotManager.on('fieldChanged', onFieldChanged(instance))
 
+    instance.annotManager.on('setLockStatus', onSetLockStatus(instance));
+    instance.annotManager.on('setSelectedSigner', onSetSelectedSigner(instance));
+    instance.annotManager.on('setCurrentUser', onSetCurrentUser(instance));
 
-    // prevent intermediate annotations from being selected in a group so it doesnt synced to firebase
-    annotManager.on('annotationSelected', (annots, action) => {
-      // if group is selected, dont mix intermediate annots which shouldnt be synced between signers
-      if (action === 'selected' && annots.length > 1){
-        const intermediates = _.filter(annots, isIntermediateField);
-        if (intermediates.length > 0){
-          // all arent intermediate fields. continue
-          if (intermediates.length !== annots.length) {
-            instance.annotManager.deselectAllAnnotations()
-          }
-        }
-      }
-    });
-
-
-
-
-    annotManager.on('fieldChanged', onFieldChanged(instance))
-
-    // register listeners. triggered from parent component
-    annotManager.on('setLockStatus', async (val) => {
-      exports.setLock(val);
-      return exports.readerControl.setReadOnly(val);
-    });
-
-
-
-    // built-in event 
-    const updateAnnotPerm = handleUpdateAnnotPermission(instance)
-    annotManager.on('updateAnnotationPermission', updateAnnotPerm);
-
-
-    annotManager.on('setSelectedSigner', (signerId) => {
-      exports.setSelectedSigner(signerId);
-      annotManager.trigger('selectedSignerChanged', signerId);
-    });
-
-    annotManager.on('setCurrentUser', (currentUser) => {
-      annotManager.setCurrentUser(currentUser);
-      annotManager.trigger('currentUserChanged', currentUser);
-    });
-
-    // built-in event 
-    readerControl.docViewer.on('documentLoaded', () => configureFeatures(instance, custom));
+    instance.annotManager.on('addSigner', async (args) => exports.addSigner(args));
+    instance.annotManager.on('setSigners', onSetSigners(instance));
+    instance.docViewer.on('setDocId', (docId) => exports.setDocId(docId));
    
 
 
-    annotManager.on('addSigner', async (args) => exports.addSigner(args));
-    annotManager.on('setSigners', async (...args) => {
-      exports.setSigners(args)
-      annotManager.trigger('signersChanged', args);
-    });
 
 
-    docViewer.on('setDocId', (docId) => exports.setDocId(docId));
 
 
-    // TODO: use this when at v6.3
-    readerControl.setColorPalette(['#4B92DB', '#000000']);
 
 
-    // disables hotkeys when document loads
-    // built-in event 
-    readerControl.docViewer.on('annotationsLoaded', () => {
-      readerControl.hotkeys.off();
-      readerControl.hotkeys.on('AnnotationEdit');
-    });
-
-    // disables hotkeys when annotManager.setCurrentUser() is called
-    // built-in event 
-    annotManager.on('updateAnnotationPermission', () => {
-      readerControl.hotkeys.off();
-      readerControl.hotkeys.on('AnnotationEdit');
-    });
 
 
-    exports.CoreControls.disableLogs(true);
 
+
+    
+    // exports.CoreControls.disableLogs(true);
     const { loadDocument } = instance;
     const triggerReady = () => docViewer.trigger('ready', { 
       ...instance, 

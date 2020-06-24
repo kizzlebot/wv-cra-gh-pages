@@ -1,9 +1,10 @@
 import * as R from 'ramda';
 import registerAnnotationType from "../initializers/registerAnnotationType";
 import registerTool from "../initializers/registerTool";
-import { injectTool, registerHeaderGroup } from "../initializers/injectors";
+import { injectTool } from "../initializers/injectors";
 import defineToolClass from '../initializers/defineToolClass';
 import defineAnnotClass from '../initializers/defineAnnotClass';
+import registerHeaderGroup from "../initializers/registerHeaderGroup";
 
 const loadImg = async (url) => new Promise((res, rej) => {
   const img = new window.Image();

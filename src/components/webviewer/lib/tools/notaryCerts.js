@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import * as R from 'ramda';
-import { registerHeaderGroup, injectTool } from "../initializers/injectors";
+import { injectTool } from "../initializers/injectors";
+
+import registerHeaderGroup from "../initializers/registerHeaderGroup";
 import defineAnnotClass from '../initializers/defineAnnotClass';
 import defineToolClass from '../initializers/defineToolClass';
 import registerAnnotationType from '../initializers/registerAnnotationType';
