@@ -43,6 +43,7 @@ export default function Collab(props){
        */
       config={appState.config}
       toolConfig={{
+        panelNames: ['TestPanel'],
         toolNames: [
           // 'ShowSigner', 
           'SelectSigner', 

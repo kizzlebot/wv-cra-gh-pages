@@ -109,8 +109,9 @@ class Webviewer extends Component {
       // The default was set to compare the authorName
       // Instead of the authorName, we will compare authorId created from the server
       annotManager.setPermissionCheckCallback((author, annotation) => {
-        const currentUser = annotManager.getCurrentUser()
-        return annotation.authorId === currentUser || annotation.Author === currentUser;
+        const currentUser = annotManager.getCurrentUser();
+        const isAdmin = annotManager.getIsAdminUser();
+        return annotation.authorId === currentUser || annotation.Author === currentUser || isAdmin;
       });
 
 
@@ -126,6 +127,15 @@ class Webviewer extends Component {
 
         // when cert modal clicked
         instance.docViewer.on('certModal', ({ type, pdf }) => this.setState({ certModal: { show: true, pdf } }));
+        
+        annotManager.on('selectedSignerChanged', (signerId) => {
+          console.log('selectedSignerChanged', signerId)
+          if (signerId === '-1') {
+            this.disableAllTools(this.instance);
+          } else {
+            this.enableAllTools(this.instance);
+          }
+        });        
       });
 
 
@@ -182,6 +192,7 @@ class Webviewer extends Component {
         annotManager.off('widgetUpdated');
         annotManager.off('widgetDeleted');
         annotManager.off('fieldUpdated');
+        annotManager.off('selectedSignerChanged', this.props.onSelectedSignerChanged)
       })
 
 

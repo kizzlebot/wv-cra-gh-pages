@@ -10,6 +10,7 @@ export const injectToolArr = async ({ instance, config }) => ({
     Divider: { type: 'divider' },
   },
   toolClasses: {},
+  panels: {}
 });
 
 export const injectTool = (toolName, toolButtonConfig) => async ({ tools, ...rest }) => {
@@ -25,6 +26,16 @@ export const injectTool = (toolName, toolButtonConfig) => async ({ tools, ...res
   }
 }
 
+
+export const injectPanel = (panelName, panelConfig) => async ({ panels, ...rest }) => {
+  return {
+    ...rest,
+    panels: {
+      ...panels,
+      [panelName]: _.isFunction(panelConfig) ? panelConfig({ panels, ...rest, }) : panelConfig 
+    }
+  }
+}
 
 
 

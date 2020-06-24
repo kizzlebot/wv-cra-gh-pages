@@ -69,9 +69,6 @@ export function AppStateProvider({
     setBlankPages: (blankPages) => setBlankPages(blankPages),
     setSigners: (signers) => {
       setSigners(signers)
-      if (!getSelectedSigner()){
-        setSelectedSigner(_.head(_.keys(signers)));
-      }
     },
     setPageNumbers: (pageNumbers) => setPageNumbers(pageNumbers),
 

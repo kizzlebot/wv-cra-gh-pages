@@ -36,6 +36,7 @@ class SelectSigner extends React.Component {
           this.props.instance.annotManager.trigger('setSelectedSigner', evt.target.value)
         }}
       >
+        <option value={'-1'}>N/A</option>
         {
           _.map(this.state.signers, (signer) => (
             <option key={signer.id} value={signer.id}>{parseName(signer)}</option>

@@ -7,9 +7,14 @@ export default {
   fullAPI: true,
   // ui: 'beta',
   // config: config ? `${process.env.PUBLIC_URL}${config}` : undefined,
-  config: '/wv-configs/config.js',
+  config: '/wv-configs/vanilla-config.js',
+  disableLogs: true,
   // pdftronServer: 'https://demo.pdftron.com/',
   custom: {
+    colorPalette: [{
+      toolNames: ['AnnotationCreateFreeText', 'AnnotationCreateSignature'],
+      colors: ['#4B92DB', '#000000'],
+    }],
     // fitMode: 'FitPage',
     layoutMode: 'Single',
     disableFeatures: [
@@ -40,11 +45,11 @@ export default {
       'linkButton',
       'shapeToolGroupButton',
       'eraserToolButton',
-      'thumbnailControl',
+      // 'thumbnailControl',
       'outlinesPanel',
       'outlinesPanelButton',
-      'thumbnailsPanelButton',
-      'leftPanelTabs'
+      // 'thumbnailsPanelButton',
+      // 'leftPanelTabs'
     ]
   }
 }
