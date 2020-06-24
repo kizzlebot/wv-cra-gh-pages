@@ -583,6 +583,35 @@ function tracePropAccess(obj, propKeys) {
   }
 
 
+  const handleSetAnnotationDisplayAuthorMap = (instance) => (annot) => {
+    const signers = exports.getSigners();;
+    const signer = exports.getSigner();;
+    const userId = instance.annotManager.getCurrentUser();
+
+    if (annot instanceof Annotations.WidgetAnnotation) {
+      const signerId = _.get(annot, 'CustomData.signerId', annot.Author);
+      const signer = exports.getSignerById(userId);
+      const rtn = parseName(signer);
+      return rtn;
+    }
+
+    if (_.get(annot, 'Author')) {
+      const user = _.find(signers, { id: annot.Author });
+
+      if (user) {
+        return parseName(user);
+      }
+    }
+
+    const s = _.find(signers, { id: userId });
+    if (s) {
+      return parseName(s);
+    }
+
+    return _.get(annot, 'Author');
+  }
+
+
 
   const onSetBlankPages = (instance) => {
     const { PDFNet } = instance;
@@ -670,37 +699,6 @@ function tracePropAccess(obj, propKeys) {
       return _.map(allAnnots, updatePerm);
     }
   };
-
-
-
-  const handleSetAnnotationDisplayAuthorMap = (instance) => (annot) => {
-    const signers = exports.getSigners();;
-    const signer = exports.getSigner();;
-    const userId = instance.annotManager.getCurrentUser();
-
-    if (annot instanceof Annotations.WidgetAnnotation) {
-      const signerId = _.get(annot, 'CustomData.signerId', annot.Author);
-      const signer = exports.getSignerById(userId);
-      const rtn = parseName(signer);
-      return rtn;
-    }
-
-    if (_.get(annot, 'Author')) {
-      const user = _.find(signers, { id: annot.Author });
-
-      if (user) {
-        return parseName(user);
-      }
-    }
-
-    const s = _.find(signers, { id: userId });
-    if (s) {
-      return parseName(s);
-    }
-
-    return _.get(annot, 'Author');
-  }
-
 
   const onSetCurrentUser = (instance) => (currentUser) => {
     instance.annotManager.setCurrentUser(currentUser);
