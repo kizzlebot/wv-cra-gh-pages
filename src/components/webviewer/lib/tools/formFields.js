@@ -5,7 +5,8 @@ import registerTool from "../initializers/registerTool";
 import applyFormFieldCreate from '../actions/applyFormFieldCreate';
 import initRectAnnot from '../initializers/initRectAnnot';
 import registerAnnotationType from "../initializers/registerAnnotationType";
-import { registerHeaderGroup, injectTool } from "../initializers/injectors";
+import registerHeaderGroup from "../initializers/registerHeaderGroup";
+import { injectTool } from "../initializers/injectors";
 import defineToolClass from '../initializers/defineToolClass';
 import createTextField from '../actions/createTextField';
 
