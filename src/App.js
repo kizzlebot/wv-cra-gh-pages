@@ -4,7 +4,7 @@ import config from './stories/lib/config';
 import WebviewerApp from './components/webviewer';
 import WebviewerEsignApp from './components/webviewer/esign';
 import { Route, Switch, Link } from 'react-router-dom';
-import { useDefault } from 'react-use';
+import { useDefault, useLocation } from 'react-use';
 
 const initialData = {
   nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
@@ -15,6 +15,9 @@ const defaultData = {
   orgId: '8d976a23-b865-4fcd-9165-ddc0aedaf614'
 }
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 function App({
   user,
@@ -24,7 +27,10 @@ function App({
 }) {
 
   const [data, setData] = useDefault(defaultData, initialData);
+  const query = useQuery();
 
+
+  
   return (
     <Switch>
       <Route path='/v2/:organizationId/rooms/:nsId'>
@@ -32,7 +38,7 @@ function App({
           config={config}
           user={user}
           userId={userId}
-          isAdminUser={isAdminUser}
+          isAdminUser={query.get('isAdminUser') === 'true'}
           docs={docs}
           selectedDoc={_.head(_.keys(docs))}
         />
@@ -43,7 +49,7 @@ function App({
           config={config}
           user={user}
           userId={userId}
-          isAdminUser={isAdminUser}
+          isAdminUser={query.get('isAdminUser') === 'true'}
           docs={docs}
           selectedDoc={_.head(_.keys(docs))}
         />
@@ -103,9 +109,14 @@ function App({
           <div>
             <Link to={`/esign/8d976a23-b865-4fcd-9165-ddc0aedaf614`}>Esignature</Link>
           </div>
+
           <div>
-            <Link to={`/v2/8d976a23-b865-4fcd-9165-ddc0aedaf614/rooms/8d976a23-b865-4fcd-9165-ddc0aedaf614`}>Go to V2</Link>
+            <Link to={`/v2/${data.nsId}/rooms/${data.orgId}?isAdminUser=true`}>Go to V2 (admin)</Link>
           </div>
+          <div>
+            <Link to={`/v2/${data.nsId}/rooms/${data.orgId}`}>Go to V2 (non-admin)</Link>
+          </div>
+
           <hr />
 
           <div>

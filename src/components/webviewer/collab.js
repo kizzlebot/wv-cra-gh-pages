@@ -6,7 +6,7 @@ import { useServer } from 'lib/hooks/useServerProvider';
 import Promise from 'bluebird';
 import { useEffectOnce } from 'react-use';
 import useAppState from 'lib/hooks/AppState';
-import { importFbaseVal, delFbaseVal, importWidgetFbaseVal, delWidgetFbaseVal, importField, setBlankPages } from './lib/helpers/import';
+import { importFbaseVal, delFbaseVal, importWidgetFbaseVal, delWidgetFbaseVal, importField, setBlankPages, lockWebviewer } from './lib/helpers/import';
 import debug from 'debug';
 const log = debug('collab');
 
@@ -46,6 +46,7 @@ export default function Collab(props){
         panelNames: ['TestPanel'],
         toolNames: [
           // 'ShowSigner', 
+          'LockCheckbox',
           'SelectSigner', 
           'Divider', 
           'AddBlankPage', 
@@ -87,7 +88,8 @@ export default function Collab(props){
         server.bind('onWidgetDeleted', inst.getDocId(), delWidgetFbaseVal(inst)),
         server.bind('onFieldAdded', inst.getDocId(), importField(inst)),
         server.bind('onFieldUpdated', inst.getDocId(), importField(inst)),
-        server.bind('onBlankPagesChanged', inst.getDocId(), setBlankPages(inst))
+        server.bind('onBlankPagesChanged', inst.getDocId(), setBlankPages(inst)),
+        server.bind('onLockChanged', inst.getDocId(), lockWebviewer(inst))
       ])}
       unbindEvents={({ selectedDoc }) => server.unbindAll(selectedDoc)}
 
@@ -100,6 +102,7 @@ export default function Collab(props){
       onWidgetAdded={invokeServerMethod(server.createWidget)}
       onWidgetUpdated={invokeServerMethod(server.updateWidget)}
       onWidgetDeleted={invokeServerMethod(server.deleteWidget)}
+      onLockChanged={server.setLock}
 
       onSelectedSignerChanged={server.setSelectedSigner}
       

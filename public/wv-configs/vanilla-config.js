@@ -811,14 +811,37 @@ function tracePropAccess(obj, propKeys) {
       getSigners: exports.getSigners,
       getSigner: exports.getSigner,
       getSignerById: exports.getSignerById,
+      getLock: exports.getLock,
+      setLock: exports.setLock,
       setSigners: (signers) => {
         exports.setSigners(signers);
         annotManager.trigger('signersChanged', signers);
       },
       showMessage: callIfDefined(readerControl.showMessage),
       hideMessage: callIfDefined(readerControl.hideMessage),
+      toggleTools: (disable) => instance.setHeaderItems((header) => {
+        _.chain(header.headers.default)
+          .map('dataElement')
+          .filter(R.complement(_.isNil))
+          .forEach((dataEl) => {
+            instance.updateElement(dataEl, { disable: disable });
+          })
+          .value()
+      
+        instance.annotManager.setReadOnly(disable)
+      }),
     }
 
+    
+
+    docViewer.lockWebviewer = (disable) => {
+      instance.toggleTools(disable);
+      if (disable) {
+        instance.showMessage('Notary Editing..');
+      } else {
+        instance.hideMessage();
+      }
+    }
 
     
     instance.annotManager.handleDeleteDuplicateWidgets = buildHandleDeleteDuplicateWidgets(instance);

@@ -70,7 +70,7 @@ class Webviewer extends Component {
       config: '/wv-configs/vanilla-config.js'
     }, this.viewerRef.current);
 
-    const { docs, selectedDoc, currentUser } = this.props;
+    const { docs, selectedDoc, currentUser, isAdminUser } = this.props;
 
 
 
@@ -100,6 +100,7 @@ class Webviewer extends Component {
 
 
       annotManager.setCurrentUser(currentUser);
+      annotManager.setIsAdminUser(isAdminUser);
 
 
       if (_.isFunction(this.props.authenticate)){
@@ -125,6 +126,7 @@ class Webviewer extends Component {
       instance.docViewer.one('documentLoaded', () => {
         // attach event listeners to docViewer
         docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
+        docViewer.on('lockChanged', callIfDefined(this.props.onLockChanged))
 
         // when cert modal clicked
         instance.docViewer.on('certModal', ({ type, pdf }) => {
@@ -162,6 +164,8 @@ class Webviewer extends Component {
         if (_.isFunction(this.props.bindEvents)){
           await this.props.bindEvents({
             ...instance,
+            disableAllTools: this.disableAllTools,
+            enableAllTools: this.enableAllTools,
             selectedDoc: instance.getDocId(),
           })
         }

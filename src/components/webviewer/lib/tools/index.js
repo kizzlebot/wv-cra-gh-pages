@@ -8,6 +8,7 @@ import registerAddRemovePage from './addRemovePage';
 import registerRemoveFormFields from './removeFormFields';
 import registerSelectSigner from './selectSigner';
 import registerShowSigner from './showSigner';
+import registerLockCheckbox from './lock';
 
 
 const registerTools = R.pipeP(
@@ -19,6 +20,7 @@ const registerTools = R.pipeP(
   registerFormFieldTools,
   registerTemplateTools,
   registerStampAnnotTool,
+  registerLockCheckbox
 );
 
 export default registerTools;

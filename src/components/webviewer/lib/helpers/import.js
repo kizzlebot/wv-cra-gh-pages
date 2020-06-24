@@ -106,3 +106,11 @@ export const setBlankPages = ({ selectedDoc, docViewer }) => async ({ val, key }
   }
   return docViewer.trigger('setBlankPages', [val]);
 };
+
+
+export const lockWebviewer = (instance) => async ({ val }) => {
+  instance.docViewer.trigger('setLockStatus', [val]);
+  if (!instance.annotManager.getIsAdminUser()){
+    return instance.docViewer.lockWebviewer(val);
+  }
+}
