@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-assign */
-import * as R from 'ramda';
+import * as R from '@enotarylog/ramda';
 import _ from 'lodash';
 import debug from 'debug';
 
@@ -9,7 +9,7 @@ const log = debug('server');
 export default async (firebase, serverOpts) => {
   // console.debug('serverOpts', serverOpts, firebase);
   class Server {
-    constructor({ nsId, userId, user, signers, userType, token, rtdbNamespace }) {
+    constructor({ nsId, isAdmin, userId, user, signers, userType, token, rtdbNamespace }) {
       this.nsId = nsId;
       this.userId = userId;
       this.userType = userType;

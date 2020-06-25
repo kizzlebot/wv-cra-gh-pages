@@ -60,6 +60,7 @@ function App({
           config={config}
           user={user}
           userId={userId}
+          userType='admin'
           isAdminUser={true}
           docs={docs}
           selectedDoc={'-1'}
@@ -71,6 +72,7 @@ function App({
           config={config}
           user={user}
           userId={userId}
+          userType='signer'
           isAdminUser={false}
           docs={docs}
           selectedDoc={'-1'}

@@ -935,6 +935,12 @@ function tracePropAccess(obj, propKeys) {
           const pageCount = instance.docViewer.getPageCount()
           exports.setPageCount(config.docId, pageCount);
           instance.hideMessage('Loading...');
+          const isAdmin = instance.annotManager.getIsAdminUser();
+          if (!isAdmin){
+            const isLocked = exports.getLock();
+            docViewer.lockWebviewer(isLocked);
+          }
+          
           return configureFeatures(instance, custom)
         });
 

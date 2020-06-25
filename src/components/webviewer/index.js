@@ -8,15 +8,44 @@ import { withServerProvider, useServer } from 'lib/hooks/useServerProvider';
 import { useParams } from 'react-router-dom';
 
 
-function WebviewerApp() {
-  const appState = useAppState();
-  const server = useServer();
+const toolConfigs = {
+  admin: {
+    // panelNames: ['TestPanel'],
+    toolNames: [
+      'LockCheckbox',
+      'Divider', 
+      'SelectSigner', 
+      'Divider', 
+      'AddBlankPage', 
+      'RemoveBlankPage', 
+      'Divider', 
+      'RemoveFormFields', 
+      'Divider', 
+      'FormFieldTools', 
+      'TemplateTools', 
+      'Divider', 
+      'StampTools', 
+      'CertTool'
+    ],
+    popupNames: [
+      'AssignSigner',
+      'SetRequired'
+    ]
+  },
+  signer: {
+    toolNames: [
+      'ShowSigner', 
+      'Divider', 
+    ],
+  }
+};
 
-  const [clearAll, toggleClearAll] = useToggle(false);
+function WebviewerApp({ userType }) {
+  const appState = useAppState();
 
 
   useEffectOnce(() => {
-    appState.setSelectedDoc(_.head(_.keys(appState.docs)))
+    // appState.setSelectedDoc(_.head(_.keys(appState.docs)))
   }, []);
   
 
@@ -24,16 +53,8 @@ function WebviewerApp() {
   return (
     <>
       <div className="App d-flex flex-column" style={{ height: '100% !important' }}>
-        <Collab
-          config={appState.config}
-          userId={appState.getCurrentUser()}
-          isAdminUser={appState.isAdminUser}
-          docs={appState.docs}
-          selectedDoc={appState.selectedDoc}
-          selectedSigner={appState.selectedSigner}
-          clearAll={clearAll}
-          onAllCleared={() => toggleClearAll(false)}
-          onSignersUpdated={(signers) => appState.setSigners(signers)}
+        <Collab 
+          toolConfig={toolConfigs[userType]}
         />
       </div>
     </>
@@ -47,6 +68,7 @@ const composeComponent = R.compose(
 
     const rtn = {
       nsId: nsId,
+      isAdmin: props.isAdmin,
       userId: props.userId,
       user: props.user,
       rtdbNamespace: organizationId,

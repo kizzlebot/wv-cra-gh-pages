@@ -42,29 +42,7 @@ export default function Collab(props){
        * appState
        */
       config={appState.config}
-      toolConfig={{
-        panelNames: ['TestPanel'],
-        toolNames: [
-          // 'ShowSigner', 
-          'LockCheckbox',
-          'SelectSigner', 
-          'Divider', 
-          'AddBlankPage', 
-          'RemoveBlankPage', 
-          'Divider', 
-          'RemoveFormFields', 
-          'Divider', 
-          'FormFieldTools', 
-          'TemplateTools', 
-          'Divider', 
-          'StampTools', 
-          'CertTool'
-        ],
-        popupNames: [
-          'AssignSigner',
-          'SetRequired'
-        ]
-      }}
+      toolConfig={props.toolConfig}
       currentUser={appState.currentUser}
       isAdminUser={appState.isAdminUser}
       signers={_.values(appState.signers)}
