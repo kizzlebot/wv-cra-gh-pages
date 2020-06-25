@@ -1,44 +1,49 @@
 /* eslint-disable no-multi-assign */
-import * as R from '@enotarylog/ramda';
+import * as R from 'ramda';
 import _ from 'lodash';
+import Promise from 'bluebird';
 import debug from 'debug';
 
 const log = debug('server');
 
 
 export default async (firebase, serverOpts) => {
-  // console.debug('serverOpts', serverOpts, firebase);
+  
+
+  console.debug('serverOpts', serverOpts, firebase);
   class Server {
-    constructor({ nsId, isAdmin, userId, user, signers, userType, token, rtdbNamespace }) {
+    constructor({ nsId, userId, user, signers, signerLocation, token, rtdbNamespace }) {
       this.nsId = nsId;
       this.userId = userId;
-      this.userType = userType;
-      this.signers = signers;
+      this.userType = user?.userType || 'signer';
+
+      // the signers that are required
+      this.requiredSigners = _.filter(signers, ({ userType }) => userType !== 'admin');
+
       this.user = user;
+      this.userId = userId;
+      this.isAdminUser = user?.userType === 'admin';
+
+      this.signerLocation = signerLocation;
+      
       this.rtdbNamespace = _.isEmpty(rtdbNamespace) ? 'rooms' : `organization/${rtdbNamespace}/rooms`;
+
 
       // Initialize Firebase
       this.firebase = firebase;
       this.token = token;
     }
 
-    bindings = { annotations: {} };
-
-    bindingsMapping = {
-      annotations: {
-        onAnnotationCreated: 'child_added',
-        onAnnotationUpdated: 'child_changed',
-        onAnnotationDeleted: 'child_removed'
-      }
-    };
-
     init = async () => {
       const { nsId, userId } = this;
+
       if (this.token) {
         await this.signInWithToken(this.token);
       } else {
         await this.signInAnonymously();
       }
+
+
       const roomRef = (this.roomRef = firebase
         .database()
         .ref(this.rtdbNamespace)
@@ -51,7 +56,10 @@ export default async (firebase, serverOpts) => {
       this.fieldRef = roomRef.child('fields');
       this.xfdfRef = roomRef.child('xfdf');
       this.connectionRef = firebase.database().ref('.info/connected');
+
       this.authorsRef = roomRef.child('authors');
+      this.notaryRef = roomRef.child('notary');
+
       this.participantsRef = roomRef.child('participants');
       this.blankPagesRef = roomRef.child('blankPages');
       this.lockRef = roomRef.child('locked');
@@ -65,68 +73,29 @@ export default async (firebase, serverOpts) => {
       this.pinModalRef = roomRef.child('pinModalOpen');
       this.authPinModalRef = roomRef.child('showAuthPinModal');
 
-      this.initializedRefs = [];
-
-      this.refs = [
-        // this.selectedSignerRef,
-        this.widgetRef,
-        this.annotationsRef,
-        this.xfdfRef,
-        // this.pageRef,
-        // this.participantsRef,
-        // this.blankPagesRef,
-        // this.lockRef,
-        // this.vaDisclaimerRef,
-        // this.selectedDocIdRef,
-        // this.selectedDocTitleRef,
-        // this.vaDisclaimerRejectedRef,
-        // this.completingRef,
-        // this.consumerSignatures,
-        // this.pinModalRef,
-        // this.authPinModalRef,
-        // Skip connectionRef b/c we need it for user-presence
-        // this.connectionRef
-      ]
-
       await this.vaDisclaimerRef.set(0);
 
+      this.initializedRefs = [];
 
-      return this.connectionRef.on('value', async snapshot => {
+
+
+      return this.connectionRef.on('value', async (snapshot) => {
         // If we're not currently connected, don't do anything.
         if (snapshot.val() === false) {
-
           console.debug('%cfirebase not connected 🔥!', 'color: red; font-size:20px');
           return;
         }
 
         console.debug('%cfirebase connected 🔥!', 'color: blue; font-size:20px');
 
-        // If we are currently connected, then use the 'onDisconnect()'
-        // method to add a set which will only trigger once this
-        // client has disconnected by closing the app,
-        // losing internet, or any other means.
-        if (!_.isNil(userId) && !_.isNil(this.user)) {
-          await this.authorsRef
-            .child(userId)
-            .onDisconnect()
-            .set(null);
 
-          return this.authorsRef
-            .child(userId)
-            // .child('connected')
-            .set({
-              ...this.user,
-              connected: true,
-              connectedAt: +new Date()
-            });
+        if (!this.isAdminUser && this.signerLocation === 'local') {
+          return this.addPresences(this.requiredSigners);
         }
-        // The promise returned from .onDisconnect().set() will
-        // resolve as soon as the server acknowledges the onDisconnect()
-        // request, NOT once we've actually disconnected:
-        // https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect
 
-        // We can now safely set ourselves as 'online' knowing that the
-        // server will mark us as offline once we lose connection.
+        if (!_.isNil(userId) && !_.isNil(this.user)) {
+          return this.addPresence(this.user, this.notaryRef);
+        }
       });
     };
 
@@ -141,25 +110,8 @@ export default async (firebase, serverOpts) => {
         await Promise.map(this.initializedRefs, (unbind) => unbind());
         this.initializedRefs = [];
 
-
         return;
       }
-      if (this.annotInstRef){
-        log('unbinding annotInstRef')
-        await this.annotInstRef.off();
-        this.annotInstRef = null;
-      }
-      if (this.widgetInstRef){
-        log('unbinding widgetInstRef')
-        await this.widgetInstRef.off();
-        this.widgetInstRef = null;
-      }
-      if (this.pageInstRef){
-        log('unbinding pageInstRefj')
-        await this.pageInstRef.off();
-        this.pageInstRef = null;
-      }
-
     }
 
 
@@ -169,18 +121,20 @@ export default async (firebase, serverOpts) => {
       .child('connected')
       .set(false);
 
-    pauseAnnotUpdates = () => this.annotationsRef.off();
 
     setShowVaDisclaimer = val => this.vaDisclaimerRef.set(val);
-
     setVaDisclaimerRejected = val => this.vaDisclaimerRejectedRef.set(val);
+
+
+    createBinding = (ref, event, callbackFunction) => {
+      const initializedRef = ref.on(event, callbackFunction);
+      this.initializedRefs.push(() => ref.off(event, initializedRef));
+      return initializedRef;
+    }
 
     bind = (action, docId, cbFunc = docId) => {
 
       const callbackFunction = R.pipe(R.applySpec({ val: R.invoker(0, 'val'), key: R.prop('key') }), cbFunc);
-      
-      let initializedRef;
-
       switch (action) {
         case 'onAuthStateChanged':
           return firebase.auth().onAuthStateChanged(async user => {
@@ -196,6 +150,10 @@ export default async (firebase, serverOpts) => {
               throw error;
             }
           });
+
+
+
+
         case 'onPageChanged':
           this.pageInstRef = this.pageInstRef ? this.pageInstRef : this.pageRef
             .orderByKey()
@@ -204,59 +162,26 @@ export default async (firebase, serverOpts) => {
             .on('value', callbackFunction);
 
         case 'onFieldAdded':
-          initializedRef = this.fieldRef.on('child_added', callbackFunction)
-          this.initializedRefs.push(() => this.fieldRef.off('child_added', initializedRef));
-          return initializedRef;
-
+          return this.createBinding(this.fieldRef, 'child_added', callbackFunction);
         case 'onFieldUpdated':
-          initializedRef = this.fieldRef.on('child_changed', callbackFunction)
-          this.initializedRefs.push(() => this.fieldRef.off('child_changed', initializedRef));
-          return initializedRef;
-
-
-
+          return this.createBinding(this.fieldRef, 'child_changed', callbackFunction);
         case 'onWidgetCreated':
-          initializedRef = this.widgetRef.on('child_added', callbackFunction);
-          this.initializedRefs.push(() => this.widgetRef.off('child_added', initializedRef));
-          return initializedRef;
+          return this.createBinding(this.widgetRef, 'child_added', callbackFunction);
         case 'onWidgetUpdated':
-          initializedRef = this.widgetRef.on('child_changed', callbackFunction);
-          this.initializedRefs.push(() => this.widgetRef.off('child_changed', initializedRef));
-          return initializedRef;
+          return this.createBinding(this.widgetRef, 'child_changed', callbackFunction);
         case 'onWidgetDeleted':
-          initializedRef = this.widgetRef.on('child_removed', callbackFunction);
-          this.initializedRefs.push(() => this.widgetRef.off('child_removed', initializedRef));
-          return initializedRef;
-
-
+          return this.createBinding(this.widgetRef, 'child_removed', callbackFunction);
         case 'onAnnotationCreated':
-          initializedRef = this.annotationsRef.on('child_added', callbackFunction);
-          this.initializedRefs.push(() => this.annotationsRef.off('child_added', initializedRef));
-          return initializedRef;
+          return this.createBinding(this.annotationsRef, 'child_added', callbackFunction);
         case 'onAnnotationUpdated':
-          initializedRef = this.annotationsRef.on('child_changed', callbackFunction);
-          this.initializedRefs.push(() => this.annotationsRef.off('child_changed', initializedRef));
-          return initializedRef;
+          return this.createBinding(this.annotationsRef, 'child_changed', callbackFunction);
         case 'onAnnotationDeleted':
-          initializedRef = this.annotationsRef.on('child_removed', callbackFunction);
-          this.initializedRefs.push(() => this.annotationsRef.off('child_removed', initializedRef));
-          return initializedRef;
-
+          return this.createBinding(this.annotationsRef, 'child_removed', callbackFunction);
         case 'onBlankPagesChanged':
-          initializedRef = this.blankPagesRef
-            .child(docId)
-            .on('value', callbackFunction);
-          this.initializedRefs.push(() => this.blankPagesRef
-            .child(docId)
-            .off('value', initializedRef));
-          return initializedRef;
+          return this.createBinding(this.blankPagesRef.child(docId), 'value', callbackFunction);
 
-
-
-
-
-        case 'onSelectedSignerChange':
-          return this.selectedSignerRef.on('value', callbackFunction);
+        case 'onSelectedSignerChanged':
+          return this.createBinding(this.selectedSignerRef, 'value', callbackFunction);
           
         case 'onBlankPagesAdded':
           return this.blankPagesRef
@@ -425,24 +350,37 @@ export default async (firebase, serverOpts) => {
     setSelectedDocId = (docId) => this.selectedDocIdRef.set(docId);
     getSelectedDocId = () => this.selectedDocIdRef.once('value').then(R.invoker(0, 'val'))
 
-    getSelectedDocTitle = () => this.selectedDocTitleRef.once('value').then(R.invoker(0, 'val'))
-    setSelectedDocTitle = (title) => this.selectedDocTitleRef.set(title);
-
     createSignatures = (signerId, data) => this.consumerSignatures.child(signerId).update(data);
     getSignatures = (signerId) => this.consumerSignatures.child(signerId).once('value')
       .then(R.invoker(0, 'val'))
 
     deleteSignature = (signerId, type) => this.consumerSignatures.child(signerId).child(type).remove();
 
-    addPresence = async (user) => {
-      await this.participantsRef
-        .child(user.id)
+    addPresences = async (signers) => Promise.map(signers, (s) => this.addPresence(s))
+
+    addPresence = async (user, optionalRef) => {
+      const ref = (optionalRef) ? optionalRef : this.authorsRef.child(user.id);
+      // If we are currently connected, then use the 'onDisconnect()'
+      // method to add a set which will only trigger once this
+      // client has disconnected by closing the app,
+      // losing internet, or any other means.
+      await ref
         .onDisconnect()
         .set({});
 
-      return this.participantsRef
-        .child(user.id)
-        .set({ connected: true, status: user.status });
+      // The promise returned from .onDisconnect().set() will
+      // resolve as soon as the server acknowledges the onDisconnect()
+      // request, NOT once we've actually disconnected:
+      // https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect
+
+      // We can now safely set ourselves as 'online' knowing that the
+      // server will mark us as offline once we lose connection.
+      return ref.set({ 
+        ...user,
+        connected: true,
+        runId: serverOpts.runId,
+        connectedAt: +new Date()
+      });
     }
   }
 

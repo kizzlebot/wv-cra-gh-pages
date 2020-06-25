@@ -30,6 +30,19 @@ const docs = {
   'doc_cs': 'https://storage.googleapis.com/enl-static-files/local/cs2.pdf',
 };
 
+const signers = [{
+  id: '1',
+  firstName: 'Joseph',
+  lastName: 'Bisaillon',
+}, {
+  id: '2',
+  firstName: 'John',
+  lastName: 'Gills',
+}, {
+  id: '3',
+  firstName: 'Blake',
+  lastName: 'Gills',
+}]
 
 
 
@@ -38,21 +51,12 @@ if (process.env.NODE_ENV !== 'production') {
   ReactDOM.render(
     <Router>
       <FirebaseProvider>
-        {/* <ServerProvider 
-          config={{ 
-            userId,
-            user,
-            nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
-            rtdbNamespace:'8d976a23-b865-4fcd-9165-ddc0aedaf614'
-          }}
-        > */}
-          <App 
-            userId={userId}
-            user={user}
-            docs={docs}
-            isAdminUser={false}
-          />
-        {/* </ServerProvider> */}
+        <App 
+          userId={userId}
+          user={user}
+          signers={signers}
+          docs={docs}
+        />
       </FirebaseProvider>
     </Router>,
     document.getElementById('root')

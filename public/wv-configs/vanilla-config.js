@@ -669,10 +669,10 @@ function tracePropAccess(obj, propKeys) {
       if (annot instanceof instance.Annotations.WidgetAnnotation) {
         const signerId = _.get(annot.getMetadata(), 'signerId');
 
-        if (isAdminUser) {
-          annot.fieldFlags.set('ReadOnly', false);
-          return;
-        }
+        // if (isAdminUser) {
+        //   annot.fieldFlags.set('ReadOnly', true);
+        //   return;
+        // }
 
         if (signerId !== currUserId || locked) {
           annot.fieldFlags.set('ReadOnly', true);
@@ -687,7 +687,7 @@ function tracePropAccess(obj, propKeys) {
       const currUserId = instance.annotManager.getCurrentUser();
       const isAdminUser = instance.annotManager.getIsAdminUser();
       const updatePerm = updateAnnotPerm(isAdminUser, currUserId, locked);
-      const annots = _.castArray(annotation);
+      const annots = _.filter(_.castArray(annotation), (el) => !_.isNil(el));
 
 
       if (annots && !_.isEmpty(annots)) {
@@ -775,6 +775,20 @@ function tracePropAccess(obj, propKeys) {
   }
 
 
+  const createEnableDisableTools = (instance) => (disable) => instance.setHeaderItems((header) => {
+    _.chain(header.headers.default)
+      .map('dataElement')
+      .filter(R.complement(_.isNil))
+      .forEach((dataEl) => {
+        instance.updateElement(dataEl, { disable: disable });
+      })
+      .value()
+  
+    instance.annotManager.setReadOnly(disable)
+  })
+  
+
+
   /**
    * When viewerLoaded fires, configures features and adds additional functions to WebViewerInstance before calling
    * `docViewer.trigger('ready', [instance]);` to pass up customized WebViewerInstance to the react component
@@ -820,17 +834,7 @@ function tracePropAccess(obj, propKeys) {
       },
       showMessage: callIfDefined(readerControl.showMessage),
       hideMessage: callIfDefined(readerControl.hideMessage),
-      toggleTools: (disable) => instance.setHeaderItems((header) => {
-        _.chain(header.headers.default)
-          .map('dataElement')
-          .filter(R.complement(_.isNil))
-          .forEach((dataEl) => {
-            instance.updateElement(dataEl, { disable: disable });
-          })
-          .value()
-      
-        instance.annotManager.setReadOnly(disable)
-      }),
+      toggleTools: createEnableDisableTools({ ...readerControl, annotManager }),
     }
 
     

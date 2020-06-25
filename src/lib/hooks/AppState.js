@@ -13,10 +13,10 @@ const AppStateCtx = React.createContext();
 const tapFns = R.pipe(
   R.toPairs,
   R.map(
-      R.when(
-        R.pipe(R.nth(1), _.isFunction),
-        R.converge(R.unapply(R.identity), [R.nth(0), ([key, fn]) => R.pipe(R.tap(() => log(`${key} called`)), fn)])
-      )
+    R.when(
+      R.pipe(R.nth(1), _.isFunction),
+      R.converge(R.unapply(R.identity), [R.nth(0), ([key, fn]) => R.pipe(R.tap(() => log(`${key} called`)), fn)])
+    )
   ),
   R.fromPairs
 );
@@ -27,16 +27,17 @@ const tapFns = R.pipe(
 export function AppStateProvider({
   children,
   config,
-  userId, 
+  userId = '-1', 
   isAdminUser,
+  runId,
   docs
 }){
-  const [getState, setState] = useGetSetState({ pageNumber: {}, signers: {}, fields: {} });
 
   const [getSigners, setSigners] = useGetSetState({ });
   const [getSelectedSigner, setSelectedSigner] = useGetSet(null);
   const [getCurrentUser, setCurrentUser] = useGetSet(userId);
   const [getSelectedDoc, setSelectedDoc] = useGetSet();
+  const [getRunId] = useGetSet(runId);
 
   const [getPageNumbers, setPageNumbers] = useGetSetState(_.mapValues(docs, () => 1));
   const [getFields, setFields] = useGetSetState({ });
@@ -67,9 +68,7 @@ export function AppStateProvider({
 
   const context = {
     setBlankPages: (blankPages) => setBlankPages(blankPages),
-    setSigners: (signers) => {
-      setSigners(signers)
-    },
+    setSigners: (signers) => setSigners(signers),
     setPageNumbers: (pageNumbers) => setPageNumbers(pageNumbers),
 
     setSelectedSigner: (selectedSigner) => setSelectedSigner(selectedSigner),
@@ -89,9 +88,12 @@ export function AppStateProvider({
     getSelectedDoc,
     getCurrentUser,
     getAnnotsToImport,
+    getRunId,
     upsertAnnot,
 
 
+    // runId is used to identity which users are on the same machine
+    runId: getRunId(),
     blankPages: getBlankPages(),
     signers: getSigners(),
     pageNumbers: getPageNumbers(),
@@ -128,12 +130,23 @@ export const useAppState = () => {
 
 
 
+// runId is used to determine which users are on the same machine
+const runId = `${Math.floor(Math.random() * 10000)}`;
+
+
 // HOC
-export const withAppStateProvider = (Component) => (props) => (
-  <AppStateProvider {..._.pick(props, ['config', 'userId', 'isAdminUser', 'docs' ])} >
-    <Component {...props} />
-  </AppStateProvider>
-);
+export const withAppStateProvider = (Component) => (props) => {
+  const appState = { 
+    ..._.pick(props, ['config', 'userId', 'isAdminUser', 'docs' ]),
+    runId,
+  }
+
+  return (
+    <AppStateProvider {...appState} >
+      <Component {...props} />
+    </AppStateProvider>
+  )
+};
 export const withUseAppState = (Component) => (props) => {
   const appState = useAppState();
   return (

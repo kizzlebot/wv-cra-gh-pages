@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
 import config from './stories/lib/config';
-import WebviewerApp from './components/webviewer';
+import WebviewerApp from './components/webviewer/collab';
 import WebviewerEsignApp from './components/webviewer/esign';
 import { Route, Switch, Link } from 'react-router-dom';
 import { useDefault, useLocation } from 'react-use';
@@ -15,6 +15,36 @@ const defaultData = {
   orgId: '8d976a23-b865-4fcd-9165-ddc0aedaf614'
 }
 
+const docs = {
+  'doc_a': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
+  'emortgagelaw': `https://storage.googleapis.com/enl-static-files/local/emortgagelaw.pdf`,
+  'ps1583': `https://storage.googleapis.com/enl-static-files/local/ps1583.pdf`,
+  'doc_c': 'https://storage.googleapis.com/enl-static-files/local/with_date.pdf',
+  'doc_cs': 'https://storage.googleapis.com/enl-static-files/local/cs2.pdf',
+};
+
+const notary = {
+  id: '1',
+  userType: 'admin',
+  firstName: 'Joseph',
+  lastName: 'Bisaillon',
+};
+
+const signers = [{
+  id: '2',
+  firstName: 'John',
+  lastName: 'Gills',
+}, {
+  id: '3',
+  firstName: 'Blake',
+  lastName: 'Gills',
+}]
+
+
+
+
+
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -22,7 +52,6 @@ function useQuery() {
 function App({
   user,
   userId,
-  isAdminUser,
   docs
 }) {
 
@@ -55,11 +84,15 @@ function App({
         />
       </Route>
 
+
+      {/* org-to-consumer use-case */}
       <Route path='/notarization/:nsId/notary/:organizationId'>
         <WebviewerApp
           config={config}
-          user={user}
-          userId={userId}
+          user={notary}
+          userId={notary.id}
+          signers={signers}
+          signerLocation='local'
           userType='admin'
           isAdminUser={true}
           docs={docs}
@@ -70,9 +103,15 @@ function App({
       <Route path='/notarization/:nsId/consumer/:organizationId'>
         <WebviewerApp
           config={config}
-          user={user}
-          userId={userId}
+          // primary signer is the user
+          // user={signers[0]}
+          // userId={signers[0].id}
+
           userType='signer'
+
+          // signers are all together
+          signerLocation='local'
+          signers={signers}
           isAdminUser={false}
           docs={docs}
           selectedDoc={'-1'}
@@ -121,11 +160,12 @@ function App({
 
           <hr />
 
-          <div>
-            <Link to={`/notarization/${data.nsId}/consumer/${data.orgId}`}>Notarization Room (Consumer)</Link>
-          </div>
+
           <div>
             <Link to={`/notarization/${data.nsId}/notary/${data.orgId}`}>Notarization Room (Notary)</Link>
+          </div>
+          <div>
+            <Link to={`/notarization/${data.nsId}/consumer/${data.orgId}`}>Notarization Room (Consumer)</Link>
           </div>
 
           <hr />

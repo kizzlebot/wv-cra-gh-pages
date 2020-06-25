@@ -114,3 +114,10 @@ export const lockWebviewer = (instance) => async ({ val }) => {
     return instance.docViewer.lockWebviewer(val);
   }
 }
+
+
+
+export const setCurrentUser = (instance) => async ({ val }) => {
+  console.log('setCurrentUser called', val)
+  instance.annotManager.setCurrentUser(val)
+};

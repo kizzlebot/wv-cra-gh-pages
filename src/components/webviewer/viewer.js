@@ -26,17 +26,7 @@ const callIfDefined = R.when(
 
 
 
-const createEnableDisableTools = (disable) => (instance) => instance.setHeaderItems((header) => {
-  _.chain(header.headers.default)
-    .map('dataElement')
-    .filter(R.complement(_.isNil))
-    .forEach((dataEl) => {
-      instance.updateElement(dataEl, { disable: disable });
-    })
-    .value()
 
-  instance.annotManager.setReadOnly(disable)
-})
 
 
 
@@ -55,8 +45,7 @@ class Webviewer extends Component {
     this.notarialCertUploadRef = React.createRef();
   }
 
-  disableAllTools = createEnableDisableTools(true)
-  enableAllTools = createEnableDisableTools(false)
+
 
   componentDidMount = async () => {
 
@@ -135,15 +124,14 @@ class Webviewer extends Component {
           }
           return this.setState({ certModal: { show: true, pdf } })
         });
+
+
         
-        annotManager.on('selectedSignerChanged', (signerId) => {
-          console.log('selectedSignerChanged', signerId)
-          if (signerId === '-1') {
-            this.disableAllTools(this.instance);
-          } else {
-            this.enableAllTools(this.instance);
-          }
-        });        
+        annotManager.on('selectedSignerChanged', R.juxt([
+          R.converge(this.instance.toggleTools, [R.equals('-1')]),
+          this.props.onSelectedSignerChanged
+        ]));        
+        
       });
 
 
@@ -164,8 +152,6 @@ class Webviewer extends Component {
         if (_.isFunction(this.props.bindEvents)){
           await this.props.bindEvents({
             ...instance,
-            disableAllTools: this.disableAllTools,
-            enableAllTools: this.enableAllTools,
             selectedDoc: instance.getDocId(),
           })
         }
@@ -181,8 +167,6 @@ class Webviewer extends Component {
         annotManager.on('widgetUpdated', this.props.onWidgetUpdated);
         annotManager.on('widgetDeleted', this.props.onWidgetDeleted);
         annotManager.on('fieldUpdated', this.props.onFieldUpdated);
-        annotManager.on('selectedSignerChanged', this.props.onSelectedSignerChanged);
-
 
         // NOTE: this fixes an issue where on initial load, if there are text annots on the page, the webviewer shows a cursor
         setTimeout(() => instance.docViewer.zoomTo(instance.docViewer.getZoom()), 2000);
@@ -202,7 +186,6 @@ class Webviewer extends Component {
         annotManager.off('widgetUpdated');
         annotManager.off('widgetDeleted');
         annotManager.off('fieldUpdated');
-        annotManager.off('selectedSignerChanged', this.props.onSelectedSignerChanged)
       })
 
 
@@ -282,9 +265,9 @@ class Webviewer extends Component {
 
     // selected signer has been changed
     // TODO: move to bindEvents
-    if (prevProps.selectedSigner !== this.props.selectedSigner) {
-      this.instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
-    }
+    // if (prevProps.selectedSigner !== this.props.selectedSigner) {
+    //   this.instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
+    // }
 
     // the current user has been changed
     if (prevProps.currentUser !== this.props.currentUser) {

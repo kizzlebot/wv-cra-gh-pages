@@ -38,7 +38,7 @@ export function ServerProvider({ config, ...props }) {
       return _server;
     };
   
-    if (!server && firebase && (config.userId || config.mode === 'request')) {
+    if (!server && firebase) {
       importServer();
     }
 

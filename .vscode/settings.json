@@ -15,5 +15,6 @@
   },
   "search.exclude": {
     "public/lib": true
-  }
+  },
+  "eslint.enable": true
 }

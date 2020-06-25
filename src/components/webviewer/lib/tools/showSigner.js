@@ -30,7 +30,7 @@ class ShowSigner extends React.Component {
   render() { 
     const signer = _.find(this.state.signers, { id: this.state.selectedSigner });
     if (!signer){
-      return <></>
+      return <div>Current Signer: N/A</div>
     }
     return (  
       <div>{parseName(signer)}</div>
