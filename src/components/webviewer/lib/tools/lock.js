@@ -1,9 +1,7 @@
 import React from 'react'
 
 import * as R from 'ramda';
-import _ from 'lodash';
 import { injectTool } from "../initializers/injectors";
-import parseName from '../helpers/parseName';
 
 
 

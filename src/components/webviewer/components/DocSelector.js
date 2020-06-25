@@ -1,6 +1,5 @@
 import React from 'react'
 import _ from 'lodash';
-import * as R from 'ramda';
 
 import { Dropdown } from 'react-bootstrap';
 import styled from 'styled-components';

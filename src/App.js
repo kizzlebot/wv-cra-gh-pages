@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import _ from 'lodash';
 import config from './stories/lib/config';
 import WebviewerApp from './components/webviewer/collab';
@@ -52,7 +52,6 @@ function useQuery() {
 function App({
   user,
   userId,
-  docs
 }) {
 
   const [data, setData] = useDefault(defaultData, initialData);

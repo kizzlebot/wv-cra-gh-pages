@@ -35,8 +35,6 @@ function Collab(props){
   const appState = useAppState();
 
   useEffectOnce(() => {
-    server.bind('onAuthorsChanged', ({ val }) => appState.setSigners(val));
-    server.bind('onSelectedDocIdChanged', ({ val }) => appState.setSelectedDoc(val));
   });
 
 
@@ -47,7 +45,6 @@ function Collab(props){
   }, [appState.selectedDoc, server]);
 
 
-  
   return (
     <div className="App d-flex flex-column" style={{ height: '100% !important' }}>
       <Viewer
@@ -70,8 +67,25 @@ function Collab(props){
          */
         authenticate={server.authenticate}
 
-        // bind listeners for downstream updates; when firebase pushes data to browser, update webviewer
+        // bind non-doc-specific listeners for downstream updates; when firebase pushes data to browser, update webviewer
         bindEvents={(inst) => Promise.all([
+          server.bind('onSelectedDocIdChanged', inst.getDocId(), ({ val }) => appState.setSelectedDoc(val), 'main'),
+          server.bind('onAuthorsChanged', inst.getDocId(), ({ val }) => appState.setSigners(val), 'main'),
+          server.bind('onLockChanged', inst.getDocId(), lockWebviewer(inst), 'main'),
+          server.bind('onSelectedSignerChanged', inst.getDocId(), R.pipe(
+            R.tap(({ val }) => inst.annotManager.trigger('setSelectedSigner', val)),
+            R.tap(({ val }) => appState.setSelectedSigner(val)),
+            R.when(
+              ({ val }) => (inst.getSignerById(val) && appState.runId === inst.getSignerById(val).runId) || val === '-1',
+              setCurrentUser(inst)
+            )
+          ), 'main'),
+          server.bind('onLockChanged', inst.getDocId(), lockWebviewer(inst), 'main'),
+        ])}
+        unbindEvents={() => server.unbindAll('all')}
+
+        // bind doc-specific listeners for downstream updates; when firebase pushes data to browser, update webviewer
+        bindDocEvents={(inst) => Promise.all([
           server.bind('onAnnotationCreated', inst.getDocId(), importFbaseVal(inst)),
           server.bind('onAnnotationUpdated', inst.getDocId(), importFbaseVal(inst)),
           server.bind('onAnnotationDeleted', inst.getDocId(), delFbaseVal(inst)),
@@ -80,17 +94,8 @@ function Collab(props){
           server.bind('onFieldAdded', inst.getDocId(), importField(inst)),
           server.bind('onFieldUpdated', inst.getDocId(), importField(inst)),
           server.bind('onBlankPagesChanged', inst.getDocId(), setBlankPages(inst)),
-          server.bind('onLockChanged', inst.getDocId(), lockWebviewer(inst)),
-          server.bind('onSelectedSignerChanged', inst.getDocId(), R.pipe(
-            R.tap(({ val }) => inst.annotManager.trigger('setSelectedSigner', val)),
-            R.tap(({ val }) => appState.setSelectedSigner(val)),
-            R.when(
-              ({ val }) => inst.getSignerById(val) && appState.runId === inst.getSignerById(val).runId || val === '-1',
-              setCurrentUser(inst)
-            )
-          ))
         ])}
-        unbindEvents={({ selectedDoc }) => server.unbindAll(selectedDoc)}
+        unbindDocEvents={({ selectedDoc }) => server.unbindAll(selectedDoc)}
 
 
         

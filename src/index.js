@@ -22,29 +22,6 @@ const user = (sessionStorage.getItem(userId)) ? JSON.parse(sessionStorage.getIte
 
 sessionStorage.setItem(userId, JSON.stringify(user));
 
-const docs = {
-  'doc_a': `https://storage.googleapis.com/enl-static-files/local/linearized.pdf`,
-  'emortgagelaw': `https://storage.googleapis.com/enl-static-files/local/emortgagelaw.pdf`,
-  'ps1583': `https://storage.googleapis.com/enl-static-files/local/ps1583.pdf`,
-  'doc_c': 'https://storage.googleapis.com/enl-static-files/local/with_date.pdf',
-  'doc_cs': 'https://storage.googleapis.com/enl-static-files/local/cs2.pdf',
-};
-
-const signers = [{
-  id: '1',
-  firstName: 'Joseph',
-  lastName: 'Bisaillon',
-}, {
-  id: '2',
-  firstName: 'John',
-  lastName: 'Gills',
-}, {
-  id: '3',
-  firstName: 'Blake',
-  lastName: 'Gills',
-}]
-
-
 
 
 if (process.env.NODE_ENV !== 'production') {
@@ -54,8 +31,6 @@ if (process.env.NODE_ENV !== 'production') {
         <App 
           userId={userId}
           user={user}
-          signers={signers}
-          docs={docs}
         />
       </FirebaseProvider>
     </Router>,

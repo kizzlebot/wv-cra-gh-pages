@@ -1,9 +1,8 @@
 import React from 'react';
-import _ from 'lodash';
 import * as R from 'ramda';
 import Collab from './collab';
-import { withAppStateProvider, useAppState } from 'lib/hooks/AppState';
-import { withServerProvider, useServer } from 'lib/hooks/useServerProvider';
+import { withAppStateProvider } from 'lib/hooks/AppState';
+import { withServerProvider } from 'lib/hooks/useServerProvider';
 import { useParams } from 'react-router-dom';
 import * as toolConfigs from './lib/configs';
 

@@ -6,13 +6,13 @@ import Promise from 'bluebird';
 import registerTools from './lib';
 import initWv from '@pdftron/webviewer';
 import CertPdfModal from './components/CertPdfModal';
-import { withUseServer } from 'lib/hooks/useServerProvider';
 import DocSelector from './components/DocSelector';
 
 
 
 
 const log = debug('viewer');
+// eslint-disable-next-line no-unused-vars
 const logMsg = (label, msg) => (...args) => log(`${label}: ${msg}`);
 
 const callIfDefined = R.when(
@@ -74,7 +74,6 @@ class Webviewer extends Component {
       this.instance = window.instance = instance;
       const annotManager = this.annotManager = window.annotManager = instance.annotManager;
       const docViewer = this.docViewer = window.docViewer = instance.docViewer;
-      const fieldManager = this.fieldManager = window.fieldManager = this.instance.annotManager.getFieldManager();
 
 
       this.instance.annotManager.trigger('setSigners', this.props.signers);
@@ -112,7 +111,7 @@ class Webviewer extends Component {
 
 
       // setup listeners which apply no matter which document is loaded 
-      instance.docViewer.one('documentLoaded', () => {
+      instance.docViewer.one('documentLoaded', async () => {
         // attach event listeners to docViewer
         docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
         docViewer.on('lockChanged', callIfDefined(this.props.onLockChanged))
@@ -124,6 +123,15 @@ class Webviewer extends Component {
           }
           return this.setState({ certModal: { show: true, pdf } })
         });
+
+
+        // bind events that should be bound once
+        if (_.isFunction(this.props.bindEvents)){
+          await this.props.bindEvents({
+            ...this.instance,
+            selectedDoc: this.instance.getDocId(),
+          })
+        }
 
 
         
@@ -149,8 +157,8 @@ class Webviewer extends Component {
 
 
         // bind events for receiving downstream updates 
-        if (_.isFunction(this.props.bindEvents)){
-          await this.props.bindEvents({
+        if (_.isFunction(this.props.bindDocEvents)){
+          await this.props.bindDocEvents({
             ...instance,
             selectedDoc: instance.getDocId(),
           })
@@ -222,6 +230,13 @@ class Webviewer extends Component {
 
 
 
+  componentWillUnmount = async () => {
+    if (_.isFunction(this.props.unbindEvents)){
+      await this.props.unbindEvents();
+    }
+  }
+
+
 
   componentDidUpdate = async (prevProps, prevState) => {
     if (!this.instance){
@@ -233,8 +248,8 @@ class Webviewer extends Component {
       if (this.props.docs[this.props.selectedDoc]) {
 
         // unBind any external listeners
-        if (_.isFunction(this.props.unbindEvents)) {
-          await this.props.unbindEvents({
+        if (_.isFunction(this.props.unbindDocEvents)) {
+          await this.props.unbindDocEvents({
             ...this.instance,
             selectedDoc: this.instance.getDocId(),
           })

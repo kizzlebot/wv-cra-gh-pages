@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
-import * as R from 'ramda';
-import _ from 'lodash';
 import Viewer from './viewer';
-import { useEffectOnce } from 'react-use';
 import useAppState, { withAppStateProvider } from 'lib/hooks/AppState';
-import debug from 'debug';
-const log = debug('esign');
 
 
 function Esign(props){

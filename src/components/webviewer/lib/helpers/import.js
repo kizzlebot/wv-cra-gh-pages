@@ -116,6 +116,9 @@ export const lockWebviewer = (instance) => async ({ val }) => {
 }
 
 
+export const setSigners = (instance) => async ({ val }) => {
+  instance.annotManager.trigger('setSigners', _.values(val));
+}
 
 export const setCurrentUser = (instance) => async ({ val }) => {
   console.log('setCurrentUser called', val)

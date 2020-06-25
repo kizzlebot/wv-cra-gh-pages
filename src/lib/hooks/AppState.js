@@ -1,7 +1,7 @@
 import React, { useContext, useCallback } from 'react'
 import _ from 'lodash';
 import * as R from 'ramda';
-import { useGetSetState, useGetSet, useMap } from 'react-use';
+import { useGetSetState, useGetSet } from 'react-use';
 import debug from 'debug';
 const log = debug('hooks:AppState');
 
@@ -15,7 +15,7 @@ const tapFns = R.pipe(
   R.map(
     R.when(
       R.pipe(R.nth(1), _.isFunction),
-      R.converge(R.unapply(R.identity), [R.nth(0), ([key, fn]) => R.pipe(R.tap(() => log(`${key} called`)), fn)])
+      R.converge(R.unapply(R.identity), [R.nth(0), ([key, fn]) => R.pipe(R.tap((args) => log(`${key} called`, args)), fn)])
     )
   ),
   R.fromPairs
@@ -30,14 +30,21 @@ export function AppStateProvider({
   userId = '-1', 
   isAdminUser,
   runId,
-  docs
+  docs,
+  userType,
+  signerLocation,
+  selectedDoc,
+  ...rest
 }){
 
+  console.log('rest', rest)
   const [getSigners, setSigners] = useGetSetState({ });
   const [getSelectedSigner, setSelectedSigner] = useGetSet(null);
   const [getCurrentUser, setCurrentUser] = useGetSet(userId);
   const [getSelectedDoc, setSelectedDoc] = useGetSet();
   const [getRunId] = useGetSet(runId);
+  const [getUserType] = useGetSet(userType);
+  const [getSignerLocation] = useGetSet(signerLocation);
 
   const [getPageNumbers, setPageNumbers] = useGetSetState(_.mapValues(docs, () => 1));
   const [getFields, setFields] = useGetSetState({ });
@@ -106,6 +113,8 @@ export function AppStateProvider({
     isAdminUser,
     config,
     docs,
+    userType: getUserType(),
+    signerLocation: getSignerLocation(),
   }
 
   return (
@@ -136,13 +145,9 @@ const runId = `${Math.floor(Math.random() * 10000)}`;
 
 // HOC
 export const withAppStateProvider = (Component) => (props) => {
-  const appState = { 
-    ..._.pick(props, ['config', 'userId', 'isAdminUser', 'docs' ]),
-    runId,
-  }
 
   return (
-    <AppStateProvider {...appState} >
+    <AppStateProvider {...props} runId={runId}>
       <Component {...props} />
     </AppStateProvider>
   )

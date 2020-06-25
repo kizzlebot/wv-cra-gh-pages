@@ -76,6 +76,8 @@ export default async (firebase, serverOpts) => {
       await this.vaDisclaimerRef.set(0);
 
       this.initializedRefs = [];
+      this.mainRefs = [];
+      this.allRefs = [];
 
 
 
@@ -100,20 +102,6 @@ export default async (firebase, serverOpts) => {
     };
 
 
-    // unbindAll = () => R.map(R.pipe(R.invoker(0, 'off'), this.refs))
-    unbindAll = async (docId) => {
-      if (docId){
-        log('unbinding', this.initializedRefs.length)
-        await this.annotationsRef.off();
-        await this.widgetRef.off();
-        await this.pageRef.off();
-        await Promise.map(this.initializedRefs, (unbind) => unbind());
-        this.initializedRefs = [];
-
-        return;
-      }
-    }
-
 
 
     markAsDisconnected = () => this.userId && this.authorsRef
@@ -126,15 +114,21 @@ export default async (firebase, serverOpts) => {
     setVaDisclaimerRejected = val => this.vaDisclaimerRejectedRef.set(val);
 
 
-    createBinding = (ref, event, callbackFunction) => {
+    createBinding = (ref, event, callbackFunction, unbindList) => {
       const initializedRef = ref.on(event, callbackFunction);
-      this.initializedRefs.push(() => ref.off(event, initializedRef));
+      const refList = (unbindList === 'main') ? this.mainRefs : this.initializedRefs;
+
+      const rmRef = () => ref.off(event, initializedRef)
+      refList.push(rmRef);
+
+      this.allRefs.push(rmRef);
       return initializedRef;
     }
 
-    bind = (action, docId, cbFunc = docId) => {
+    bind = (action, docId, cbFunc = docId, unbindList = 'initialized') => {
 
       const callbackFunction = R.pipe(R.applySpec({ val: R.invoker(0, 'val'), key: R.prop('key') }), cbFunc);
+      log(`binding: ${action}, ${unbindList}`);
       switch (action) {
         case 'onAuthStateChanged':
           return firebase.auth().onAuthStateChanged(async user => {
@@ -153,7 +147,6 @@ export default async (firebase, serverOpts) => {
 
 
 
-
         case 'onPageChanged':
           this.pageInstRef = this.pageInstRef ? this.pageInstRef : this.pageRef
             .orderByKey()
@@ -162,65 +155,78 @@ export default async (firebase, serverOpts) => {
             .on('value', callbackFunction);
 
         case 'onFieldAdded':
-          return this.createBinding(this.fieldRef, 'child_added', callbackFunction);
+          return this.createBinding(this.fieldRef, 'child_added', callbackFunction, unbindList);
         case 'onFieldUpdated':
-          return this.createBinding(this.fieldRef, 'child_changed', callbackFunction);
+          return this.createBinding(this.fieldRef, 'child_changed', callbackFunction, unbindList);
         case 'onWidgetCreated':
-          return this.createBinding(this.widgetRef, 'child_added', callbackFunction);
+          return this.createBinding(this.widgetRef, 'child_added', callbackFunction, unbindList);
         case 'onWidgetUpdated':
-          return this.createBinding(this.widgetRef, 'child_changed', callbackFunction);
+          return this.createBinding(this.widgetRef, 'child_changed', callbackFunction, unbindList);
         case 'onWidgetDeleted':
-          return this.createBinding(this.widgetRef, 'child_removed', callbackFunction);
+          return this.createBinding(this.widgetRef, 'child_removed', callbackFunction, unbindList);
         case 'onAnnotationCreated':
-          return this.createBinding(this.annotationsRef, 'child_added', callbackFunction);
+          return this.createBinding(this.annotationsRef, 'child_added', callbackFunction, unbindList);
         case 'onAnnotationUpdated':
-          return this.createBinding(this.annotationsRef, 'child_changed', callbackFunction);
+          return this.createBinding(this.annotationsRef, 'child_changed', callbackFunction, unbindList);
         case 'onAnnotationDeleted':
-          return this.createBinding(this.annotationsRef, 'child_removed', callbackFunction);
+          return this.createBinding(this.annotationsRef, 'child_removed', callbackFunction, unbindList);
         case 'onBlankPagesChanged':
-          return this.createBinding(this.blankPagesRef.child(docId), 'value', callbackFunction);
-
+          return this.createBinding(this.blankPagesRef.child(docId), 'value', callbackFunction, unbindList);
         case 'onSelectedSignerChanged':
-          return this.createBinding(this.selectedSignerRef, 'value', callbackFunction);
+          return this.createBinding(this.selectedSignerRef, 'value', callbackFunction, unbindList);
           
-        case 'onBlankPagesAdded':
-          return this.blankPagesRef
-            .orderByKey()
-            .equalTo(docId)
-            .on('child_added', callbackFunction);
-
-        case 'onBlankPageAdded':
-          return this.blankPagesRef.on('child_changed', callbackFunction);
         case 'onLockChanged':
-          return this.lockRef.on('value', callbackFunction);
+          return this.createBinding(this.lockRef, 'value', callbackFunction, unbindList);
         case 'onVaDisclaimerShown':
-          return this.vaDisclaimerRef.on('value', callbackFunction);
+          return this.createBinding(this.vaDisclaimerRef, 'value', callbackFunction, unbindList);
         case 'onAuthorsChanged':
-          return this.authorsRef.on('value', callbackFunction);
+          return this.createBinding(this.authorsRef, 'value', callbackFunction, unbindList);
         case 'onSelectedDocIdChanged':
-          return this.selectedDocIdRef.on('value', callbackFunction);
-        case 'onSelectedDocTitleChanged':
-          return this.selectedDocTitleRef.on('value', callbackFunction);
+          return this.createBinding(this.selectedDocIdRef, 'value', callbackFunction, unbindList);
         case 'onVaDisclaimerRejected':
           return this.vaDisclaimerRejectedRef.on('value', callbackFunction);
         case 'onCompletingChanged':
-          return this.completingRef.on('value', callbackFunction);
+          return this.createBinding(this.completingRef, 'value', callbackFunction, unbindList);
         case 'onPinModalChanged':
-          return this.pinModalRef.on('value', callbackFunction);
+          return this.createBinding(this.pinModalRef, 'value', callbackFunction, unbindList);
         case 'onAuthPinModalChanged':
-          return this.authPinModalRef.on('value', callbackFunction);
+          return this.createBinding(this.authPinModalRef, 'value', callbackFunction, unbindList);
         default:
           console.error('The action is not defined.', action);
           break;
       }
     };
 
+    unbindAll = async (unbindList) => {
+      if (unbindList === 'main'){
+        log('unbinding main refs', this.mainRefs.length);
+        await Promise.map(this.mainRefs, (unbind) => unbind());
+        this.mainRefs = [];
+      }
+      else if (unbindList === 'all'){
+        log('unbinding all refs', this.allRefs.length);
+        await Promise.map(this.allRefs, (unbind) => unbind());
+        this.allRefs = [];
+        this.mainRefs = [];
+        this.initializedRefs = [];
+      }
+      else {
+        log('unbinding initialized refs', this.initializedRefs.length)
+        await this.annotationsRef.off();
+        await this.widgetRef.off();
+        await this.pageRef.off();
+        await Promise.map(this.initializedRefs, (unbind) => unbind());
+        this.initializedRefs = [];
+        return;
+      }
+    }
+
 
     getFields = () => this.fieldRef.once('value')
       .then(R.invoker(0, 'val'))
       .then((fields) => _.mapKeys(fields, (val, key) => key.replace(/__/ig, ' ').replace(/_/ig, '.')))
       
-    setField = (name, val) => this.fieldRef.child(name.replace(/\ /ig, '__').replace(/\./ig, '_')).set(val)
+    setField = (name, val) => this.fieldRef.child(name.replace(/ /ig, '__').replace(/\./ig, '_')).set(val)
     getAuthors = () => this.authorsRef.once('value').then(R.invoker(0, 'val'));
 
     setAuthor = (authorId, authorName) => this.authorsRef
