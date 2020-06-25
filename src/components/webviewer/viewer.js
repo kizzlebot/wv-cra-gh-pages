@@ -186,14 +186,7 @@ class Webviewer extends Component {
         annotManager.off('widgetUpdated');
         annotManager.off('widgetDeleted');
         annotManager.off('fieldUpdated');
-      })
-
-
-
-
-
-
-
+      });
 
 
 
@@ -207,7 +200,8 @@ class Webviewer extends Component {
         instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
 
         // Set the currentUser
-        instance.annotManager.trigger('setCurrentUser', this.props.currentUser || this.props.userId);
+        // instance.annotManager.trigger('setCurrentUser', this.props.currentUser || this.props.userId);
+        instance.annotManager.trigger('updateAnnotationPermission')
 
       });
 
@@ -265,14 +259,10 @@ class Webviewer extends Component {
 
     // selected signer has been changed
     // TODO: move to bindEvents
-    // if (prevProps.selectedSigner !== this.props.selectedSigner) {
-    //   this.instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
-    // }
-
-    // the current user has been changed
-    if (prevProps.currentUser !== this.props.currentUser) {
-      this.instance.annotManager.trigger('setCurrentUser', this.props.currentUser);
+    if (prevProps.selectedSigner !== this.props.selectedSigner) {
+      this.instance.annotManager.trigger('setSelectedSigner', this.props.selectedSigner);
     }
+
 
     // admin user status changed
     if (prevProps.isAdminUser !== this.props.isAdminUser) {
