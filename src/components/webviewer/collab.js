@@ -4,7 +4,6 @@ import _ from 'lodash';
 import Viewer from './viewer';
 import { useServer, withServerProvider } from 'lib/hooks/useServerProvider';
 import Promise from 'bluebird';
-import { useEffectOnce } from 'react-use';
 import useAppState, { withAppStateProvider } from 'lib/hooks/AppState';
 import { 
   importFbaseVal, 
@@ -33,9 +32,6 @@ function Collab(props){
 
   const server = useServer();
   const appState = useAppState();
-
-  useEffectOnce(() => {
-  });
 
 
   useEffect(() => {
@@ -70,7 +66,10 @@ function Collab(props){
         // bind non-doc-specific listeners for downstream updates; when firebase pushes data to browser, update webviewer
         bindEvents={(inst) => Promise.all([
           server.bind('onSelectedDocIdChanged', inst.getDocId(), ({ val }) => appState.setSelectedDoc(val), 'main'),
-          server.bind('onAuthorsChanged', inst.getDocId(), ({ val }) => appState.setSigners(val), 'main'),
+          server.bind('onAuthorsChanged', inst.getDocId(), ({ val }) => {
+            console.log('onAuthorsChanged', val);
+            appState.setSigners(val)
+          }, 'main'),
           server.bind('onLockChanged', inst.getDocId(), lockWebviewer(inst), 'main'),
           server.bind('onSelectedSignerChanged', inst.getDocId(), R.pipe(
             R.tap(({ val }) => inst.annotManager.trigger('setSelectedSigner', val)),
@@ -136,22 +135,23 @@ function Collab(props){
 
 
 const composeComponent = R.compose(
-  withAppStateProvider,
-  withServerProvider((props) => {
-    const { organizationId, nsId } = useParams();
-    const appState = useAppState();
+  // withAppStateProvider,
+  // withServerProvider((props) => {
+  //   const { organizationId, nsId } = useParams();
+  //   const appState = useAppState();
 
-    return {
-      nsId: nsId,
-      rtdbNamespace: organizationId,
-      signers: props.signers,
-      signerLocation: props.signerLocation,  
-      userId: props.userId,
-      user: props.user,
-      runId: appState.getRunId(),
-      userType: props.userType
-    }
-  }),
+  //   return {
+  //     nsId: nsId,
+  //     rtdbNamespace: organizationId,
+  //     signers: props.signers,
+  //     signerLocation: props.signerLocation,  
+  //     userId: props.userId,
+  //     user: props.user,
+  //     runId: appState.getRunId(),
+  //     userType: props.userType
+  //   }
+  // }),
+  R.identity
 )
 
 

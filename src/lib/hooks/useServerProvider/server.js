@@ -72,6 +72,7 @@ export default async (firebase, serverOpts) => {
       this.consumerSignatures = roomRef.child('consumerSignatures');
       this.pinModalRef = roomRef.child('pinModalOpen');
       this.authPinModalRef = roomRef.child('showAuthPinModal');
+      this.statusRef = roomRef.child('status');
 
       await this.vaDisclaimerRef.set(0);
 
@@ -79,26 +80,32 @@ export default async (firebase, serverOpts) => {
       this.mainRefs = [];
       this.allRefs = [];
 
+      return new Promise((res) => {
+
+        return this.connectionRef.on('value', async (snapshot) => {
+          // If we're not currently connected, don't do anything.
+          if (snapshot.val() === false) {
+            console.debug('%cfirebase not connected 🔥!', 'color: red; font-size:20px');
+            return;
+          }
+
+          console.debug('%cfirebase connected 🔥!', 'color: blue; font-size:20px');
 
 
-      return this.connectionRef.on('value', async (snapshot) => {
-        // If we're not currently connected, don't do anything.
-        if (snapshot.val() === false) {
-          console.debug('%cfirebase not connected 🔥!', 'color: red; font-size:20px');
-          return;
-        }
+          if (!this.isAdminUser && this.signerLocation === 'local') {
+            await this.addPresences(this.requiredSigners);
+            return res();
+          }
 
-        console.debug('%cfirebase connected 🔥!', 'color: blue; font-size:20px');
+          if (!_.isNil(userId) && !_.isNil(this.user)) {
+            await this.addPresence(this.user, this.notaryRef);
+            return res();
+          }
 
-
-        if (!this.isAdminUser && this.signerLocation === 'local') {
-          return this.addPresences(this.requiredSigners);
-        }
-
-        if (!_.isNil(userId) && !_.isNil(this.user)) {
-          return this.addPresence(this.user, this.notaryRef);
-        }
+          return res();
+        });
       });
+
     };
 
 
@@ -191,6 +198,9 @@ export default async (firebase, serverOpts) => {
           return this.createBinding(this.pinModalRef, 'value', callbackFunction, unbindList);
         case 'onAuthPinModalChanged':
           return this.createBinding(this.authPinModalRef, 'value', callbackFunction, unbindList);
+        case 'onStatus':
+          return this.createBinding(this.statusRef, 'value', callbackFunction, unbindList);
+          
         default:
           console.error('The action is not defined.', action);
           break;
@@ -366,6 +376,12 @@ export default async (firebase, serverOpts) => {
 
     addPresence = async (user, optionalRef) => {
       const ref = (optionalRef) ? optionalRef : this.authorsRef.child(user.id);
+
+
+      const snapshot = await ref.once('value');
+      if (snapshot.exists()){
+        throw new Error('User already authenticated')
+      }
       // If we are currently connected, then use the 'onDisconnect()'
       // method to add a set which will only trigger once this
       // client has disconnected by closing the app,

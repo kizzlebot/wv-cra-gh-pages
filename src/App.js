@@ -1,10 +1,13 @@
 import React from 'react';
 import _ from 'lodash';
 import config from './stories/lib/config';
-import WebviewerApp from './components/webviewer/collab';
-import WebviewerEsignApp from './components/webviewer/esign';
 import { Route, Switch, Link } from 'react-router-dom';
 import { useDefault, useLocation } from 'react-use';
+
+
+import WebviewerApp from './components/webviewer/collab';
+import WebviewerEsignApp from './components/webviewer/esign';
+import { Consumer, Notary } from './components/OrgToOrg';
 
 const initialData = {
   nsId: '8d976a23-b865-4fcd-9165-ddc0aedaf614',
@@ -86,7 +89,7 @@ function App({
 
       {/* org-to-consumer use-case */}
       <Route path='/notarization/:nsId/notary/:organizationId'>
-        <WebviewerApp
+        <Notary
           config={config}
           user={notary}
           userId={notary.id}
@@ -100,7 +103,17 @@ function App({
       </Route>
 
       <Route path='/notarization/:nsId/consumer/:organizationId'>
-        <WebviewerApp
+        <Consumer
+          config={config}
+          userType='signer'
+          signerLocation='local'
+          signers={signers}
+          isAdminUser={false}
+          docs={docs}
+          selectedDoc={'-1'}
+        />
+        
+        {/* <WebviewerApp
           config={config}
           // primary signer is the user
           // user={signers[0]}
@@ -114,7 +127,7 @@ function App({
           isAdminUser={false}
           docs={docs}
           selectedDoc={'-1'}
-        />
+        /> */}
       </Route>
 
 

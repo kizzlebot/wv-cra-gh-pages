@@ -12,6 +12,7 @@
     "debug": "^4.1.1",
     "faker": "^4.1.0",
     "firebase": "^7.15.0",
+    "formik": "^2.1.4",
     "isomorphic-unfetch": "^3.0.0",
     "node-sass": "^4.14.1",
     "polished": "^3.5.1",
@@ -25,7 +26,9 @@
     "react-scripts": "3.4.1",
     "react-use": "^14.2.0",
     "styled-components": "^5.1.1",
-    "twilio-video": "^2.3.0"
+    "twilio-video": "^2.3.0",
+    "uuid": "^8.2.0",
+    "yup": "^0.29.1"
   },
   "scripts": {
     "download-webviewer": "npx @pdftron/webviewer-downloader --path ./public/lib --v 6.3.2 --npm",

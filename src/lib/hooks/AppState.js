@@ -37,17 +37,15 @@ export function AppStateProvider({
   ...rest
 }){
 
-  console.log('rest', rest)
-  const [getSigners, setSigners] = useGetSetState({ });
+  const [getSigners, setSigners] = useGetSet(null);
   const [getSelectedSigner, setSelectedSigner] = useGetSet(null);
   const [getCurrentUser, setCurrentUser] = useGetSet(userId);
+  const [getStatus, setStatus] = useGetSet(userId);
   const [getSelectedDoc, setSelectedDoc] = useGetSet();
   const [getRunId] = useGetSet(runId);
   const [getUserType] = useGetSet(userType);
   const [getSignerLocation] = useGetSet(signerLocation);
 
-  const [getPageNumbers, setPageNumbers] = useGetSetState(_.mapValues(docs, () => 1));
-  const [getFields, setFields] = useGetSetState({ });
   // const [fields, { set: setFieldMap, setAll: setAllFields, remove: removeField, reset: resetFields }] = useMap({});
 
   const [getBlankPages, setBlankPages] = useGetSetState({});
@@ -55,57 +53,49 @@ export function AppStateProvider({
 
 
 
-  const upsertAnnot = useCallback((toAdd) => {
-    let allAnnots = getAnnotsToImport();
-    const i = _.findIndex(allAnnots, (b) => b.id === toAdd.id);
-    if (i > -1){
-      log('upserting', toAdd, allAnnots.length)
-      allAnnots[i] = toAdd;
-    } else {
-      log('adding', toAdd, allAnnots.length)
-      allAnnots = [...allAnnots, toAdd];
-    }
-    return setAnnotsToImport(allAnnots);
-  }, [getAnnotsToImport, setAnnotsToImport]);
 
-
-  const updateFields = useCallback((val) => setFields({ ...getFields(), ...val }), [getFields, setFields]);
 
 
 
   const context = {
     setBlankPages: (blankPages) => setBlankPages(blankPages),
-    setSigners: (signers) => setSigners(signers),
-    setPageNumbers: (pageNumbers) => setPageNumbers(pageNumbers),
-
+    setSigners: (signers = {}) => {
+      console.log('setSigners called', signers);
+      setSigners(_.isNil(signers) ? {} : signers);
+    },
     setSelectedSigner: (selectedSigner) => setSelectedSigner(selectedSigner),
 
-    setFields: (fields) => setFields(fields),
-    updateFields,
 
     setSelectedDoc: (docId) => setSelectedDoc(docId),
     setAnnotsToImport: (annotsToImport) => setAnnotsToImport(annotsToImport),
     setCurrentUser: (userId) => setCurrentUser(userId),
+    setStatus,
 
     getBlankPages,
     getSigners,
-    getPageNumbers,
     getSelectedSigner,
-    getFields,
     getSelectedDoc,
     getCurrentUser,
     getAnnotsToImport,
     getRunId,
-    upsertAnnot,
+    getStatus,
+    getUsersOnDevice: () => {
+      const signers = _.mapValues(getSigners(), (val) => {
+        if (val.runId === getRunId()){
+          return val;
+        }
+        return null;
+      })
+      return _.compact(signers)
+    },
 
 
     // runId is used to identity which users are on the same machine
+    status: getStatus(),
     runId: getRunId(),
     blankPages: getBlankPages(),
     signers: getSigners(),
-    pageNumbers: getPageNumbers(),
     selectedSigner: getSelectedSigner(),
-    fields: getFields(),
     selectedDoc: getSelectedDoc(),
     annotsToImport: getAnnotsToImport(),
     currentUser: getCurrentUser(),
