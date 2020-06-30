@@ -87,7 +87,7 @@ function App({
       </Route>
 
 
-      {/* org-to-consumer use-case */}
+      {/* org-to-org use-case */}
       <Route path='/notarization/:nsId/notary/:organizationId'>
         <Notary
           config={config}

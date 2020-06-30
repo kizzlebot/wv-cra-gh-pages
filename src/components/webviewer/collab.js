@@ -74,10 +74,24 @@ function Collab(props){
           server.bind('onSelectedSignerChanged', inst.getDocId(), R.pipe(
             R.tap(({ val }) => inst.annotManager.trigger('setSelectedSigner', val)),
             R.tap(({ val }) => appState.setSelectedSigner(val)),
-            R.when(
-              ({ val }) => (inst.getSignerById(val) && appState.runId === inst.getSignerById(val).runId) || val === '-1',
-              setCurrentUser(inst)
-            )
+            ({ val }) => {
+              if (inst.annotManager.getIsAdminUser()){
+                inst.toggleTools(false);
+                return;
+              }
+              if (val == '-1' || (inst.getSignerById(val) && appState.runId !== inst.getSignerById(val).runId)) {
+                inst.annotManager.setCurrentUser('-1');
+                inst.toggleTools(true);
+              }
+              else if ((inst.getSignerById(val) && appState.runId === inst.getSignerById(val).runId)){
+                inst.annotManager.setCurrentUser(val);
+                inst.toggleTools(false);
+              }
+            }
+            // R.when(
+            //   ({ val }) => (inst.getSignerById(val) && appState.runId === inst.getSignerById(val).runId) || val === '-1',
+            //   setCurrentUser(inst)
+            // )
           ), 'main'),
           server.bind('onLockChanged', inst.getDocId(), lockWebviewer(inst), 'main'),
         ])}

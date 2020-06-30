@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import * as R from '@enotarylog/ramda';
-import ConsumerAuthenticate from './components/ConsumerAuthenticate.modal';
 import Collab from 'components/webviewer/collab';
 import { useServer, withServerProvider } from 'lib/hooks/useServerProvider';
 import useAppState, { withAppStateProvider } from 'lib/hooks/AppState';
@@ -60,7 +59,7 @@ const composeComponent = R.compose(
       userType: props.userType
     }
   }),
-)
+);
 
 
 export default composeComponent(Notary);

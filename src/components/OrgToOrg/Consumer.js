@@ -16,11 +16,7 @@ function Consumer(props) {
   const [getShowAuth, setShowAuth] = useGetSet(false);
 
   useEffectOnce(() => {
-    // server.bind('onAuthorsChanged', ({ val }) => appState.setSigners(val), 'main');
-    server.bind('onStatus', ({ val }) => {
-      console.log('signers', appState.signers, uuid);
-      appState.setStatus(val)
-    });
+    server.bind('onStatus', ({ val }) => appState.setStatus(val));
   });
 
   useEffect(() => {

@@ -47,6 +47,7 @@ const ConsumerAuthenticate = ({ handleSubmit, dirty, isValid, show, ...props }) 
   return (
     <Modal 
       show={show} 
+      animation={false}
       size='xl'
       onHide={_.noop}
     >
