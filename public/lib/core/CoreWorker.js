@@ -1,17 +1,17 @@
 (function(){/*
  *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
+Copyright (c) Microsoft Corporation.
 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
 
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
 *****************************************************************************/
 var H="undefined"!=typeof window&&window===this?this:"undefined"!=typeof global&&null!=global?global:this;function I(f){var l=0;return function(){return l<f.length?{done:!1,value:f[l++]}:{done:!0}}}var N="function"==typeof Object.defineProperties?Object.defineProperty:function(f,l,e){f!=Array.prototype&&f!=Object.prototype&&(f[l]=e.value)};function O(){O=function(){};H.Symbol||(H.Symbol=P)}var P=function(){var f=0;return function(l){return"jscomp_symbol_"+(l||"")+f++}}();
 function R(){O();var f=H.Symbol.iterator;f||(f=H.Symbol.iterator=H.Symbol("iterator"));"function"!=typeof Array.prototype[f]&&N(Array.prototype,f,{configurable:!0,writable:!0,value:function(){return S(I(this))}});R=function(){}}function S(f){R();f={next:f};f[H.Symbol.iterator]=function(){return this};return f}function T(f,l){return Object.prototype.hasOwnProperty.call(f,l)}
@@ -54,7 +54,7 @@ m=m.Ua(),this.B(this.S(m))),this.f.H();else if(b.c.l(m,"Canvas.OpacityMask",b.c.
 a,"".concat(this.f.N(),": ").concat(a," is not defined"));return parseFloat(a)},oa:function(a,b){a=this.f.C(a);return null!=a?parseFloat(a):b},A:function(a){a=this.f.C(a);b.c.G(null!=a,"".concat(this.f.N(),": ").concat(a," is not defined"));return a},pa:function(a,b){a=this.f.C(a);return null!=a?a:b},Zc:function(){var a=this.f.C("x:Key");b.c.G(null!=a,"Key must be defined for elements in a resource dictionary");return a},fc:function(){0===this.Ka&&this.f.mark();var a=!1,b=this.oa("Opacity",1);1>b&&
 (a||(a=!0,this.save(),this.aa()),this.B(this.Qa(b)));b=this.f.C("RenderTransform");null!=b&&(a||(a=!0,this.save(),this.aa()),this.ee(b));b=this.f.C("Clip");null!=b&&(a||(this.save(),this.aa()),this.Jb(b),a=!0);return a},Jb:function(a){var g=!0;a&&"F"===a[0]&&(g=!1);this.Nc(g?"evenodd":"nonzero");this.Yd(this.xa(a));this.Jc(a);this.u.push(b.c.nd);this.v.push(g?["evenodd"]:[])},be:function(a){var g=[];for(a=Object(n.a)(a.split(";"));a.oe();){var c=a.current,m=new b.Ga;c=c.split(",");if(1<=c.length){if(0<
 c[0].length){var h=c[0].split(")");if(2<=h.length){var d=h[0].substr(1).split(":");m.Db=parseInt(d[0]);m.bc=parseInt(d[1])}m.Gb=parseInt(h[h.length-1]);m.pb=!0}2<=c.length&&(0<c[1].length&&(m.ac=parseFloat(c[1]),m.dc=!0),3<=c.length&&(0<c[2].length&&(m.Hb=parseFloat(c[2])),4<=c.length&&0<c[3].length&&(m.Ib=parseFloat(c[3]))))}g.push(m)}return g},Xd:function(){var a=this.A("UnicodeString"),b="",c=0;for(2<=a.length&&"{"===a.charAt(0)&&"}"===a.charAt(1)&&(a=a.substr(2));c<a.length;){var m=a.charCodeAt(c);
-if(9==m)b+=String.fromCharCode(10),c++;else if(128>m)b+=String.fromCharCode(m),c++;else if(191<m)if(224>m){var h=a.charCodeAt(c+1);b+=String.fromCharCode((m&31)<<6|h&63);c+=2}else if(240>m){h=a.charCodeAt(c+1);var d=a.charCodeAt(c+2);b+=String.fromCharCode((m&15)<<12|(h&63)<<6|d&63);c+=3}else h=a.charCodeAt(c+1),d=a.charCodeAt(c+2),c4=a.charCodeAt(c+3),b+=String.fromCodePoint((m&7)<<18|(h&63)<<12|(d&63)<<6|c4&63),c+=4;else Object(k.a)("Invalid UTF-8 character")}return b},Wb:function(){var a=new b.ha,
+if(9==m)b+=String.fromCharCode(10),c++;else if(128>m)b+=String.fromCharCode(m),c++;else if(191<m)if(224>m){var h=a.charCodeAt(c+1);b+=String.fromCharCode((m&31)<<6|h&63);c+=2}else if(240>m){h=a.charCodeAt(c+1);var d=a.charCodeAt(c+2);b+=String.fromCharCode((m&15)<<12|(h&63)<<6|d&63);c+=3}else{h=a.charCodeAt(c+1);d=a.charCodeAt(c+2);var e=a.charCodeAt(c+3);b+=String.fromCodePoint((m&7)<<18|(h&63)<<12|(d&63)<<6|e&63);c+=4}else Object(k.a)("Invalid UTF-8 character")}return b},Wb:function(){var a=new b.ha,
 g=this.f.C("Clip");null!=g&&(a=this.xa(g));return a},Yb:function(a,g){return this.Zd&&1===a.length?g===b.c.rc?b.c.ud:g===b.c.Vb?b.c.Vb:b.c.vd:g},oc:function(a){return 0===Object.keys(a).length&&a.constructor===Object},Ic:function(a){var g=this.pa("trn:BlendMode","source-over");g=this.ea?"source-over":g;var c="source-over"!=g&&!this.Bb,m=this.fc();this.Bb&&this.Mc(g);var d=this.ub("OriginX"),e=this.ub("OriginY"),f=this.A("FontUri");this.mb[f]=null;var n=this.ub("FontRenderingEmSize"),x=this.be(this.pa("Indices",
 ""));if(200>n){var p=n/200;m||(this.aa(),this.save(),m=!0);var t=new b.J;t.kb(p,0,0,p,d,e);n=200;e=0;this.u.push(b.c.xb);this.v.push(t.zb())}var q=0;d=new l;var r=this.Xd(),v=0,C=0,L=n/100,u="",K=null;a=(t=this.f.C("Stroke"))?b.c.Vb:a?b.c.rc:b.c.td;d.K(b.c.Kd,0);for(var D={},w,Q=0;Q<x.length;){var y=x[Q],z=r.charCodeAt(q);z=y.Db+(55296<=z&&57344>z?1:0);if(v!==y.Hb||C!==y.Ib)u&&(d.K(this.Yb(w,a),[u,v?v*L:0,e-C*L]),d.K(b.c.tc,[u])),v=y.Hb,C=y.Ib,u="";y.pb&&(D[u.length]=r.substr(q,y.Db));y.dc?(this.oc(D)||
 d.K(b.c.wc,[D]),w=u+(y.pb?String.fromCharCode(y.Gb+57344):r.substr(q,z)),d.K(this.Yb(w,a),[w,v?v*L:0,e-C*L]),u&&d.K(b.c.tc,[u]),d.K(b.c.kd,[y.ac*L]),D={},u=""):u+=y.pb?String.fromCharCode(y.Gb+57344):r.substr(q,z);Q+=y.bc;q+=z}if(u||q<r.length)this.oc(D)||d.K(b.c.wc,[D]),w=u+r.substr(q,r.length-q),d.K(this.Yb(w,a),[w,0,0]);e=w=null;v=this.f.C("Fill");q=!1;null!=v&&(this.Ab(v)?w=this.ya(v,b.c.ka,d):(q=!0,w=this.jb(v,b.c.ka,d)));x=!1;null!=t&&(this.Ab(t)?K=this.ya(t,b.c.wa,d):(x=!0,K=this.jb(t,b.c.wa,
