@@ -30,7 +30,6 @@ function Notary(props) {
       .values()
       .filter((s) => s.runId === runId)
       .value();
-    console.log('signers changed', appState.signers, signersOnDevice)
   }, [appState.status, appState.signers, appState, setShowAuth])
 
   

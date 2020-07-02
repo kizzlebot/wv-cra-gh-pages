@@ -10,7 +10,10 @@ const removeFormFields = {
   title: 'Remove Form Fields',
   dataElement: 'removeFormFields',
   onClick: ({ instance }) => async () => {
-    instance.docViewer.trigger('removeFormFields')
+    instance.docViewer.trigger('confirmationModal', [{
+      message: 'Are you sure you want to delete all form fields? This will remove all form fields in all documents.',
+      onConfirm: 'removeFormFields'
+    }])
   },
 };
 

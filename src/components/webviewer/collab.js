@@ -120,6 +120,8 @@ function Collab(props){
         onWidgetUpdated={invokeServerMethod(server.updateWidget)}
         onWidgetDeleted={invokeServerMethod(server.deleteWidget)}
         onLockChanged={server.setLock}
+        onRemoveFormFields={server.clearWidgets}
+        onRemoveAllAnnots={server.clearAll}
 
         onSelectedSignerChanged={server.setSelectedSigner}
         

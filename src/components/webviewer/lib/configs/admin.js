@@ -1,5 +1,5 @@
 export default {
-  // panelNames: ['TestPanel'],
+  panelNames: ['TestPanel'],
   toolNames: [
     'LockCheckbox',
     'Divider',
@@ -9,6 +9,7 @@ export default {
     'RemoveBlankPage',
     'Divider',
     'RemoveFormFields',
+    'RemoveAllAnnots',
     'Divider',
     'FormFieldTools',
     'TemplateTools',

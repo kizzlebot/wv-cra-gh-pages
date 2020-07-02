@@ -6,6 +6,7 @@ import Promise from 'bluebird';
 import registerTools from './lib';
 import initWv from '@pdftron/webviewer';
 import CertPdfModal from './components/CertPdfModal';
+import ConfirmationModal from './components/ConfirmationModal';
 import DocSelector from './components/DocSelector';
 
 
@@ -41,6 +42,7 @@ class Webviewer extends Component {
     this.containerRef = React.createRef();
     this.state = {
       certModal: { show: false, },
+      confirmationModal: { show: false, },
     }
     this.notarialCertUploadRef = React.createRef();
   }
@@ -107,15 +109,6 @@ class Webviewer extends Component {
 
 
 
-
-
-
-      // setup listeners which apply no matter which document is loaded 
-      instance.docViewer.one('documentLoaded', async () => {
-        // attach event listeners to docViewer
-        docViewer.on('removeFormFields', callIfDefined(this.props.onRemoveFormFields))
-        docViewer.on('lockChanged', callIfDefined(this.props.onLockChanged))
-
         // when cert modal clicked
         instance.docViewer.on('certModal', ({ type, pdf }) => {
           if (type === 'file'){
@@ -123,6 +116,25 @@ class Webviewer extends Component {
           }
           return this.setState({ certModal: { show: true, pdf } })
         });
+
+        instance.docViewer.on('confirmationModal', ({ message, onConfirm }) => {
+          return this.setState({
+            confirmationModal: {
+              show: true,
+              message,
+              onConfirm
+            }
+          })
+        })
+
+
+
+      // setup listeners which apply no matter which document is loaded 
+      instance.docViewer.one('documentLoaded', async () => {
+        // attach event listeners to docViewer
+        docViewer.on('lockChanged', callIfDefined(this.props.onLockChanged))
+
+
 
 
         // bind events that should be bound once
@@ -135,6 +147,8 @@ class Webviewer extends Component {
 
 
         
+        docViewer.on('formFieldsRemoved', callIfDefined(this.props.onRemoveFormFields))
+        docViewer.on('allAnnotsRemoved', callIfDefined(this.props.onRemoveAllAnnots));
         annotManager.on('selectedSignerChanged', R.juxt([
           R.converge(this.instance.toggleTools, [R.equals('-1')]),
           this.props.onSelectedSignerChanged
@@ -304,6 +318,16 @@ class Webviewer extends Component {
           style={{ display: 'none' }}
           accept='image/*,.pdf'
           onChange={(e) => this.setState({ certModal: { show: true, type: 'file', pdf: e.target.files[0] } })}
+        />
+
+        <ConfirmationModal
+          show={this.state.confirmationModal.show}
+          message={this.state.confirmationModal.message}
+          onHide={() => this.setState({ confirmationModal: { show: false }})}
+          onSubmit={() => {
+            this.instance.docViewer.trigger(this.state.confirmationModal.onConfirm);
+            return this.setState({ confirmationModal: { show: false } })
+          }}
         />
         <CertPdfModal
           show={this.state.certModal.show}

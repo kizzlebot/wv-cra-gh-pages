@@ -53,7 +53,14 @@ export function AppStateProvider({
 
 
 
-
+  const getUsersOnDevice = () => {
+    const getUsersOnDevice = R.pipe(
+      R.toPairs,
+      R.filter(R.pipe(R.nth(1), R.propEq('runId', getRunId()))),
+      R.fromPairs
+    )
+    return getUsersOnDevice(getSigners());
+  };
 
 
 
@@ -79,18 +86,11 @@ export function AppStateProvider({
     getAnnotsToImport,
     getRunId,
     getStatus,
-    getUsersOnDevice: () => {
-      const signers = _.mapValues(getSigners(), (val) => {
-        if (val.runId === getRunId()){
-          return val;
-        }
-        return null;
-      })
-      return _.compact(signers)
-    },
+    getUsersOnDevice,
 
 
     // runId is used to identity which users are on the same machine
+    usersOnDevice: getUsersOnDevice(),
     status: getStatus(),
     runId: getRunId(),
     blankPages: getBlankPages(),
@@ -105,7 +105,7 @@ export function AppStateProvider({
     docs,
     userType: getUserType(),
     signerLocation: getSignerLocation(),
-  }
+  };
 
   return (
     <AppStateCtx.Provider value={tapFns(context)}>

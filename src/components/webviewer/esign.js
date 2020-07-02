@@ -6,13 +6,6 @@ import useAppState, { withAppStateProvider } from 'lib/hooks/AppState';
 function Esign(props){
 
   const appState = useAppState();
-
-  useEffect(() => {
-    if (appState.selectedDoc){
-      // doc changed
-    }
-  }, [appState.selectedDoc]);
-
   
   return (
     <Viewer

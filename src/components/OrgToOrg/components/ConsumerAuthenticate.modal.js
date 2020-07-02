@@ -58,7 +58,7 @@ const ConsumerAuthenticate = ({ handleSubmit, dirty, isValid, show, ...props }) 
             <ul>
               {
                 _.map(appState.signers, (val) => (
-                  <li key={val.id}>{val.firstName} {val.lastName} - {val.runId}</li>
+                  <li key={val.id}>{val.firstName} {val.lastName} (machine Id: {val.runId}) - {val.status}</li>
                 ))
               }
             </ul>
@@ -83,6 +83,14 @@ const ConsumerAuthenticate = ({ handleSubmit, dirty, isValid, show, ...props }) 
           >
             Submit
           </Button>
+          
+          <Button 
+            type='button'
+            disabled={_.isEmpty(appState.signers)}
+            onClick={props.markReady}
+          >
+            Finish 
+          </Button>
         </Modal.Footer>
       </Form>
     </Modal>
@@ -98,7 +106,7 @@ const composeComponent = R.compose(
     }),
     validationSchema: schema,
     handleSubmit: async (values, formikBag) => {
-      await formikBag.props.onSubmit(values);
+      await formikBag.props.addUser(values);
       return formikBag.resetForm();
     }
   })

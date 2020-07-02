@@ -6,6 +6,7 @@ import registerStampAnnotTool from "./stamps";
 import registerNotaryCertTool from "./notaryCerts";
 import registerAddRemovePage from './addRemovePage';
 import registerRemoveFormFields from './removeFormFields';
+import registerRemoveAllAnnots from './removeAllAnnots';
 import registerSelectSigner from './selectSigner';
 import registerShowSigner from './showSigner';
 import registerLockCheckbox from './lock';
@@ -16,6 +17,7 @@ const registerTools = R.pipeP(
   registerShowSigner,
   registerAddRemovePage,
   registerRemoveFormFields,
+  registerRemoveAllAnnots,
   registerNotaryCertTool,
   registerFormFieldTools,
   registerTemplateTools,

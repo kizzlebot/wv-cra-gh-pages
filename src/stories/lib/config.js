@@ -32,6 +32,10 @@ export default {
       'AnnotationCreateTextHighlight',
       'AnnotationCreateTextUnderline',
     ],
+    enableElements: [
+      'bookmarksPanelButton',
+      'bookmarksPanel'
+    ],
     disableElements: [
       'stickyToolButton',
       // 'leftPanel',
@@ -46,8 +50,8 @@ export default {
       'shapeToolGroupButton',
       'eraserToolButton',
       // 'thumbnailControl',
-      'outlinesPanel',
-      'outlinesPanelButton',
+      // 'outlinesPanel',
+      // 'outlinesPanelButton',
       // 'thumbnailsPanelButton',
       // 'leftPanelTabs'
     ]

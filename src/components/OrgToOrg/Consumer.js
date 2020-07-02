@@ -26,6 +26,7 @@ function Consumer(props) {
       .filter((s) => s.runId === runId)
       .value();
 
+    
     if (appState.status === 'ready' || signersOnDevice.length === 0){
       setShowAuth(true);
     }
@@ -38,13 +39,13 @@ function Consumer(props) {
     <>
       <ConsumerAuthenticate 
         show={getShowAuth()}
-        onSubmit={async (values) => {
-          console.log('values', values);
+        addUser={async (values) => {
           await server.addPresence({
             id: uuid.v4(),
             ...values
           })
         }}
+        markReady={() => server.markReady(appState.getRunId())}
       />
 
       <Collab {...props} />

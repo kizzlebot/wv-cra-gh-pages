@@ -372,6 +372,25 @@ export default async (firebase, serverOpts) => {
 
     deleteSignature = (signerId, type) => this.consumerSignatures.child(signerId).child(type).remove();
 
+
+    markReady = async (runId) => {
+      const authorsSnapshot = await this.authorsRef.once('value');
+      const authors = authorsSnapshot.val();
+
+      const markReady = R.apply(R.useWith(R.unapply(R.identity), [R.identity, R.assoc('status', 'ready')]))
+      const setUsersReady = R.pipe(
+        R.toPairs,
+        R.filter(R.pipe(R.nth(1), R.propEq('runId', runId))),
+        R.map(markReady),
+        R.fromPairs
+      );
+
+      const onDevice = setUsersReady(authors);
+
+      return this.authorsRef.update(onDevice)
+    }
+
+
     addPresences = async (signers) => Promise.map(signers, (s) => this.addPresence(s))
 
     addPresence = async (user, optionalRef) => {

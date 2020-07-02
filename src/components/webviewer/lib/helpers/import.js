@@ -25,7 +25,7 @@ export const importFbaseVal = ({ selectedDoc, annotManager }) => async ({ val, k
     await annotation.resourcesLoaded();
     // Set a custom field authorId to be used in client-side permission check
     annotation.authorId = annotation.Author = val.authorId;
-    annotation.CustomData = { ...annotation.CustomData, ..._.omit(val, ['xfdf']) };
+    // annotation.CustomData = { ...annotation.CustomData, ..._.omit(val, ['xfdf']) };
     annotManager.redrawAnnotation(annotation);
   }
 }

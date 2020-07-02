@@ -31,7 +31,7 @@ export const injectPanel = (panelName, panelConfig) => async ({ panels, ...rest 
     ...rest,
     panels: {
       ...panels,
-      [panelName]: _.isFunction(panelConfig) ? panelConfig({ panels, ...rest, }) : panelConfig 
+      [panelName]: _.isFunction(panelConfig) ? await panelConfig({ panels, ...rest, }) : panelConfig 
     }
   }
 };

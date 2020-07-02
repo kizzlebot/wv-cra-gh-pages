@@ -355,6 +355,7 @@ function tracePropAccess(obj, propKeys) {
       fitMode, 
       layoutMode,
       disableElements = [],
+      enableElements = [],
       colorPalette = []
     } = config;
     
@@ -381,6 +382,7 @@ function tracePropAccess(obj, propKeys) {
 
     instance.disableTools([...disableTools]);
     instance.disableElements([...disableElements]);
+    instance.enableElements([...enableElements]);
     instance.setActiveLeftPanel('thumbnailsPanel');
 
     return { instance }
@@ -865,7 +867,7 @@ function tracePropAccess(obj, propKeys) {
 
 
     // when an signature annotation is copied in webviewer-ui code, it doesn't copy over the CustomData. So extend this
-    instance.annotManager.getAnnotationCopy = buildGetAnnotationCopy(instance);
+    // instance.annotManager.getAnnotationCopy = buildGetAnnotationCopy(instance);
 
 
     // this handles gettings the name of the author based on authorId
@@ -900,7 +902,8 @@ function tracePropAccess(obj, propKeys) {
       instance.hotkeys.on('AnnotationEdit');
     });
 
-
+    instance.docViewer.on('removeFormFields', () => instance.docViewer.trigger('formFieldsRemoved'));
+    instance.docViewer.on('removeAllAnnots', () => instance.docViewer.trigger('allAnnotsRemoved'));
 
     // register events to trigger on annotManager. subscribed by parent component
     instance.annotManager.on('annotationChanged', onAnnotationChanged(instance));
